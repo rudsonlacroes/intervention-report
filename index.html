@@ -927,7 +927,7 @@
                 label_customer_signature: "Firma Cliente",
                 btn_clear: "Cancella",
                 label_engineer_signature: "Firma Tecnico Fortna",
-                label_customer_email: "Indirizzo Email Cliente",
+                label_customer_email: "Indresso Email Cliente",
                 section_spare_parts: "Parti di Ricambio Utilizzate",
                 title_add_part: "Aggiungi Nuova Parte",
                 label_qty: "Qtà.",
@@ -1270,7 +1270,7 @@
                     const div = document.createElement('div');
                     div.className = 'relative group';
                     div.innerHTML = `
-                        <img src="${photo.dataUrl}" alt="${photo.name}" class="object-cover w-full h-32 rounded-lg">
+                        <img src="${photo.dataUrl}" alt="${photo.name}" class="object-contain w-full h-32 rounded-lg bg-gray-100">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-opacity rounded-lg remove-btn">
                             <button type="button" onclick="removePhoto(${index})" class="text-white opacity-0 group-hover:opacity-100 p-2 bg-red-600 rounded-full">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
