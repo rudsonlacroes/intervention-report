@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortna Intervention Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .signature-canvas {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            cursor: crosshair;
+        }
+        /* Active tab style */
+        .tab-active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Initially hide print-only elements */
+        #print-header, #print-footer {
+            display: none;
+        }
+
+        /* Mobile-proof tables */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+            }
+             .responsive-table tr {
+                margin-bottom: 1.5rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid #f3f4f6;
+                text-align: right;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+                 justify-content: flex-end;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+                margin-right: 1rem;
+                color: #374151;
+            }
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #fff;
+                margin: 0;
+            }
+            header, nav, footer, #add-time-entry-btn, .add-part-form, #photo-upload-label, .remove-btn, .clear-signature-btn, #language-switcher {
+                display: none !important;
+            }
+            .container {
+                max-width: 100% !important;
+                padding: 0 1in !important; /* Standard A4 margins */
+                margin: 0 !important;
+            }
+             main {
+                 padding-top: 100px; /* Space for fixed header */
+                 padding-bottom: 80px; /* Space for fixed footer */
+             }
+            #page-details, #page-parts {
+                display: block !important;
+            }
+             main, .bg-white {
+                box-shadow: none !important;
+                border: none !important;
+                background-color: transparent !important;
+            }
+            .grid {
+                display: block !important; /* Stack columns for printing */
+            }
+            fieldset {
+                page-break-inside: avoid;
+            }
+            .responsive-table thead {
+                display: table-header-group !important;
+            }
+            .responsive-table tr {
+                display: table-row !important;
+                 margin-bottom: 0;
+                border: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+            .responsive-table td {
+                display: table-cell !important;
+                justify-content: flex-start;
+                padding: 0.5rem;
+                border-bottom: 1px solid #e5e7eb;
+                 text-align: left;
+            }
+             .responsive-table td::before {
+                display: none;
+            }
+            #photos-gallery {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+            #photos-gallery img {
+                object-fit: contain !important; /* Fit image without stretching */
+                height: 500px !important; /* Give a consistent height */
+                width: 100%;
+                background-color: #f9fafb; /* Add light background for letterboxing */
+            }
+            
+            /* Letterhead for printing */
+            #print-header, #print-footer {
+                display: block;
+                position: fixed;
+                left: 0;
+                right: 0;
+                padding: 0 1in;
+            }
+            #print-header {
+                top: 0;
+                padding-top: 0.5in;
+                text-align: center; /* Center the logo */
+            }
+            #print-footer {
+                bottom: 0;
+                padding-bottom: 0.5in;
+                border-top: 1px solid #e5e7eb;
+                font-size: 8pt;
+                color: #6b7280;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Print-only Header -->
+    <div id="print-header">
+        <img src="https://www.fortna.com/wp-content/uploads/2022/10/IMG-Fortna-logo-new-transparent-335x255-1.png" alt="Fortna Logo" class="h-16 inline-block">
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl font-bold text-gray-900" data-translate-key="report_title">Intervention Report</h1>
+                <p class="text-gray-500" data-translate-key="report_subtitle">Digital report for on-site interventions</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <select id="language-switcher" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-md shadow-sm leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="en">English (EN)</option>
+                        <option value="nl">Nederlands (NL)</option>
+                        <option value="de">Deutsch (DE)</option>
+                        <option value="it">Italiano (IT)</option>
+                        <option value="pl">Polski (PL)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+                 <img src="https://www.fortna.com/wp-content/uploads/2022/10/IMG-Fortna-logo-new-transparent-335x255-1.png" alt="Fortna Logo" class="h-12">
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 mb-6">
+            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                <button id="tab-details" onclick="switchTab('details')" class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active" data-translate-key="tab_details">
+                    Report Details
+                </button>
+                <button id="tab-parts" onclick="switchTab('parts')" class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-translate-key="tab_parts">
+                    Parts & Photos
+                </button>
+            </nav>
+        </div>
+
+        <main id="main-content">
+            <!-- Form Container -->
+            <form id="intervention-form" class="space-y-8">
+                
+                <!-- Page 1: Report Details -->
+                <div id="page-details">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left Column -->
+                        <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_general_info">General Information</legend>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="customer-site" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_site">Customer & Site Location</label>
+                                        <input type="text" id="customer-site" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="installation-group" class="block text-sm font-medium text-gray-700" data-translate-key="label_installation_group">Installation Group</label>
+                                        <input type="text" id="installation-group" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="contact-name" class="block text-sm font-medium text-gray-700" data-translate-key="label_contact_name">Contact Name Customer</label>
+                                        <input type="text" id="contact-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="case-sf" class="block text-sm font-medium text-gray-700" data-translate-key="label_case_sf">CASE # SF</label>
+                                        <input type="text" id="case-sf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="customer-phone" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_phone">Phone Nr. Customer</label>
+                                        <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 pt-2">
+                                        <div>
+                                            <label for="date" class="block text-sm font-medium text-gray-700" data-translate-key="label_intervention_date">Intervention Date</label>
+                                            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label for="inbound-call" class="block text-sm font-medium text-gray-700" data-translate-key="label_inbound_call">Inbound Call Time</label>
+                                            <input type="time" id="inbound-call" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend class="text-sm font-medium text-gray-700" data-translate-key="label_agreement_type">Agreement Type</legend>
+                                <div class="mt-2 space-x-4">
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="GLA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">GLA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LTA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">LTA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LAA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">LAA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="OTHER" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2" data-translate-key="option_other">Other</span></label>
+                                </div>
+                                <div id="agreement-other-container" class="mt-4">
+                                    <label for="agreement-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
+                                    <input type="text" id="agreement-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
+                             <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_intervention_type">Type of Intervention</legend>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Inspection" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_inspection">Inspection</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Maintenance" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_maintenance">Maintenance</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Training" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_training">Training</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Malfunction" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_malfunction">Malfunction</span></label>
+                                    <label class="flex items-center"><input type="checkbox" id="intervention-type-other-checkbox" name="intervention-type" value="Other" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_other">Other</span></label>
+                                </div>
+                                <div id="intervention-other-container" class="mt-4 hidden">
+                                    <label for="intervention-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
+                                    <input type="text" id="intervention-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                            </fieldset>
+                            
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_malfunction_desc">Description of Malfunction</legend>
+                                <div class="space-y-4">
+                                     <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="item-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_item_no">Item No:</label>
+                                            <input type="text" id="item-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                         <div>
+                                            <label for="message-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_message_no">Message No:</label>
+                                            <input type="text" id="message-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="malfunction-description" class="block text-sm font-medium text-gray-700" data-translate-key="label_description">Description</label>
+                                        <textarea id="malfunction-description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <!-- Timetable -->
+                    <div class="mt-8 bg-white p-6 rounded-lg shadow-sm">
+                        <fieldset>
+                            <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_timetable">Timetable</legend>
+                             <!-- Form to add new time entry -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
+                                <div class="lg:col-span-3">
+                                    <h3 class="font-medium text-gray-800" data-translate-key="title_add_entry">Add Engineer Time Entry</h3>
+                                </div>
+                                <div class="lg:col-span-3">
+                                    <label for="engineer-name" class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_name">Engineer Name</label>
+                                    <input type="text" id="engineer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="entry-date" class="block text-sm font-medium text-gray-700" data-translate-key="label_date">Date</label>
+                                    <input type="date" id="entry-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label for="start-type" class="block text-sm font-medium text-gray-700" data-translate-key="label_start_type">Start Type</label>
+                                    <select id="start-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="Arrival" data-translate-key="option_arrival">Arrival</option>
+                                        <option value="Remote support start" data-translate-key="option_remote_start">Remote support start</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="arrival-time" class="block text-sm font-medium text-gray-700" data-translate-key="label_start_time">Start Time</label>
+                                    <input type="time" id="arrival-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div></div> <!-- Spacer -->
+                                <div>
+                                    <label for="end-type" class="block text-sm font-medium text-gray-700" data-translate-key="label_end_type">End Type</label>
+                                    <select id="end-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <option value="Departure" data-translate-key="option_departure">Departure</option>
+                                        <option value="Remote support end" data-translate-key="option_remote_end">Remote support end</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="departure-time" class="block text-sm font-medium text-gray-700" data-translate-key="label_end_time">End Time</label>
+                                    <input type="time" id="departure-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+
+                                <div class="lg:col-span-3 text-right">
+                                    <button type="button" id="add-time-entry-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_add_entry">+ Add Entry</button>
+                                </div>
+                            </div>
+
+                             <!-- Table of added time entries -->
+                            <div id="timetable-container" class="mt-4 flow-root">
+                                <div class="overflow-x-auto md:overflow-visible -mx-4 -my-2 sm:-mx-6 lg:-mx-8">
+                                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                        <table class="min-w-full divide-y divide-gray-300 responsive-table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" data-translate-key="table_engineer">Engineer</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_date">Date</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_start_type">Start Type</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_start_time">Start Time</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_end_type">End Type</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_end_time">End Time</th>
+                                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_duration">Duration</th>
+                                                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"><span class="sr-only" data-translate-key="table_remove">Remove</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="timetable-body" class="divide-y divide-gray-200 bg-white">
+                                                <!-- Dynamic rows will be inserted here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <p id="no-time-entries-message" class="text-center text-gray-500 py-4" data-translate-key="msg_no_time_entries">No time entries added yet.</p>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                     <!-- Follow up & Signatures -->
+                    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm space-y-6">
+                             <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_follow_up">Follow Up Action</legend>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-700" data-translate-key="label_work_complete">Work complete?</span>
+                                        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="work-complete" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div></label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-700" data-translate-key="label_follow_up_required">Follow up action required?</span>
+                                         <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="follow-up-required" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div></label>
+                                    </div>
+                                    <div>
+                                        <label for="follow-up-action" class="block text-sm font-medium text-gray-700" data-translate-key="label_action">Action</label>
+                                        <textarea id="follow-up-action" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_signature">Signature for Approval</legend>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_signature">Customer Signature</label>
+                                        <canvas id="customer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
+                                        <button type="button" onclick="clearSignature('customer-signature-canvas')" class="text-xs text-blue-600 hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
+                                    </div>
+                                     <div>
+                                        <label class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_signature">Fortna Engineer Signature</label>
+                                        <canvas id="engineer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
+                                        <button type="button" onclick="clearSignature('engineer-signature-canvas')" class="text-xs text-blue-600 hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2: Spare Parts & Photos -->
+                <div id="page-parts" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Spare Parts Section -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_spare_parts">Used Spare Parts</legend>
+                                <!-- Form to add new part -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
+                                    <div class="md:col-span-2">
+                                        <h3 class="font-medium text-gray-800" data-translate-key="title_add_part">Add New Part</h3>
+                                    </div>
+                                    <div>
+                                        <label for="part-qty" class="block text-sm font-medium text-gray-700" data-translate-key="label_qty">Qty.</label>
+                                        <input type="number" id="part-qty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="part-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_article_no">Article No.</label>
+                                        <input type="text" id="part-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="part-desc" class="block text-sm font-medium text-gray-700" data-translate-key="label_description">Description</label>
+                                        <input type="text" id="part-desc" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="part-location" class="block text-sm font-medium text-gray-700" data-translate-key="label_from_location">From Location</label>
+                                        <select id="part-location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <option value="FORTNA" data-translate-key="option_fortna">FORTNA</option>
+                                            <option value="Car" data-translate-key="option_car">Car</option>
+                                            <option value="Site" data-translate-key="option_site">Site</option>
+                                        </select>
+                                    </div>
+                                     <div>
+                                        <label for="part-order" class="block text-sm font-medium text-gray-700" data-translate-key="label_order">Order?</label>
+                                        <select id="part-order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <option value="No" data-translate-key="option_no">No</option>
+                                            <option value="Yes" data-translate-key="option_yes">Yes</option>
+                                        </select>
+                                    </div>
+                                     <div class="md:col-span-2">
+                                        <label for="part-ship-to" class="block text-sm font-medium text-gray-700" data-translate-key="label_ship_to">Ship to</label>
+                                        <select id="part-ship-to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <option value="Customer" data-translate-key="option_customer">Customer</option>
+                                            <option value="Pick up point" data-translate-key="option_pickup">Pick up point</option>
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2 text-right">
+                                        <button type="button" id="add-part-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_add_part">Add Part</button>
+                                    </div>
+                                </div>
+                                <!-- Table of added parts -->
+                                <div id="parts-list-container" class="mt-4 flow-root">
+                                    <div class="overflow-x-auto md:overflow-visible -mx-4 -my-2 sm:-mx-6 lg:-mx-8">
+                                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                             <table class="min-w-full divide-y divide-gray-300 responsive-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" data-translate-key="table_qty">Qty.</th>
+                                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_article_no">Article No.</th>
+                                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_description">Description</th>
+                                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_from">From</th>
+                                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_order">Order?</th>
+                                                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900" data-translate-key="table_ship_to">Ship to</th>
+                                                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0"><span class="sr-only" data-translate-key="table_remove">Remove</span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="parts-list-body" class="divide-y divide-gray-200 bg-white">
+                                                    <!-- Dynamic rows will be inserted here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <p id="no-parts-message" class="text-center text-gray-500 py-4" data-translate-key="msg_no_parts">No spare parts added yet.</p>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- Photos Section -->
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_photos">Photos</legend>
+                                <div class="mt-1">
+                                    <label id="photo-upload-label" for="photo-upload" class="w-full inline-flex justify-center items-center px-4 py-2 border border-dashed border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
+                                        <svg class="w-6 h-6 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0- 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        <span data-translate-key="btn_upload_photos">Click to upload photos</span>
+                                    </label>
+                                    <input id="photo-upload" name="photo-upload" type="file" class="sr-only" multiple accept="image/*">
+                                </div>
+                                <div id="photos-gallery" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <!-- Dynamic photo previews will be inserted here -->
+                                </div>
+                                 <p id="no-photos-message" class="text-center text-gray-500 py-4" data-translate-key="msg_no_photos">No photos uploaded yet.</p>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Footer -->
+                <footer class="pt-5">
+                    <div id="submission-feedback" class="hidden mb-4 p-4 text-sm rounded-lg" role="alert">
+                      <span class="font-medium" data-translate-key="msg_success_title">Success!</span> <span data-translate-key="msg_success_body">Your report has been submitted.</span>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                         <button type="button" onclick="window.print()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_print_pdf">
+                            Print / Save as PDF
+                        </button>
+                        <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_submit">
+                            Submit Report
+                        </button>
+                    </div>
+                </footer>
+            </form>
+        </main>
+    </div>
+    
+    <!-- Print-only Footer -->
+    <div id="print-footer">
+        <p>FORTNA International B.V. | Kaagschip 8 | 3991 CS Houten | NLD</p>
+        <p>Registered Seat Houten | Company Nr. 60397691 | VAT ID NL853892805B01</p>
+    </div>
+
+
+    <script>
+        // --- TRANSLATION MANAGEMENT ---
+        const translations = {
+            en: {
+                report_title: "Intervention Report",
+                report_subtitle: "Digital report for on-site interventions",
+                tab_details: "Report Details",
+                tab_parts: "Parts & Photos",
+                section_general_info: "General Information",
+                label_customer_site: "Customer & Site Location",
+                label_installation_group: "Installation Group",
+                label_contact_name: "Contact Name Customer",
+                label_case_sf: "CASE # SF",
+                label_customer_phone: "Phone Nr. Customer",
+                label_intervention_date: "Intervention Date",
+                label_inbound_call: "Inbound Call Time",
+                label_agreement_type: "Agreement Type",
+                option_other: "Other",
+                label_please_specify: "Please specify",
+                section_intervention_type: "Type of Intervention",
+                option_inspection: "Inspection",
+                option_maintenance: "Maintenance",
+                option_training: "Training",
+                option_malfunction: "Malfunction",
+                section_malfunction_desc: "Description of Malfunction",
+                label_item_no: "Item No:",
+                label_message_no: "Message No:",
+                label_description: "Description",
+                section_timetable: "Timetable",
+                title_add_entry: "Add Engineer Time Entry",
+                label_engineer_name: "Engineer Name",
+                label_date: "Date",
+                label_start_type: "Start Type",
+                option_arrival: "Arrival",
+                option_remote_start: "Remote support start",
+                label_start_time: "Start Time",
+                label_end_type: "End Type",
+                option_departure: "Departure",
+                option_remote_end: "Remote support end",
+                label_end_time: "End Time",
+                btn_add_entry: "+ Add Entry",
+                table_engineer: "Engineer",
+                table_date: "Date",
+                table_start_type: "Start Type",
+                table_start_time: "Start Time",
+                table_end_type: "End Type",
+                table_end_time: "End Time",
+                table_duration: "Duration",
+                table_remove: "Remove",
+                msg_no_time_entries: "No time entries added yet.",
+                section_follow_up: "Follow Up Action",
+                label_work_complete: "Work complete?",
+                label_follow_up_required: "Follow up action required?",
+                label_action: "Action",
+                section_signature: "Signature for Approval",
+                label_customer_signature: "Customer Signature",
+                btn_clear: "Clear",
+                label_engineer_signature: "Fortna Engineer Signature",
+                section_spare_parts: "Used Spare Parts",
+                title_add_part: "Add New Part",
+                label_qty: "Qty.",
+                label_article_no: "Article No.",
+                label_from_location: "From Location",
+                option_fortna: "FORTNA",
+                option_car: "Car",
+                option_site: "Site",
+                label_order: "Order?",
+                option_no: "No",
+                option_yes: "Yes",
+                label_ship_to: "Ship to",
+                option_customer: "Customer",
+                option_pickup: "Pick up point",
+                btn_add_part: "Add Part",
+                table_qty: "Qty.",
+                table_article_no: "Article No.",
+                table_description: "Description",
+                table_from: "From",
+                table_order: "Order?",
+                table_ship_to: "Ship to",
+                msg_no_parts: "No spare parts added yet.",
+                section_photos: "Photos",
+                btn_upload_photos: "Click to upload photos",
+                msg_no_photos: "No photos uploaded yet.",
+                msg_success_title: "Success!",
+                msg_success_body: "Your report has been submitted.",
+                btn_print_pdf: "Print / Save as PDF",
+                btn_submit: "Submit Report",
+                alert_fill_time_entry: "Please fill in all fields for the time entry.",
+                alert_fill_part_entry: "Please fill in Qty, Article No, and Description."
+            },
+            nl: {
+                report_title: "Interventierapport",
+                report_subtitle: "Digitaal rapport voor interventies op locatie",
+                tab_details: "Rapportdetails",
+                tab_parts: "Onderdelen & Foto's",
+                section_general_info: "Algemene Informatie",
+                label_customer_site: "Klant & Sitenaam",
+                label_installation_group: "Installatiegroep",
+                label_contact_name: "Naam Contactpersoon Klant",
+                label_case_sf: "CASE # SF",
+                label_customer_phone: "Telefoonnr. Klant",
+                label_intervention_date: "Interventiedatum",
+                label_inbound_call: "Tijd Inkomend Gesprek",
+                label_agreement_type: "Contractvorm",
+                option_other: "Overig",
+                label_please_specify: "Gelieve te specificeren",
+                section_intervention_type: "Soort Interventie",
+                option_inspection: "Inspectie",
+                option_maintenance: "Onderhoud",
+                option_training: "Training",
+                option_malfunction: "Storing",
+                section_malfunction_desc: "Beschrijving van de Storing",
+                label_item_no: "Item Nr:",
+                label_message_no: "Meldingsnr:",
+                label_description: "Beschrijving",
+                section_timetable: "Tijdsregistratie",
+                title_add_entry: "Voeg Tijdsinvoer Engineer Toe",
+                label_engineer_name: "Naam Engineer",
+                label_date: "Datum",
+                label_start_type: "Starttype",
+                option_arrival: "Aankomst",
+                option_remote_start: "Hulp op afstand start",
+                label_start_time: "Starttijd",
+                label_end_type: "Eindtype",
+                option_departure: "Vertrek",
+                option_remote_end: "Hulp op afstand einde",
+                label_end_time: "Eindtijd",
+                btn_add_entry: "+ Toevoegen",
+                table_engineer: "Engineer",
+                table_date: "Datum",
+                table_start_type: "Starttype",
+                table_start_time: "Starttijd",
+                table_end_type: "Eindtype",
+                table_end_time: "Eindtijd",
+                table_duration: "Duur",
+                table_remove: "Verwijder",
+                msg_no_time_entries: "Nog geen tijdsinvoeren toegevoegd.",
+                section_follow_up: "Vervolgactie",
+                label_work_complete: "Werk afgerond?",
+                label_follow_up_required: "Vervolgactie vereist?",
+                label_action: "Actie",
+                section_signature: "Handtekening voor Akkoord",
+                label_customer_signature: "Handtekening Klant",
+                btn_clear: "Wissen",
+                label_engineer_signature: "Handtekening Fortna Engineer",
+                section_spare_parts: "Gebruikte Reserveonderdelen",
+                title_add_part: "Nieuw Onderdeel Toevoegen",
+                label_qty: "Aant.",
+                label_article_no: "Artikelnr.",
+                label_from_location: "Van Locatie",
+                option_fortna: "FORTNA",
+                option_car: "Auto",
+                option_site: "Site",
+                label_order: "Bestellen?",
+                option_no: "Nee",
+                option_yes: "Ja",
+                label_ship_to: "Verzenden naar",
+                option_customer: "Klant",
+                option_pickup: "Ophaalpunt",
+                btn_add_part: "Onderdeel Toevoegen",
+                table_qty: "Aant.",
+                table_article_no: "Artikelnr.",
+                table_description: "Beschrijving",
+                table_from: "Van",
+                table_order: "Bestellen?",
+                table_ship_to: "Verzenden naar",
+                msg_no_parts: "Nog geen reserveonderdelen toegevoegd.",
+                section_photos: "Foto's",
+                btn_upload_photos: "Klik om foto's te uploaden",
+                msg_no_photos: "Nog geen foto's geüpload.",
+                msg_success_title: "Succes!",
+                msg_success_body: "Uw rapport is verzonden.",
+                btn_print_pdf: "Print / Opslaan als PDF",
+                btn_submit: "Rapport Verzenden",
+                alert_fill_time_entry: "Vul alstublieft alle velden voor de tijdsinvoer in.",
+                alert_fill_part_entry: "Vul alstublieft Aantal, Artikelnr. en Beschrijving in."
+            },
+            de: {
+                report_title: "Interventionsbericht",
+                report_subtitle: "Digitaler Bericht für Vor-Ort-Einsätze",
+                tab_details: "Berichtsdetails",
+                tab_parts: "Teile & Fotos",
+                section_general_info: "Allgemeine Informationen",
+                label_customer_site: "Kunde & Standort",
+                label_installation_group: "Installationsgruppe",
+                label_contact_name: "Ansprechpartner Kunde",
+                label_case_sf: "FALL # SF",
+                label_customer_phone: "Telefonnr. Kunde",
+                label_intervention_date: "Interventionsdatum",
+                label_inbound_call: "Zeit des Eingangsanrufs",
+                label_agreement_type: "Vertragsart",
+                option_other: "Andere",
+                label_please_specify: "Bitte angeben",
+                section_intervention_type: "Art der Intervention",
+                option_inspection: "Inspektion",
+                option_maintenance: "Wartung",
+                option_training: "Schulung",
+                option_malfunction: "Störung",
+                section_malfunction_desc: "Beschreibung der Störung",
+                label_item_no: "Artikel-Nr.:",
+                label_message_no: "Meldungs-Nr.:",
+                label_description: "Beschreibung",
+                section_timetable: "Zeiterfassung",
+                title_add_entry: "Zeiteintrag für Techniker hinzufügen",
+                label_engineer_name: "Name des Technikers",
+                label_date: "Datum",
+                label_start_type: "Starttyp",
+                option_arrival: "Ankunft",
+                option_remote_start: "Fernsupport Start",
+                label_start_time: "Startzeit",
+                label_end_type: "Endtyp",
+                option_departure: "Abfahrt",
+                option_remote_end: "Fernsupport Ende",
+                label_end_time: "Endzeit",
+                btn_add_entry: "+ Eintrag hinzufügen",
+                table_engineer: "Techniker",
+                table_date: "Datum",
+                table_start_type: "Starttyp",
+                table_start_time: "Startzeit",
+                table_end_type: "Endtyp",
+                table_end_time: "Endzeit",
+                table_duration: "Dauer",
+                table_remove: "Entfernen",
+                msg_no_time_entries: "Noch keine Zeiteinträge hinzugefügt.",
+                section_follow_up: "Folgemassnahme",
+                label_work_complete: "Arbeit abgeschlossen?",
+                label_follow_up_required: "Folgemassnahme erforderlich?",
+                label_action: "Massnahme",
+                section_signature: "Unterschrift zur Genehmigung",
+                label_customer_signature: "Kundenunterschrift",
+                btn_clear: "Löschen",
+                label_engineer_signature: "Unterschrift Fortna Techniker",
+                section_spare_parts: "Verwendete Ersatzteile",
+                title_add_part: "Neues Teil hinzufügen",
+                label_qty: "Menge",
+                label_article_no: "Artikel-Nr.",
+                label_from_location: "Von Standort",
+                option_fortna: "FORTNA",
+                option_car: "Auto",
+                option_site: "Standort",
+                label_order: "Bestellen?",
+                option_no: "Nein",
+                option_yes: "Ja",
+                label_ship_to: "Versenden an",
+                option_customer: "Kunde",
+                option_pickup: "Abholpunkt",
+                btn_add_part: "Teil hinzufügen",
+                table_qty: "Menge",
+                table_article_no: "Artikel-Nr.",
+                table_description: "Beschreibung",
+                table_from: "Von",
+                table_order: "Bestellen?",
+                table_ship_to: "Versenden an",
+                msg_no_parts: "Noch keine Ersatzteile hinzugefügt.",
+                section_photos: "Fotos",
+                btn_upload_photos: "Klicken, um Fotos hochzuladen",
+                msg_no_photos: "Noch keine Fotos hochgeladen.",
+                msg_success_title: "Erfolg!",
+                msg_success_body: "Ihr Bericht wurde übermittelt.",
+                btn_print_pdf: "Drucken / Als PDF speichern",
+                btn_submit: "Bericht senden",
+                alert_fill_time_entry: "Bitte füllen Sie alle Felder für den Zeiteintrag aus.",
+                alert_fill_part_entry: "Bitte füllen Sie Menge, Artikel-Nr. und Beschreibung aus."
+            },
+            it: {
+                report_title: "Rapporto di Intervento",
+                report_subtitle: "Rapporto digitale per interventi in loco",
+                tab_details: "Dettagli Rapporto",
+                tab_parts: "Parti e Foto",
+                section_general_info: "Informazioni Generali",
+                label_customer_site: "Cliente e Sede",
+                label_installation_group: "Gruppo di Installazione",
+                label_contact_name: "Nome Contatto Cliente",
+                label_case_sf: "CASO # SF",
+                label_customer_phone: "Tel. Cliente",
+                label_intervention_date: "Data Intervento",
+                label_inbound_call: "Ora Chiamata in Entrata",
+                label_agreement_type: "Tipo di Contratto",
+                option_other: "Altro",
+                label_please_specify: "Si prega di specificare",
+                section_intervention_type: "Tipo di Intervento",
+                option_inspection: "Ispezione",
+                option_maintenance: "Manutenzione",
+                option_training: "Formazione",
+                option_malfunction: "Guasto",
+                section_malfunction_desc: "Descrizione del Guasto",
+                label_item_no: "Codice Articolo:",
+                label_message_no: "Nr. Messaggio:",
+                label_description: "Descrizione",
+                section_timetable: "Orario",
+                title_add_entry: "Aggiungi Orario Tecnico",
+                label_engineer_name: "Nome Tecnico",
+                label_date: "Data",
+                label_start_type: "Tipo Inizio",
+                option_arrival: "Arrivo",
+                option_remote_start: "Inizio supporto remoto",
+                label_start_time: "Ora Inizio",
+                label_end_type: "Tipo Fine",
+                option_departure: "Partenza",
+                option_remote_end: "Fine supporto remoto",
+                label_end_time: "Ora Fine",
+                btn_add_entry: "+ Aggiungi Voce",
+                table_engineer: "Tecnico",
+                table_date: "Data",
+                table_start_type: "Tipo Inizio",
+                table_start_time: "Ora Inizio",
+                table_end_type: "Tipo Fine",
+                table_end_time: "Ora Fine",
+                table_duration: "Durata",
+                table_remove: "Rimuovi",
+                msg_no_time_entries: "Nessun orario ancora aggiunto.",
+                section_follow_up: "Azione Successiva",
+                label_work_complete: "Lavoro completato?",
+                label_follow_up_required: "Azione successiva richiesta?",
+                label_action: "Azione",
+                section_signature: "Firma per Approvazione",
+                label_customer_signature: "Firma Cliente",
+                btn_clear: "Cancella",
+                label_engineer_signature: "Firma Tecnico Fortna",
+                section_spare_parts: "Parti di Ricambio Utilizzate",
+                title_add_part: "Aggiungi Nuova Parte",
+                label_qty: "Qtà.",
+                label_article_no: "Codice Articolo",
+                label_from_location: "Da Posizione",
+                option_fortna: "FORTNA",
+                option_car: "Auto",
+                option_site: "Sede",
+                label_order: "Ordinare?",
+                option_no: "No",
+                option_yes: "Sì",
+                label_ship_to: "Spedire a",
+                option_customer: "Cliente",
+                option_pickup: "Punto di ritiro",
+                btn_add_part: "Aggiungi Parte",
+                table_qty: "Qtà.",
+                table_article_no: "Codice Articolo",
+                table_description: "Descrizione",
+                table_from: "Da",
+                table_order: "Ordinare?",
+                table_ship_to: "Spedire a",
+                msg_no_parts: "Nessuna parte di ricambio ancora aggiunta.",
+                section_photos: "Foto",
+                btn_upload_photos: "Clicca per caricare foto",
+                msg_no_photos: "Nessuna foto ancora caricata.",
+                msg_success_title: "Successo!",
+                msg_success_body: "Il tuo rapporto è stato inviato.",
+                btn_print_pdf: "Stampa / Salva come PDF",
+                btn_submit: "Invia Rapporto",
+                alert_fill_time_entry: "Si prega di compilare tutti i campi per la registrazione dell'orario.",
+                alert_fill_part_entry: "Si prega di compilare Quantità, Codice Articolo e Descrizione."
+            },
+            pl: {
+                report_title: "Raport z Interwencji",
+                report_subtitle: "Cyfrowy raport z interwencji na miejscu",
+                tab_details: "Szczegóły Raportu",
+                tab_parts: "Części i Zdjęcia",
+                section_general_info: "Informacje Ogólne",
+                label_customer_site: "Klient i Lokalizacja",
+                label_installation_group: "Grupa Instalacyjna",
+                label_contact_name: "Osoba Kontaktowa Klienta",
+                label_case_sf: "SPRAWA # SF",
+                label_customer_phone: "Nr Tel. Klienta",
+                label_intervention_date: "Data Interwencji",
+                label_inbound_call: "Godzina Zgłoszenia",
+                label_agreement_type: "Rodzaj Umowy",
+                option_other: "Inny",
+                label_please_specify: "Proszę określić",
+                section_intervention_type: "Rodzaj Interwencji",
+                option_inspection: "Inspekcja",
+                option_maintenance: "Konserwacja",
+                option_training: "Szkolenie",
+                option_malfunction: "Awaria",
+                section_malfunction_desc: "Opis Awarii",
+                label_item_no: "Nr Pozycji:",
+                label_message_no: "Nr Wiadomości:",
+                label_description: "Opis",
+                section_timetable: "Harmonogram",
+                title_add_entry: "Dodaj Wpis Czasu Inżyniera",
+                label_engineer_name: "Imię i Nazwisko Inżyniera",
+                label_date: "Data",
+                label_start_type: "Typ Rozpoczęcia",
+                option_arrival: "Przybycie",
+                option_remote_start: "Start zdalnego wsparcia",
+                label_start_time: "Godzina Rozpoczęcia",
+                label_end_type: "Typ Zakończenia",
+                option_departure: "Wyjazd",
+                option_remote_end: "Koniec zdalnego wsparcia",
+                label_end_time: "Godzina Zakończenia",
+                btn_add_entry: "+ Dodaj Wpis",
+                table_engineer: "Inżynier",
+                table_date: "Data",
+                table_start_type: "Typ Rozpoczęcia",
+                table_start_time: "Godzina Rozpoczęcia",
+                table_end_type: "Typ Zakończenia",
+                table_end_time: "Godzina Zakończenia",
+                table_duration: "Czas Trwania",
+                table_remove: "Usuń",
+                msg_no_time_entries: "Brak dodanych wpisów czasu.",
+                section_follow_up: "Dalsze Działania",
+                label_work_complete: "Praca ukończona?",
+                label_follow_up_required: "Wymagane dalsze działania?",
+                label_action: "Działanie",
+                section_signature: "Podpis do Zatwierdzenia",
+                label_customer_signature: "Podpis Klienta",
+                btn_clear: "Wyczyść",
+                label_engineer_signature: "Podpis Inżyniera Fortna",
+                section_spare_parts: "Użyte Części Zamienne",
+                title_add_part: "Dodaj Nową Część",
+                label_qty: "Ilość",
+                label_article_no: "Nr Artykułu",
+                label_from_location: "Z Lokalizacji",
+                option_fortna: "FORTNA",
+                option_car: "Samochód",
+                option_site: "Lokalizacja",
+                label_order: "Zamówić?",
+                option_no: "Nie",
+                option_yes: "Tak",
+                label_ship_to: "Wysłać do",
+                option_customer: "Klient",
+                option_pickup: "Punkt odbioru",
+                btn_add_part: "Dodaj Część",
+                table_qty: "Ilość",
+                table_article_no: "Nr Artykułu",
+                table_description: "Opis",
+                table_from: "Z",
+                table_order: "Zamówić?",
+                table_ship_to: "Wysłać do",
+                msg_no_parts: "Brak dodanych części zamiennych.",
+                section_photos: "Zdjęcia",
+                btn_upload_photos: "Kliknij, aby przesłać zdjęcia",
+                msg_no_photos: "Brak przesłanych zdjęć.",
+                msg_success_title: "Sukces!",
+                msg_success_body: "Twój raport został przesłany.",
+                btn_print_pdf: "Drukuj / Zapisz jako PDF",
+                btn_submit: "Wyślij Raport",
+                alert_fill_time_entry: "Proszę wypełnić wszystkie pola wpisu czasu.",
+                alert_fill_part_entry: "Proszę wypełnić Ilość, Nr Artykułu i Opis."
+            }
+        };
+
+        const languageSwitcher = document.getElementById('language-switcher');
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang; // Set the lang attribute on the HTML tag
+            const elements = document.querySelectorAll('[data-translate-key]');
+            elements.forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            localStorage.setItem('language', lang); // Save preference
+            languageSwitcher.value = lang;
+            renderTimeEntries(); // Re-render tables with correct labels
+            renderSpareParts();
+        }
+
+        languageSwitcher.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+
+
+        // --- TAB MANAGEMENT ---
+        const pageDetails = document.getElementById('page-details');
+        const pageParts = document.getElementById('page-parts');
+        const tabDetails = document.getElementById('tab-details');
+        const tabParts = document.getElementById('tab-parts');
+
+        function switchTab(tab) {
+            if (tab === 'details') {
+                pageDetails.classList.remove('hidden');
+                pageParts.classList.add('hidden');
+                tabDetails.classList.add('tab-active');
+                tabParts.classList.remove('tab-active');
+            } else {
+                pageDetails.classList.add('hidden');
+                pageParts.classList.remove('hidden');
+                tabDetails.classList.remove('tab-active');
+                tabParts.classList.add('tab-active');
+            }
+        }
+        
+        // --- INTERVENTION TYPE OTHER FIELD ---
+        const interventionOtherCheckbox = document.getElementById('intervention-type-other-checkbox');
+        const interventionOtherContainer = document.getElementById('intervention-other-container');
+
+        interventionOtherCheckbox.addEventListener('change', () => {
+            if (interventionOtherCheckbox.checked) {
+                interventionOtherContainer.classList.remove('hidden');
+            } else {
+                interventionOtherContainer.classList.add('hidden');
+            }
+        });
+
+        // --- TIMETABLE MANAGEMENT ---
+        const addTimeEntryBtn = document.getElementById('add-time-entry-btn');
+        const timetableBody = document.getElementById('timetable-body');
+        const noTimeEntriesMessage = document.getElementById('no-time-entries-message');
+        const timetableContainer = document.getElementById('timetable-container');
+        let timeEntries = [];
+
+        function renderTimeEntries() {
+            const lang = localStorage.getItem('language') || 'en';
+            timetableBody.innerHTML = '';
+            if (timeEntries.length === 0) {
+                noTimeEntriesMessage.style.display = 'block';
+                timetableContainer.querySelector('table').style.display = 'none';
+            } else {
+                noTimeEntriesMessage.style.display = 'none';
+                timetableContainer.querySelector('table').style.display = 'table';
+                timeEntries.forEach((entry, index) => {
+                    const tr = document.createElement('tr');
+                    
+                    let durationStr = 'N/A';
+                    if (entry.arrival && entry.departure) {
+                        const startTime = new Date(`1970-01-01T${entry.arrival}`);
+                        const endTime = new Date(`1970-01-01T${entry.departure}`);
+                        if (endTime > startTime) {
+                            const diffMs = endTime - startTime;
+                            const diffHrs = Math.floor(diffMs / 3600000);
+                            const diffMins = Math.round((diffMs % 3600000) / 60000);
+                            const pad = (num) => num.toString().padStart(2, '0');
+                            durationStr = `${pad(diffHrs)}:${pad(diffMins)}`;
+                        } else {
+                            durationStr = 'Invalid';
+                        }
+                    }
+                    
+                    const removeText = translations[lang]['table_remove'] || 'Remove';
+
+                    tr.innerHTML = `
+                        <td data-label="${translations[lang]['table_engineer'] || 'Engineer'}">${entry.engineer}</td>
+                        <td data-label="${translations[lang]['table_date'] || 'Date'}">${entry.date}</td>
+                        <td data-label="${translations[lang]['table_start_type'] || 'Start Type'}">${entry.startType}</td>
+                        <td data-label="${translations[lang]['table_start_time'] || 'Start Time'}">${entry.arrival}</td>
+                        <td data-label="${translations[lang]['table_end_type'] || 'End Type'}">${entry.endType}</td>
+                        <td data-label="${translations[lang]['table_end_time'] || 'End Time'}">${entry.departure}</td>
+                        <td data-label="${translations[lang]['table_duration'] || 'Duration'}" class="font-medium text-gray-800">${durationStr}</td>
+                        <td class="remove-btn">
+                            <button type="button" onclick="removeTimeEntry(${index})" class="text-red-600 hover:text-red-900">${removeText}</button>
+                        </td>
+                    `;
+                    timetableBody.appendChild(tr);
+                });
+            }
+        }
+
+        function removeTimeEntry(index) {
+            timeEntries.splice(index, 1);
+            renderTimeEntries();
+        }
+
+        addTimeEntryBtn.addEventListener('click', () => {
+            const engineer = document.getElementById('engineer-name').value;
+            const date = document.getElementById('entry-date').value;
+            const startTypeSelect = document.getElementById('start-type');
+            const startType = startTypeSelect.options[startTypeSelect.selectedIndex].text;
+            const arrival = document.getElementById('arrival-time').value;
+            const endTypeSelect = document.getElementById('end-type');
+            const endType = endTypeSelect.options[endTypeSelect.selectedIndex].text;
+            const departure = document.getElementById('departure-time').value;
+
+            if (engineer && date && arrival && departure) {
+                timeEntries.push({ engineer, date, startType, arrival, endType, departure });
+                renderTimeEntries();
+                document.getElementById('engineer-name').value = '';
+                document.getElementById('entry-date').value = '';
+                document.getElementById('arrival-time').value = '';
+                document.getElementById('departure-time').value = '';
+            } else {
+                const lang = localStorage.getItem('language') || 'en';
+                alert(translations[lang]['alert_fill_time_entry']);
+            }
+        });
+        
+        // --- SPARE PARTS MANAGEMENT ---
+        const addPartBtn = document.getElementById('add-part-btn');
+        const partsListBody = document.getElementById('parts-list-body');
+        const noPartsMessage = document.getElementById('no-parts-message');
+        const partsListContainer = document.getElementById('parts-list-container');
+        let spareParts = [];
+
+        function renderSpareParts() {
+            const lang = localStorage.getItem('language') || 'en';
+            partsListBody.innerHTML = ''; // Clear existing list
+            if (spareParts.length === 0) {
+                noPartsMessage.style.display = 'block';
+                partsListContainer.querySelector('table').style.display = 'none';
+            } else {
+                noPartsMessage.style.display = 'none';
+                partsListContainer.querySelector('table').style.display = 'table';
+                spareParts.forEach((part, index) => {
+                    const tr = document.createElement('tr');
+                    const removeText = translations[lang]['table_remove'] || 'Remove';
+                    tr.innerHTML = `
+                        <td data-label="${translations[lang]['table_qty'] || 'Qty.'}">${part.qty}</td>
+                        <td data-label="${translations[lang]['table_article_no'] || 'Article No.'}">${part.no}</td>
+                        <td data-label="${translations[lang]['table_description'] || 'Description'}">${part.desc}</td>
+                        <td data-label="${translations[lang]['table_from'] || 'From'}">${part.location}</td>
+                        <td data-label="${translations[lang]['table_order'] || 'Order?'}">${part.order}</td>
+                        <td data-label="${translations[lang]['table_ship_to'] || 'Ship to'}">${part.shipTo}</td>
+                        <td class="remove-btn">
+                            <button type="button" onclick="removePart(${index})" class="text-red-600 hover:text-red-900">${removeText}</button>
+                        </td>
+                    `;
+                    partsListBody.appendChild(tr);
+                });
+            }
+        }
+        
+        function removePart(index) {
+            spareParts.splice(index, 1);
+            renderSpareParts();
+        }
+
+        addPartBtn.addEventListener('click', () => {
+            const qty = document.getElementById('part-qty').value;
+            const no = document.getElementById('part-no').value;
+            const desc = document.getElementById('part-desc').value;
+            const locationSelect = document.getElementById('part-location');
+            const location = locationSelect.options[locationSelect.selectedIndex].text;
+            const orderSelect = document.getElementById('part-order');
+            const order = orderSelect.options[orderSelect.selectedIndex].text;
+            const shipToSelect = document.getElementById('part-ship-to');
+            const shipTo = shipToSelect.options[shipToSelect.selectedIndex].text;
+
+            if (qty && no && desc) {
+                spareParts.push({ qty, no, desc, location, order, shipTo });
+                renderSpareParts();
+                document.getElementById('part-qty').value = '';
+                document.getElementById('part-no').value = '';
+                document.getElementById('part-desc').value = '';
+            } else {
+                 const lang = localStorage.getItem('language') || 'en';
+                alert(translations[lang]['alert_fill_part_entry']);
+            }
+        });
+        
+        // --- PHOTO MANAGEMENT ---
+        const photoUpload = document.getElementById('photo-upload');
+        const photosGallery = document.getElementById('photos-gallery');
+        const noPhotosMessage = document.getElementById('no-photos-message');
+        let photos = []; 
+
+        function renderPhotos() {
+            photosGallery.innerHTML = '';
+            if (photos.length === 0) {
+                noPhotosMessage.style.display = 'block';
+            } else {
+                noPhotosMessage.style.display = 'none';
+                photos.forEach((photo, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'relative group';
+                    div.innerHTML = `
+                        <img src="${photo.dataUrl}" alt="${photo.name}" class="object-cover w-full h-32 rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center transition-opacity rounded-lg remove-btn">
+                            <button type="button" onclick="removePhoto(${index})" class="text-white opacity-0 group-hover:opacity-100 p-2 bg-red-600 rounded-full">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    photosGallery.appendChild(div);
+                });
+            }
+        }
+        
+        function removePhoto(index) {
+            photos.splice(index, 1);
+            renderPhotos();
+        }
+
+        photoUpload.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files) {
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        photos.push({ name: file.name, dataUrl: e.target.result });
+                        renderPhotos();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+        
+        // --- SIGNATURE PAD MANAGEMENT ---
+        function setupSignaturePad(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+
+            function getMousePos(canvas, evt) {
+                const rect = canvas.getBoundingClientRect();
+                return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+            }
+            
+            function getTouchPos(canvas, touch) {
+                const rect = canvas.getBoundingClientRect();
+                return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+            }
+
+            function startDrawing(e) { drawing = true; draw(e); }
+            function stopDrawing() { drawing = false; ctx.beginPath(); }
+
+            function draw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#333';
+                let pos = e.type.startsWith('touch') ? getTouchPos(canvas, e.touches[0]) : getMousePos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+
+            ['mousedown', 'touchstart'].forEach(event => canvas.addEventListener(event, startDrawing));
+            ['mouseup', 'mouseleave', 'touchend'].forEach(event => canvas.addEventListener(event, stopDrawing));
+            ['mousemove', 'touchmove'].forEach(event => canvas.addEventListener(event, draw));
+        }
+
+        function clearSignature(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- INITIAL PAGE LOAD ---
+        window.addEventListener('load', () => {
+            const canvases = document.querySelectorAll('.signature-canvas');
+            canvases.forEach(canvas => {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                setupSignaturePad(canvas.id);
+            });
+            const savedLang = localStorage.getItem('language') || 'en';
+            setLanguage(savedLang);
+            renderTimeEntries();
+            renderSpareParts();
+            renderPhotos();
+        });
+        
+        // --- FORM SUBMISSION ---
+        const form = document.getElementById('intervention-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const interventionTypes = Array.from(document.querySelectorAll('input[name="intervention-type"]:checked')).map(el => el.value);
+            const formData = {
+                generalInfo: {
+                    customerSite: document.getElementById('customer-site').value,
+                    installationGroup: document.getElementById('installation-group').value,
+                    contactName: document.getElementById('contact-name').value,
+                    caseSF: document.getElementById('case-sf').value,
+                    customerPhone: document.getElementById('customer-phone').value,
+                    agreementType: document.querySelector('input[name="agreement-type"]:checked')?.value || '',
+                    agreementOtherText: document.getElementById('agreement-other-text').value,
+                    date: document.getElementById('date').value,
+                    inboundCall: document.getElementById('inbound-call').value,
+                },
+                intervention: { types: interventionTypes, other: document.getElementById('intervention-other-text').value },
+                timetable: timeEntries,
+                malfunction: {
+                    itemNo: document.getElementById('item-no').value,
+                    messageNo: document.getElementById('message-no').value,
+                    description: document.getElementById('malfunction-description').value,
+                },
+                followUp: {
+                    workComplete: document.getElementById('work-complete').checked,
+                    followUpRequired: document.getElementById('follow-up-required').checked,
+                    action: document.getElementById('follow-up-action').value,
+                },
+                signatures: {
+                    customer: document.getElementById('customer-signature-canvas').toDataURL(),
+                    engineer: document.getElementById('engineer-signature-canvas').toDataURL(),
+                },
+                spareParts: spareParts,
+                photos: photos.map(p => ({ name: p.name, data: p.dataUrl })),
+            };
+
+            console.log("Form Data Submitted:", JSON.stringify(formData, null, 2));
+            const feedback = document.getElementById('submission-feedback');
+            feedback.classList.remove('hidden');
+            feedback.classList.add('bg-green-100', 'text-green-700');
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+
+</body>
+</html>
+
