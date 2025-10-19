@@ -9,6 +9,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            font-size: 1.05rem; /* Increased base font size */
         }
         .signature-canvas {
             border: 2px dashed #d1d5db;
@@ -30,11 +31,36 @@
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
-        /* Initially hide print-only elements */
-        #print-header, #print-footer {
-            display: none;
+
+        /* Custom styles for clearer input fields */
+        #intervention-form input[type="text"],
+        #intervention-form input[type="tel"],
+        #intervention-form input[type="date"],
+        #intervention-form input[type="time"],
+        #intervention-form input[type="number"],
+        #intervention-form textarea,
+        #intervention-form select {
+            background-color: #f9fafb; /* bg-gray-50 */
+            padding-top: 0.65rem;
+            padding-bottom: 0.65rem;
+            border-color: #d1d5db; /* gray-300 */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
 
+        /* Custom focus styles */
+        #intervention-form input[type="text"]:focus,
+        #intervention-form input[type="tel"]:focus,
+        #intervention-form input[type="date"]:focus,
+        #intervention-form input[type="time"]:focus,
+        #intervention-form input[type="number"]:focus,
+        #intervention-form textarea:focus,
+        #intervention-form select:focus {
+            background-color: white;
+            border-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            outline: none; /* remove default outline */
+        }
+        
         /* Mobile-proof tables */
         @media (max-width: 767px) {
             .responsive-table thead {
@@ -75,20 +101,15 @@
         @media print {
             body {
                 background-color: #fff;
-                margin: 0;
             }
             header, nav, footer, #add-time-entry-btn, .add-part-form, #photo-upload-label, .remove-btn, .clear-signature-btn, #language-switcher {
                 display: none !important;
             }
             .container {
                 max-width: 100% !important;
-                padding: 0 1in !important; /* Standard A4 margins */
+                padding: 0 !important;
                 margin: 0 !important;
             }
-             main {
-                 padding-top: 100px; /* Space for fixed header */
-                 padding-bottom: 80px; /* Space for fixed footer */
-             }
             #page-details, #page-parts {
                 display: block !important;
             }
@@ -126,43 +147,31 @@
             #photos-gallery {
                 grid-template-columns: repeat(3, 1fr) !important;
             }
-            #photos-gallery img {
-                object-fit: contain !important; /* Fit image without stretching */
-                height: 500px !important; /* Give a consistent height */
-                width: 100%;
-                background-color: #f9fafb; /* Add light background for letterboxing */
-            }
             
-            /* Letterhead for printing */
-            #print-header, #print-footer {
-                display: block;
-                position: fixed;
+            /* Letterhead/Watermark for printing */
+            body::after {
+                content: "";
+                /* Base64 encoded SVG of a faint, rotated FORTNA text watermark */
+                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgwIiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDUiIHRyYW5zZm9ybT0icm90YXRlKC00NSAyNTAgMjUwKSI+Rk9SVE5BPC90ZXh0Pjwvc3ZnPg==');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 80vmin;
+                position: fixed; /* Use fixed to cover the whole viewport */
+                top: 0;
                 left: 0;
                 right: 0;
-                padding: 0 1in;
-            }
-            #print-header {
-                top: 0;
-                padding-top: 0.5in;
-                text-align: center; /* Center the logo */
-            }
-            #print-footer {
                 bottom: 0;
-                padding-bottom: 0.5in;
-                border-top: 1px solid #e5e7eb;
-                font-size: 8pt;
-                color: #6b7280;
-                text-align: center;
+                z-index: -1;
+            }
+
+            #main-content {
+                position: relative;
+                z-index: 1; /* Ensure content is above the watermark */
             }
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
-
-    <!-- Print-only Header -->
-    <div id="print-header">
-        <img src="https://www.fortna.com/wp-content/uploads/2022/10/IMG-Fortna-logo-new-transparent-335x255-1.png" alt="Fortna Logo" class="h-16 inline-block">
-    </div>
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         <!-- Header -->
@@ -403,6 +412,10 @@
                                         <canvas id="customer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
                                         <button type="button" onclick="clearSignature('customer-signature-canvas')" class="text-xs text-blue-600 hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
                                     </div>
+                                    <div>
+                                        <label for="customer-email" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_email">Customer Email Address</label>
+                                        <input type="email" id="customer-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="name@example.com">
+                                    </div>
                                      <div>
                                         <label class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_signature">Fortna Engineer Signature</label>
                                         <canvas id="engineer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
@@ -513,7 +526,7 @@
                 <!-- Submission Footer -->
                 <footer class="pt-5">
                     <div id="submission-feedback" class="hidden mb-4 p-4 text-sm rounded-lg" role="alert">
-                      <span class="font-medium" data-translate-key="msg_success_title">Success!</span> <span data-translate-key="msg_success_body">Your report has been submitted.</span>
+                      <span class="font-medium" data-translate-key="msg_success_title">Success!</span> <span id="submission-feedback-body" data-translate-key="msg_success_body_download">Your report has been downloaded.</span>
                     </div>
                     <div class="flex justify-end space-x-3">
                          <button type="button" onclick="window.print()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_print_pdf">
@@ -527,13 +540,6 @@
             </form>
         </main>
     </div>
-    
-    <!-- Print-only Footer -->
-    <div id="print-footer">
-        <p>FORTNA International B.V. | Kaagschip 8 | 3991 CS Houten | NLD</p>
-        <p>Registered Seat Houten | Company Nr. 60397691 | VAT ID NL853892805B01</p>
-    </div>
-
 
     <script>
         // --- TRANSLATION MANAGEMENT ---
@@ -593,6 +599,7 @@
                 label_customer_signature: "Customer Signature",
                 btn_clear: "Clear",
                 label_engineer_signature: "Fortna Engineer Signature",
+                label_customer_email: "Customer Email Address",
                 section_spare_parts: "Used Spare Parts",
                 title_add_part: "Add New Part",
                 label_qty: "Qty.",
@@ -623,7 +630,10 @@
                 btn_print_pdf: "Print / Save as PDF",
                 btn_submit: "Submit Report",
                 alert_fill_time_entry: "Please fill in all fields for the time entry.",
-                alert_fill_part_entry: "Please fill in Qty, Article No, and Description."
+                alert_fill_part_entry: "Please fill in Qty, Article No, and Description.",
+                msg_success_body_download: "Your report has been downloaded as a JSON file.",
+                msg_success_body_email: "Report sent to {email} and a copy has been downloaded.",
+                msg_success_body_mailto: "Your email application has been opened to send the report to {email}."
             },
             nl: {
                 report_title: "Interventierapport",
@@ -680,6 +690,7 @@
                 label_customer_signature: "Handtekening Klant",
                 btn_clear: "Wissen",
                 label_engineer_signature: "Handtekening Fortna Engineer",
+                label_customer_email: "E-mailadres Klant",
                 section_spare_parts: "Gebruikte Reserveonderdelen",
                 title_add_part: "Nieuw Onderdeel Toevoegen",
                 label_qty: "Aant.",
@@ -710,7 +721,10 @@
                 btn_print_pdf: "Print / Opslaan als PDF",
                 btn_submit: "Rapport Verzenden",
                 alert_fill_time_entry: "Vul alstublieft alle velden voor de tijdsinvoer in.",
-                alert_fill_part_entry: "Vul alstublieft Aantal, Artikelnr. en Beschrijving in."
+                alert_fill_part_entry: "Vul alstublieft Aantal, Artikelnr. en Beschrijving in.",
+                msg_success_body_download: "Uw rapport is gedownload als een JSON-bestand.",
+                msg_success_body_email: "Rapport verzonden naar {email} en een kopie is gedownload.",
+                msg_success_body_mailto: "Uw e-mailprogramma is geopend om het rapport naar {email} te verzenden."
             },
             de: {
                 report_title: "Interventionsbericht",
@@ -767,6 +781,7 @@
                 label_customer_signature: "Kundenunterschrift",
                 btn_clear: "Löschen",
                 label_engineer_signature: "Unterschrift Fortna Techniker",
+                label_customer_email: "E-Mail-Adresse des Kunden",
                 section_spare_parts: "Verwendete Ersatzteile",
                 title_add_part: "Neues Teil hinzufügen",
                 label_qty: "Menge",
@@ -797,7 +812,10 @@
                 btn_print_pdf: "Drucken / Als PDF speichern",
                 btn_submit: "Bericht senden",
                 alert_fill_time_entry: "Bitte füllen Sie alle Felder für den Zeiteintrag aus.",
-                alert_fill_part_entry: "Bitte füllen Sie Menge, Artikel-Nr. und Beschreibung aus."
+                alert_fill_part_entry: "Bitte füllen Sie Menge, Artikel-Nr. und Beschreibung aus.",
+                msg_success_body_download: "Ihr Bericht wurde als JSON-Datei heruntergeladen.",
+                msg_success_body_email: "Bericht an {email} gesendet und eine Kopie wurde heruntergeladen.",
+                msg_success_body_mailto: "Ihre E-Mail-Anwendung wurde geöffnet, um den Bericht an {email} zu senden."
             },
             it: {
                 report_title: "Rapporto di Intervento",
@@ -854,6 +872,7 @@
                 label_customer_signature: "Firma Cliente",
                 btn_clear: "Cancella",
                 label_engineer_signature: "Firma Tecnico Fortna",
+                label_customer_email: "Indirizzo Email Cliente",
                 section_spare_parts: "Parti di Ricambio Utilizzate",
                 title_add_part: "Aggiungi Nuova Parte",
                 label_qty: "Qtà.",
@@ -884,7 +903,10 @@
                 btn_print_pdf: "Stampa / Salva come PDF",
                 btn_submit: "Invia Rapporto",
                 alert_fill_time_entry: "Si prega di compilare tutti i campi per la registrazione dell'orario.",
-                alert_fill_part_entry: "Si prega di compilare Quantità, Codice Articolo e Descrizione."
+                alert_fill_part_entry: "Si prega di compilare Quantità, Codice Articolo e Descrizione.",
+                msg_success_body_download: "Il tuo rapporto è stato scaricato come file JSON.",
+                msg_success_body_email: "Rapporto inviato a {email} e una copia è stata scaricata.",
+                msg_success_body_mailto: "La tua applicazione di posta elettronica è stata aperta per inviare il rapporto a {email}."
             },
             pl: {
                 report_title: "Raport z Interwencji",
@@ -941,6 +963,7 @@
                 label_customer_signature: "Podpis Klienta",
                 btn_clear: "Wyczyść",
                 label_engineer_signature: "Podpis Inżyniera Fortna",
+                label_customer_email: "Adres e-mail klienta",
                 section_spare_parts: "Użyte Części Zamienne",
                 title_add_part: "Dodaj Nową Część",
                 label_qty: "Ilość",
@@ -971,7 +994,10 @@
                 btn_print_pdf: "Drukuj / Zapisz jako PDF",
                 btn_submit: "Wyślij Raport",
                 alert_fill_time_entry: "Proszę wypełnić wszystkie pola wpisu czasu.",
-                alert_fill_part_entry: "Proszę wypełnić Ilość, Nr Artykułu i Opis."
+                alert_fill_part_entry: "Proszę wypełnić Ilość, Nr Artykułu i Opis.",
+                msg_success_body_download: "Twój raport został pobrany jako plik JSON.",
+                msg_success_body_email: "Raport wysłany na adres {email} i kopia została pobrana.",
+                msg_success_body_mailto: "Twoja aplikacja e-mail została otwarta, aby wysłać raport do {email}."
             }
         };
 
@@ -1279,10 +1305,24 @@
         });
         
         // --- FORM SUBMISSION ---
+        function downloadJSON(data, filename) {
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         const form = document.getElementById('intervention-form');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
+            const lang = localStorage.getItem('language') || 'en';
             const interventionTypes = Array.from(document.querySelectorAll('input[name="intervention-type"]:checked')).map(el => el.value);
             const formData = {
                 generalInfo: {
@@ -1310,16 +1350,87 @@
                 },
                 signatures: {
                     customer: document.getElementById('customer-signature-canvas').toDataURL(),
+                    customerEmail: document.getElementById('customer-email').value,
                     engineer: document.getElementById('engineer-signature-canvas').toDataURL(),
                 },
                 spareParts: spareParts,
-                photos: photos.map(p => ({ name: p.name, data: p.dataUrl })),
+                photos: photos.map(p => ({ name: p.name, data: p.dataUrl.substring(0, 100) + '... [data truncated]' })), // Truncate photo data for readability in JSON
+            };
+            
+            // --- Email Generation ---
+            const mailTranslations = {
+                 en: { dear: "Dear Customer", intro: "Please find the summary of the intervention report below.", instruction: 'IMPORTANT: Please use the "Print / Save as PDF" button in the web application to generate a PDF of the full report and attach it to this email before sending.', summary_title: "REPORT SUMMARY", regards: "Best regards", engineer: "Fortna Engineer" },
+                 nl: { dear: "Geachte Klant", intro: "Hieronder vindt u de samenvatting van het interventierapport.", instruction: 'BELANGRIJK: Gebruik de knop "Print / Opslaan als PDF" in de webapplicatie om een PDF van het volledige rapport te genereren en voeg deze als bijlage toe aan deze e-mail voordat u deze verzendt.', summary_title: "RAPPORT SAMENVATTING", regards: "Met vriendelijke groet", engineer: "Fortna Engineer" },
+                 de: { dear: "Sehr geehrter Kunde", intro: "Nachfolgend finden Sie die Zusammenfassung des Interventionsberichts.", instruction: 'WICHTIG: Bitte verwenden Sie die Schaltfläche "Drucken / Als PDF speichern" in der Webanwendung, um ein PDF des vollständigen Berichts zu erstellen und fügen Sie es dieser E-Mail bei, bevor Sie sie senden.', summary_title: "BERICHTSÜBERSICHT", regards: "Mit freundlichen Grüßen", engineer: "Fortna Techniker" },
+                 it: { dear: "Gentile Cliente", intro: "Di seguito troverà il riepilogo del rapporto di intervento.", instruction: 'IMPORTANTE: Utilizzare il pulsante "Stampa / Salva come PDF" nell\'applicazione web per generare un PDF del rapporto completo e allegarlo a questa email prima di inviarla.', summary_title: "RIEPILOGO RAPPORTO", regards: "Cordiali saluti", engineer: "Tecnico Fortna" },
+                 pl: { dear: "Szanowny Kliencie", intro: "Poniżej znajduje się podsumowanie raportu z interwencji.", instruction: 'WAŻNE: Proszę użyć przycisku "Drukuj / Zapisz jako PDF" w aplikacji internetowej, aby wygenerować plik PDF z pełnym raportem i dołączyć go do tej wiadomości e-mail przed wysłaniem.', summary_title: "PODSUMOWANIE RAPORTU", regards: "Z poważaniem", engineer: "Inżynier Fortna" }
             };
 
-            console.log("Form Data Submitted:", JSON.stringify(formData, null, 2));
+            const t = mailTranslations[lang] || mailTranslations['en'];
+            const customerEmail = formData.signatures.customerEmail;
+            const subject = `Intervention Report: ${formData.generalInfo.customerSite || 'N/A'} - ${formData.generalInfo.date || 'N/A'}`;
+            
+            let body = `${t.dear},\n\n${t.intro}\n\n${t.instruction}\n\n--- ${t.summary_title} ---\n\n`;
+
+            const formatSection = (title, data) => {
+                let sectionText = `--- ${title} ---\n`;
+                for (const [key, value] of Object.entries(data)) {
+                    if (value) {
+                        const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                        sectionText += `${formattedKey}: ${value}\n`;
+                    }
+                }
+                return sectionText + '\n';
+            };
+
+            body += formatSection(translations[lang].section_general_info, formData.generalInfo);
+            body += `--- ${translations[lang].section_timetable} ---\n`;
+            formData.timetable.forEach(entry => {
+                 let durationStr = 'N/A';
+                if (entry.arrival && entry.departure) {
+                    const startTime = new Date(`1970-01-01T${entry.arrival}`);
+                    const endTime = new Date(`1970-01-01T${entry.departure}`);
+                    if (endTime > startTime) {
+                        const diffMs = endTime - startTime;
+                        const diffHrs = Math.floor(diffMs / 3600000);
+                        const diffMins = Math.round((diffMs % 3600000) / 60000);
+                        const pad = (num) => num.toString().padStart(2, '0');
+                        durationStr = `${pad(diffHrs)}:${pad(diffMins)}`;
+                    }
+                }
+                body += `${translations[lang].table_engineer}: ${entry.engineer}, ${translations[lang].table_date}: ${entry.date}, ${translations[lang].table_duration}: ${durationStr}\n`;
+            });
+
+            body += `\n` + formatSection(translations[lang].section_malfunction_desc, formData.malfunction);
+            body += `--- ${translations[lang].section_spare_parts} ---\n`;
+            formData.spareParts.length > 0 ? formData.spareParts.forEach(p => { body += `${p.qty}x ${p.no} - ${p.desc}\n`}) : body += "None\n";
+            
+            body += `\n--- ${translations[lang].section_follow_up} ---\n`;
+            body += `${translations[lang].label_work_complete}: ${formData.followUp.workComplete ? translations[lang].option_yes : translations[lang].option_no}\n`;
+            body += `${translations[lang].label_follow_up_required}: ${formData.followUp.followUpRequired ? translations[lang].option_yes : translations[lang].option_no}\n`;
+            if (formData.followUp.action) body += `${translations[lang].label_action}: ${formData.followUp.action}\n`;
+            
+            body += `\n\n${t.regards},\n${t.engineer}`;
+
+            const mailtoLink = `mailto:${customerEmail || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+
+            // --- Feedback Message ---
             const feedback = document.getElementById('submission-feedback');
             feedback.classList.remove('hidden');
             feedback.classList.add('bg-green-100', 'text-green-700');
+            
+            const successTitleEl = feedback.querySelector('[data-translate-key="msg_success_title"]');
+            const successBodyEl = document.getElementById('submission-feedback-body');
+            
+            successTitleEl.textContent = translations[lang]['msg_success_title'];
+            
+            if (customerEmail) {
+                successBodyEl.textContent = translations[lang]['msg_success_body_mailto'].replace('{email}', customerEmail);
+            } else {
+                 successBodyEl.textContent = translations[lang]['msg_success_body_mailto'].replace('{email}', '...');
+            }
+
             window.scrollTo(0, document.body.scrollHeight);
         });
     </script>
