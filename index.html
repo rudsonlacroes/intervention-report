@@ -6,6 +6,18 @@
     <title>Fortna Intervention Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Custom Tailwind CSS Configuration based on the new brand guide
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'fortna-blue': '#304FFF', // Official FORTNA Blue from the guide
+              }
+            }
+          }
+        }
+    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -18,8 +30,8 @@
         }
         /* Active tab style */
         .tab-active {
-            border-bottom-color: #2563eb;
-            color: #2563eb;
+            border-bottom-color: #304FFF; /* fortna-blue */
+            color: #304FFF; /* fortna-blue */
             font-weight: 600;
         }
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -47,7 +59,7 @@
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
 
-        /* Custom focus styles */
+        /* Custom focus styles with new brand color */
         #intervention-form input[type="text"]:focus,
         #intervention-form input[type="tel"]:focus,
         #intervention-form input[type="date"]:focus,
@@ -56,8 +68,8 @@
         #intervention-form textarea:focus,
         #intervention-form select:focus {
             background-color: white;
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            border-color: #304FFF; /* fortna-blue */
+            box-shadow: 0 0 0 3px rgba(48, 79, 255, 0.3);
             outline: none; /* remove default outline */
         }
         
@@ -101,6 +113,8 @@
         @media print {
             body {
                 background-color: #fff;
+                 -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+                print-color-adjust: exact !important; /* Firefox */
             }
             header, nav, footer, #add-time-entry-btn, .add-part-form, #photo-upload-label, .remove-btn, .clear-signature-btn, #language-switcher {
                 display: none !important;
@@ -148,41 +162,77 @@
                 grid-template-columns: repeat(3, 1fr) !important;
             }
             
-            /* Letterhead/Watermark for printing */
+            /* Remove old watermark */
             body::after {
-                content: "";
-                /* Base64 encoded SVG of a faint, rotated FORTNA text watermark */
-                background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgwIiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDUiIHRyYW5zZm9ybT0icm90YXRlKC00NSAyNTAgMjUwKSI+Rk9SVE5BPC90ZXh0Pjwvc3ZnPg==');
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: 80vmin;
-                position: fixed; /* Use fixed to cover the whole viewport */
+                display: none;
+            }
+
+            /* New Print Header, Footer, and Watermark styles */
+            .print-header, .print-footer {
+                display: block !important;
+                position: fixed;
+                width: 100%;
+                text-align: center;
+                font-size: 9pt;
+                color: #666;
+                left: 0;
+                z-index: 100;
+            }
+            .print-header {
+                top: 1cm;
+            }
+            .print-footer {
+                bottom: 1cm;
+            }
+            .print-watermark {
+                display: flex !important;
+                position: fixed;
                 top: 0;
                 left: 0;
-                right: 0;
-                bottom: 0;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
                 z-index: -1;
+            }
+            .print-watermark img {
+                max-width: 60%;
+                max-height: 60%;
+                opacity: 0.1;
             }
 
             #main-content {
+                padding-top: 1cm;
+                padding-bottom: 1cm;
                 position: relative;
                 z-index: 1; /* Ensure content is above the watermark */
+            }
+            .text-fortna-blue {
+                color: #304FFF !important;
             }
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
+    <!-- Elements for printing -->
+    <div class="print-header" style="display: none;">
+        FORTNA International B.V. | Kaagschip 8 | 3991 CS Houten | NLD
+    </div>
+    <div class="print-watermark" style="display: none;">
+        <img src="https://www.fortna.com/wp-content/uploads/2022/10/IMG-Fortna-logo-new-transparent-335x255-1.png" alt="Fortna Logo Watermark">
+    </div>
+
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
         <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-gray-900" data-translate-key="report_title">Intervention Report</h1>
+                <h1 class="text-3xl font-bold text-fortna-blue" data-translate-key="report_title">Intervention Report</h1>
                 <p class="text-gray-500" data-translate-key="report_subtitle">Digital report for on-site interventions</p>
             </div>
             <div class="flex items-center space-x-4">
                 <div class="relative">
-                    <select id="language-switcher" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-md shadow-sm leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <select id="language-switcher" class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-md shadow-sm leading-tight focus:outline-none focus:ring-2 focus:ring-fortna-blue text-sm">
                         <option value="en">English (EN)</option>
                         <option value="nl">Nederlands (NL)</option>
                         <option value="de">Deutsch (DE)</option>
@@ -219,36 +269,36 @@
                         <!-- Left Column -->
                         <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_general_info">General Information</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_general_info">General Information</legend>
                                 <div class="space-y-4">
                                     <div>
                                         <label for="customer-site" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_site">Customer & Site Location</label>
-                                        <input type="text" id="customer-site" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="customer-site" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="installation-group" class="block text-sm font-medium text-gray-700" data-translate-key="label_installation_group">Installation Group</label>
-                                        <input type="text" id="installation-group" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="installation-group" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="contact-name" class="block text-sm font-medium text-gray-700" data-translate-key="label_contact_name">Contact Name Customer</label>
-                                        <input type="text" id="contact-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="contact-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="case-sf" class="block text-sm font-medium text-gray-700" data-translate-key="label_case_sf">CASE # SF</label>
-                                        <input type="text" id="case-sf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="case-sf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="customer-phone" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_phone">Phone Nr. Customer</label>
-                                        <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div class="grid grid-cols-2 gap-4 pt-2">
                                         <div>
                                             <label for="date" class="block text-sm font-medium text-gray-700" data-translate-key="label_intervention_date">Intervention Date</label>
-                                            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                         <div>
                                             <label for="inbound-call" class="block text-sm font-medium text-gray-700" data-translate-key="label_inbound_call">Inbound Call Time</label>
-                                            <input type="time" id="inbound-call" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <input type="time" id="inbound-call" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                     </div>
                                 </div>
@@ -257,14 +307,14 @@
                             <fieldset>
                                 <legend class="text-sm font-medium text-gray-700" data-translate-key="label_agreement_type">Agreement Type</legend>
                                 <div class="mt-2 space-x-4">
-                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="GLA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">GLA</span></label>
-                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LTA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">LTA</span></label>
-                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LAA" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2">LAA</span></label>
-                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="OTHER" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"> <span class="ml-2" data-translate-key="option_other">Other</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="GLA" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300"> <span class="ml-2">GLA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LTA" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300"> <span class="ml-2">LTA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="LAA" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300"> <span class="ml-2">LAA</span></label>
+                                    <label class="inline-flex items-center"><input type="radio" name="agreement-type" value="OTHER" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300"> <span class="ml-2" data-translate-key="option_other">Other</span></label>
                                 </div>
                                 <div id="agreement-other-container" class="mt-4">
                                     <label for="agreement-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
-                                    <input type="text" id="agreement-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="text" id="agreement-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                             </fieldset>
                         </div>
@@ -272,36 +322,36 @@
                         <!-- Right Column -->
                         <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
                              <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_intervention_type">Type of Intervention</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_intervention_type">Type of Intervention</legend>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Inspection" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_inspection">Inspection</span></label>
-                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Maintenance" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_maintenance">Maintenance</span></label>
-                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Training" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_training">Training</span></label>
-                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Malfunction" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_malfunction">Malfunction</span></label>
-                                    <label class="flex items-center"><input type="checkbox" id="intervention-type-other-checkbox" name="intervention-type" value="Other" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_other">Other</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Inspection" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_inspection">Inspection</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Maintenance" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_maintenance">Maintenance</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Training" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_training">Training</span></label>
+                                    <label class="flex items-center"><input type="checkbox" name="intervention-type" value="Malfunction" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_malfunction">Malfunction</span></label>
+                                    <label class="flex items-center"><input type="checkbox" id="intervention-type-other-checkbox" name="intervention-type" value="Other" class="focus:ring-fortna-blue h-4 w-4 text-fortna-blue border-gray-300 rounded"> <span class="ml-2 text-sm" data-translate-key="option_other">Other</span></label>
                                 </div>
                                 <div id="intervention-other-container" class="mt-4 hidden">
                                     <label for="intervention-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
-                                    <input type="text" id="intervention-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="text" id="intervention-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                             </fieldset>
                             
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_malfunction_desc">Description of Malfunction</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_malfunction_desc">Description of Malfunction</legend>
                                 <div class="space-y-4">
                                      <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label for="item-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_item_no">Item No:</label>
-                                            <input type="text" id="item-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <input type="text" id="item-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                          <div>
                                             <label for="message-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_message_no">Message No:</label>
-                                            <input type="text" id="message-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            <input type="text" id="message-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="malfunction-description" class="block text-sm font-medium text-gray-700" data-translate-key="label_description">Description</label>
-                                        <textarea id="malfunction-description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                        <textarea id="malfunction-description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
                                     </div>
                                 </div>
                             </fieldset>
@@ -311,7 +361,7 @@
                     <!-- Timetable -->
                     <div class="mt-8 bg-white p-6 rounded-lg shadow-sm">
                         <fieldset>
-                            <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_timetable">Timetable</legend>
+                            <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_timetable">Timetable</legend>
                              <!-- Form to add new time entry -->
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
                                 <div class="lg:col-span-3">
@@ -319,38 +369,38 @@
                                 </div>
                                 <div class="lg:col-span-3">
                                     <label for="engineer-name" class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_name">Engineer Name</label>
-                                    <input type="text" id="engineer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="text" id="engineer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                                 <div>
                                     <label for="entry-date" class="block text-sm font-medium text-gray-700" data-translate-key="label_date">Date</label>
-                                    <input type="date" id="entry-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="date" id="entry-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                                 <div>
                                     <label for="start-type" class="block text-sm font-medium text-gray-700" data-translate-key="label_start_type">Start Type</label>
-                                    <select id="start-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <select id="start-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         <option value="Arrival" data-translate-key="option_arrival">Arrival</option>
                                         <option value="Remote support start" data-translate-key="option_remote_start">Remote support start</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="arrival-time" class="block text-sm font-medium text-gray-700" data-translate-key="label_start_time">Start Time</label>
-                                    <input type="time" id="arrival-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="time" id="arrival-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                                 <div></div> <!-- Spacer -->
                                 <div>
                                     <label for="end-type" class="block text-sm font-medium text-gray-700" data-translate-key="label_end_type">End Type</label>
-                                    <select id="end-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <select id="end-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         <option value="Departure" data-translate-key="option_departure">Departure</option>
                                         <option value="Remote support end" data-translate-key="option_remote_end">Remote support end</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="departure-time" class="block text-sm font-medium text-gray-700" data-translate-key="label_end_time">End Time</label>
-                                    <input type="time" id="departure-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <input type="time" id="departure-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
 
                                 <div class="lg:col-span-3 text-right">
-                                    <button type="button" id="add-time-entry-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_add_entry">+ Add Entry</button>
+                                    <button type="button" id="add-time-entry-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-fortna-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue" data-translate-key="btn_add_entry">+ Add Entry</button>
                                 </div>
                             </div>
 
@@ -386,40 +436,40 @@
                     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="bg-white p-6 rounded-lg shadow-sm space-y-6">
                              <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_follow_up">Follow Up Action</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_follow_up">Follow Up Action</legend>
                                 <div class="space-y-4">
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm font-medium text-gray-700" data-translate-key="label_work_complete">Work complete?</span>
-                                        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="work-complete" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div></label>
+                                        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="work-complete" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm font-medium text-gray-700" data-translate-key="label_follow_up_required">Follow up action required?</span>
-                                         <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="follow-up-required" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div></label>
+                                         <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="follow-up-required" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
                                     </div>
                                     <div>
                                         <label for="follow-up-action" class="block text-sm font-medium text-gray-700" data-translate-key="label_action">Action</label>
-                                        <textarea id="follow-up-action" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                        <textarea id="follow-up-action" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_signature">Signature for Approval</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_signature">Signature for Approval</legend>
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_signature">Customer Signature</label>
                                         <canvas id="customer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
-                                        <button type="button" onclick="clearSignature('customer-signature-canvas')" class="text-xs text-blue-600 hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
+                                        <button type="button" onclick="clearSignature('customer-signature-canvas')" class="text-xs text-fortna-blue hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
                                     </div>
                                     <div>
                                         <label for="customer-email" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_email">Customer Email Address</label>
-                                        <input type="email" id="customer-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="name@example.com">
+                                        <input type="email" id="customer-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue" placeholder="name@example.com">
                                     </div>
                                      <div>
                                         <label class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_signature">Fortna Engineer Signature</label>
                                         <canvas id="engineer-signature-canvas" class="signature-canvas w-full h-32 mt-1 bg-gray-50"></canvas>
-                                        <button type="button" onclick="clearSignature('engineer-signature-canvas')" class="text-xs text-blue-600 hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
+                                        <button type="button" onclick="clearSignature('engineer-signature-canvas')" class="text-xs text-fortna-blue hover:underline mt-1 clear-signature-btn" data-translate-key="btn_clear">Clear</button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -433,7 +483,7 @@
                         <!-- Spare Parts Section -->
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_spare_parts">Used Spare Parts</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_spare_parts">Used Spare Parts</legend>
                                 <!-- Form to add new part -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
                                     <div class="md:col-span-2">
@@ -441,19 +491,19 @@
                                     </div>
                                     <div>
                                         <label for="part-qty" class="block text-sm font-medium text-gray-700" data-translate-key="label_qty">Qty.</label>
-                                        <input type="number" id="part-qty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="number" id="part-qty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="part-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_article_no">Article No.</label>
-                                        <input type="text" id="part-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="part-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div class="md:col-span-2">
                                         <label for="part-desc" class="block text-sm font-medium text-gray-700" data-translate-key="label_description">Description</label>
-                                        <input type="text" id="part-desc" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <input type="text" id="part-desc" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="part-location" class="block text-sm font-medium text-gray-700" data-translate-key="label_from_location">From Location</label>
-                                        <select id="part-location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <select id="part-location" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                             <option value="FORTNA" data-translate-key="option_fortna">FORTNA</option>
                                             <option value="Car" data-translate-key="option_car">Car</option>
                                             <option value="Site" data-translate-key="option_site">Site</option>
@@ -461,20 +511,20 @@
                                     </div>
                                      <div>
                                         <label for="part-order" class="block text-sm font-medium text-gray-700" data-translate-key="label_order">Order?</label>
-                                        <select id="part-order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <select id="part-order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                             <option value="No" data-translate-key="option_no">No</option>
                                             <option value="Yes" data-translate-key="option_yes">Yes</option>
                                         </select>
                                     </div>
                                      <div class="md:col-span-2">
                                         <label for="part-ship-to" class="block text-sm font-medium text-gray-700" data-translate-key="label_ship_to">Ship to</label>
-                                        <select id="part-ship-to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        <select id="part-ship-to" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                             <option value="Customer" data-translate-key="option_customer">Customer</option>
                                             <option value="Pick up point" data-translate-key="option_pickup">Pick up point</option>
                                         </select>
                                     </div>
                                     <div class="md:col-span-2 text-right">
-                                        <button type="button" id="add-part-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_add_part">Add Part</button>
+                                        <button type="button" id="add-part-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-fortna-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue" data-translate-key="btn_add_part">Add Part</button>
                                     </div>
                                 </div>
                                 <!-- Table of added parts -->
@@ -506,7 +556,7 @@
                         <!-- Photos Section -->
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
-                                <legend class="text-lg font-semibold text-gray-900 mb-4 border-b pb-2" data-translate-key="section_photos">Photos</legend>
+                                <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_photos">Photos</legend>
                                 <div class="mt-1">
                                     <label id="photo-upload-label" for="photo-upload" class="w-full inline-flex justify-center items-center px-4 py-2 border border-dashed border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
                                         <svg class="w-6 h-6 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0- 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -529,16 +579,21 @@
                       <span class="font-medium" data-translate-key="msg_success_title">Success!</span> <span id="submission-feedback-body" data-translate-key="msg_success_body_download">Your report has been downloaded.</span>
                     </div>
                     <div class="flex justify-end space-x-3">
-                         <button type="button" onclick="window.print()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_print_pdf">
+                         <button type="button" onclick="window.print()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue">
                             Print / Save as PDF
                         </button>
-                        <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-translate-key="btn_submit">
+                        <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-fortna-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue" data-translate-key="btn_submit">
                             Submit Report
                         </button>
                     </div>
                 </footer>
             </form>
         </main>
+    </div>
+
+    <!-- Elements for printing -->
+    <div class="print-footer" style="display: none;">
+        Registered Seat Houten | Company Nr. 60397691 | VAT ID NL853892805B01
     </div>
 
     <script>
