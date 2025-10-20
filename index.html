@@ -47,6 +47,7 @@
         /* Custom styles for clearer input fields */
         #intervention-form input[type="text"],
         #intervention-form input[type="tel"],
+        #intervention-form input[type="email"],
         #intervention-form input[type="date"],
         #intervention-form input[type="time"],
         #intervention-form input[type="number"],
@@ -62,6 +63,7 @@
         /* Custom focus styles with new brand color */
         #intervention-form input[type="text"]:focus,
         #intervention-form input[type="tel"]:focus,
+        #intervention-form input[type="email"]:focus,
         #intervention-form input[type="date"]:focus,
         #intervention-form input[type="time"]:focus,
         #intervention-form input[type="number"]:focus,
@@ -215,7 +217,6 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <!-- Elements for printing -->
     <div class="print-header" style="display: none;">
         FORTNA International B.V. | Kaagschip 8 | 3991 CS Houten | NLD
     </div>
@@ -224,7 +225,6 @@
     </div>
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-        <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div class="text-center md:text-left">
                 <h1 class="text-3xl font-bold text-fortna-blue" data-translate-key="report_title">Intervention Report</h1>
@@ -247,7 +247,6 @@
             </div>
         </header>
 
-        <!-- Tab Navigation -->
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-6" aria-label="Tabs">
                 <button id="tab-details" onclick="switchTab('details')" class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active" data-translate-key="tab_details">
@@ -260,45 +259,42 @@
         </div>
 
         <main id="main-content">
-            <!-- Form Container -->
-            <form id="intervention-form" class="space-y-8">
+            <form id="intervention-form" method="POST" action="DE_URL_VAN_JE_WEB_APP_HIER" class="space-y-8">
                 
-                <!-- Page 1: Report Details -->
                 <div id="page-details">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Left Column -->
                         <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
                                 <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_general_info">General Information</legend>
                                 <div class="space-y-4">
                                     <div>
                                         <label for="customer-site" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_site">Customer & Site Location</label>
-                                        <input type="text" id="customer-site" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                        <input type="text" id="customer-site" name="customerSite" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="installation-group" class="block text-sm font-medium text-gray-700" data-translate-key="label_installation_group">Installation Group</label>
-                                        <input type="text" id="installation-group" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                        <input type="text" id="installation-group" name="installationGroup" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="contact-name" class="block text-sm font-medium text-gray-700" data-translate-key="label_contact_name">Contact Name Customer</label>
-                                        <input type="text" id="contact-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                        <input type="text" id="contact-name" name="contactName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="case-sf" class="block text-sm font-medium text-gray-700" data-translate-key="label_case_sf">CASE # SF</label>
-                                        <input type="text" id="case-sf" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                        <input type="text" id="case-sf" name="caseSF" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div>
                                         <label for="customer-phone" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_phone">Phone Nr. Customer</label>
-                                        <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                        <input type="tel" id="customer-phone" name="customerPhone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                     </div>
                                     <div class="grid grid-cols-2 gap-4 pt-2">
                                         <div>
                                             <label for="date" class="block text-sm font-medium text-gray-700" data-translate-key="label_intervention_date">Intervention Date</label>
-                                            <input type="date" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                            <input type="date" id="date" name="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                         <div>
                                             <label for="inbound-call" class="block text-sm font-medium text-gray-700" data-translate-key="label_inbound_call">Inbound Call Time</label>
-                                            <input type="time" id="inbound-call" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                            <input type="time" id="inbound-call" name="inboundCall" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                     </div>
                                 </div>
@@ -314,12 +310,11 @@
                                 </div>
                                 <div id="agreement-other-container" class="mt-4">
                                     <label for="agreement-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
-                                    <input type="text" id="agreement-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                    <input type="text" id="agreement-other-text" name="agreementOtherText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                             </fieldset>
                         </div>
 
-                        <!-- Right Column -->
                         <div class="space-y-6 bg-white p-6 rounded-lg shadow-sm">
                              <fieldset>
                                 <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_intervention_type">Type of Intervention</legend>
@@ -332,7 +327,7 @@
                                 </div>
                                 <div id="intervention-other-container" class="mt-4 hidden">
                                     <label for="intervention-other-text" class="block text-sm font-medium text-gray-700" data-translate-key="label_please_specify">Please specify</label>
-                                    <input type="text" id="intervention-other-text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                    <input type="text" id="intervention-other-text" name="interventionOtherText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
                             </fieldset>
                             
@@ -342,28 +337,26 @@
                                      <div class="grid grid-cols-2 gap-4">
                                         <div>
                                             <label for="item-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_item_no">Item No:</label>
-                                            <input type="text" id="item-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                            <input type="text" id="item-no" name="itemNo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                          <div>
                                             <label for="message-no" class="block text-sm font-medium text-gray-700" data-translate-key="label_message_no">Message No:</label>
-                                            <input type="text" id="message-no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
+                                            <input type="text" id="message-no" name="messageNo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="malfunction-description" class="block text-sm font-medium text-gray-700" data-translate-key="label_description">Description</label>
-                                        <textarea id="malfunction-description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
+                                        <textarea id="malfunction-description" name="malfunctionDescription" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
                                     </div>
                                 </div>
                             </fieldset>
                         </div>
                     </div>
 
-                    <!-- Timetable -->
                     <div class="mt-8 bg-white p-6 rounded-lg shadow-sm">
                         <fieldset>
                             <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_timetable">Timetable</legend>
-                             <!-- Form to add new time entry -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
+                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
                                 <div class="lg:col-span-3">
                                     <h3 class="font-medium text-gray-800" data-translate-key="title_add_entry">Add Engineer Time Entry</h3>
                                 </div>
@@ -386,8 +379,7 @@
                                     <label for="arrival-time" class="block text-sm font-medium text-gray-700" data-translate-key="label_start_time">Start Time</label>
                                     <input type="time" id="arrival-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                 </div>
-                                <div></div> <!-- Spacer -->
-                                <div>
+                                <div></div> <div>
                                     <label for="end-type" class="block text-sm font-medium text-gray-700" data-translate-key="label_end_type">End Type</label>
                                     <select id="end-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue">
                                         <option value="Departure" data-translate-key="option_departure">Departure</option>
@@ -404,8 +396,7 @@
                                 </div>
                             </div>
 
-                             <!-- Table of added time entries -->
-                            <div id="timetable-container" class="mt-4 flow-root">
+                             <div id="timetable-container" class="mt-4 flow-root">
                                 <div class="overflow-x-auto md:overflow-visible -mx-4 -my-2 sm:-mx-6 lg:-mx-8">
                                     <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                                         <table class="min-w-full divide-y divide-gray-300 responsive-table">
@@ -422,8 +413,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="timetable-body" class="divide-y divide-gray-200 bg-white">
-                                                <!-- Dynamic rows will be inserted here -->
-                                            </tbody>
+                                                </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -432,23 +422,22 @@
                         </fieldset>
                     </div>
 
-                     <!-- Follow up & Signatures -->
-                    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="bg-white p-6 rounded-lg shadow-sm space-y-6">
                              <fieldset>
                                 <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_follow_up">Follow Up Action</legend>
                                 <div class="space-y-4">
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm font-medium text-gray-700" data-translate-key="label_work_complete">Work complete?</span>
-                                        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="work-complete" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
+                                        <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="work-complete" name="workComplete" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm font-medium text-gray-700" data-translate-key="label_follow_up_required">Follow up action required?</span>
-                                         <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="follow-up-required" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
+                                         <label class="inline-flex items-center cursor-pointer"><input type="checkbox" id="follow-up-required" name="followUpRequired" class="sr-only peer"><div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-fortna-blue/50 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-fortna-blue"></div></label>
                                     </div>
                                     <div>
                                         <label for="follow-up-action" class="block text-sm font-medium text-gray-700" data-translate-key="label_action">Action</label>
-                                        <textarea id="follow-up-action" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
+                                        <textarea id="follow-up-action" name="followUpAction" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue"></textarea>
                                     </div>
                                 </div>
                             </fieldset>
@@ -464,7 +453,7 @@
                                     </div>
                                     <div>
                                         <label for="customer-email" class="block text-sm font-medium text-gray-700" data-translate-key="label_customer_email">Customer Email Address</label>
-                                        <input type="email" id="customer-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue" placeholder="name@example.com">
+                                        <input type="email" id="customer-email" name="customerEmail" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-fortna-blue focus:ring-fortna-blue" placeholder="name@example.com">
                                     </div>
                                      <div>
                                         <label class="block text-sm font-medium text-gray-700" data-translate-key="label_engineer_signature">Fortna Engineer Signature</label>
@@ -477,14 +466,11 @@
                     </div>
                 </div>
 
-                <!-- Page 2: Spare Parts & Photos -->
                 <div id="page-parts" class="hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Spare Parts Section -->
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
                                 <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_spare_parts">Used Spare Parts</legend>
-                                <!-- Form to add new part -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end mb-4 p-4 border rounded-md bg-gray-50 add-part-form">
                                     <div class="md:col-span-2">
                                         <h3 class="font-medium text-gray-800" data-translate-key="title_add_part">Add New Part</h3>
@@ -527,7 +513,6 @@
                                         <button type="button" id="add-part-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-fortna-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue" data-translate-key="btn_add_part">Add Part</button>
                                     </div>
                                 </div>
-                                <!-- Table of added parts -->
                                 <div id="parts-list-container" class="mt-4 flow-root">
                                     <div class="overflow-x-auto md:overflow-visible -mx-4 -my-2 sm:-mx-6 lg:-mx-8">
                                         <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -544,8 +529,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="parts-list-body" class="divide-y divide-gray-200 bg-white">
-                                                    <!-- Dynamic rows will be inserted here -->
-                                                </tbody>
+                                                    </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -553,34 +537,31 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <!-- Photos Section -->
                         <div class="bg-white p-6 rounded-lg shadow-sm">
                             <fieldset>
                                 <legend class="text-lg font-semibold text-fortna-blue mb-4 border-b pb-2" data-translate-key="section_photos">Photos</legend>
                                 <div class="mt-1">
                                     <label id="photo-upload-label" for="photo-upload" class="w-full inline-flex justify-center items-center px-4 py-2 border border-dashed border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
-                                        <svg class="w-6 h-6 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0- 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        <svg class="w-6 h-6 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                         <span data-translate-key="btn_upload_photos">Click to upload photos</span>
                                     </label>
                                     <input id="photo-upload" name="photo-upload" type="file" class="sr-only" multiple accept="image/*">
                                 </div>
                                 <div id="photos-gallery" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <!-- Dynamic photo previews will be inserted here -->
-                                </div>
+                                    </div>
                                  <p id="no-photos-message" class="text-center text-gray-500 py-4" data-translate-key="msg_no_photos">No photos uploaded yet.</p>
                             </fieldset>
                         </div>
                     </div>
                 </div>
 
-                <!-- Submission Footer -->
                 <footer class="pt-5">
                     <div id="submission-feedback" class="hidden mb-4 p-4 text-sm rounded-lg" role="alert">
                       <span class="font-medium" data-translate-key="msg_success_title">Success!</span> <span id="submission-feedback-body" data-translate-key="msg_success_body_download">Your report has been downloaded.</span>
                     </div>
                     <div class="flex justify-end space-x-3">
                          <button type="button" onclick="window.print()" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue">
-                            Print / Save as PDF
+                          Print / Save as PDF
                         </button>
                         <button type="submit" class="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-fortna-blue hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fortna-blue" data-translate-key="btn_submit">
                             Submit Report
@@ -591,7 +572,6 @@
         </main>
     </div>
 
-    <!-- Elements for printing -->
     <div class="print-footer" style="display: none;">
         Registered Seat Houten | Company Nr. 60397691 | VAT ID NL853892805B01
     </div>
@@ -1412,7 +1392,27 @@
                 photos: photos.map(p => ({ name: p.name, data: p.dataUrl.substring(0, 100) + '... [data truncated]' })), // Truncate photo data for readability in JSON
             };
             
-            // --- Email Generation ---
+            // ===============================================================
+            // == STAP 2: FETCH CODE TOEGEVOEGD OM DATA TE VERSTUREN         ==
+            // ===============================================================
+            fetch(form.action, {
+                method: 'POST',
+                // Apps Script kan CORS-problemen hebben, 'no-cors' mode kan helpen, 
+                // maar dan krijg je geen response terug. Voor nu laten we het zo.
+                body: JSON.stringify(formData) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success (Google Script):', data); // Log het resultaat van Google Script
+            })
+            .catch((error) => {
+                console.error('Error (Google Script):', error); // Log eventuele fouten
+            });
+            // ===============================================================
+            // == EINDE TOEGEVOEGDE CODE                                    ==
+            // ===============================================================
+            
+            // --- Email Generation (deze code blijft ongewijzigd) ---
             const mailTranslations = {
                  en: { dear: "Dear Customer", intro: "Please find the summary of the intervention report below.", instruction: 'IMPORTANT: Please use the "Print / Save as PDF" button in the web application to generate a PDF of the full report and attach it to this email before sending.', summary_title: "REPORT SUMMARY", regards: "Best regards", engineer: "Fortna Engineer" },
                  nl: { dear: "Geachte Klant", intro: "Hieronder vindt u de samenvatting van het interventierapport.", instruction: 'BELANGRIJK: Gebruik de knop "Print / Opslaan als PDF" in de webapplicatie om een PDF van het volledige rapport te genereren en voeg deze als bijlage toe aan deze e-mail voordat u deze verzendt.', summary_title: "RAPPORT SAMENVATTING", regards: "Met vriendelijke groet", engineer: "Fortna Engineer" },
@@ -1492,4 +1492,3 @@
 
 </body>
 </html>
-
