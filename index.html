@@ -30,8 +30,8 @@
         }
         /* Active tab style */
         .tab-active {
-            border-bottom-color: #304FFF; /* fortna-blue */
-            color: #304FFF; /* fortna-blue */
+            background-color: #304FFF; /* fortna-blue */
+            color: white;
             font-weight: 600;
         }
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -247,17 +247,16 @@
             </div>
         </header>
 
-        <div class="border-b border-gray-200 mb-6">
-            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
-                <button id="tab-details" onclick="switchTab('details')" class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 tab-active" data-translate-key="tab_details">
+        <div class="mb-8">
+            <nav class="flex space-x-2" aria-label="Tabs">
+                <button id="tab-details" onclick="switchTab('details')" class="py-3 px-6 font-medium text-sm rounded-t-lg transition-colors duration-200 bg-gray-200 text-gray-600 hover:bg-gray-300 tab-active" data-translate-key="tab_details">
                     Report Details
                 </button>
-                <button id="tab-parts" onclick="switchTab('parts')" class="py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-translate-key="tab_parts">
+                <button id="tab-parts" onclick="switchTab('parts')" class="py-3 px-6 font-medium text-sm rounded-t-lg transition-colors duration-200 bg-gray-200 text-gray-600 hover:bg-gray-300" data-translate-key="tab_parts">
                     Parts & Photos
                 </button>
             </nav>
         </div>
-
         <main id="main-content">
             <form id="intervention-form" method="POST" action="https://script.google.com/macros/s/AKfycbwFMgraSzW-lag-0wocJxYvv2aLwiYTOQwnXC4nmbrneKxX7QzjkIDfMYlT9nHV3uAz/exec" class="space-y-8">
                 
