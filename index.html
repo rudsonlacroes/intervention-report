@@ -1389,7 +1389,7 @@
                     engineer: document.getElementById('engineer-signature-canvas').toDataURL(),
                 },
                 spareParts: spareParts,
-                photos: photos.map(p => ({ name: p.name, data: p.dataUrl.substring(0, 100) + '... [data truncated]' })), // Truncate photo data for readability in JSON
+                photos: photos, // Verstuurt het volledige 'photos' array
             };
             
             // ===============================================================
@@ -1495,5 +1495,6 @@
 
 </body>
 </html>
+
 
 
