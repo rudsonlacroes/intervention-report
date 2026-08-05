@@ -1,0 +1,53 @@
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    background-color: #f3f4f6;
+}
+
+input[type="text"], 
+input[type="tel"], 
+input[type="date"], 
+input[type="time"], 
+input[type="number"], 
+textarea, 
+select {
+    background-color: #f9fafb;
+    padding: 0.65rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+input:focus, 
+textarea:focus, 
+select:focus {
+    background-color: white;
+    border-color: #304FFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(48, 79, 255, 0.3);
+}
+
+.tab-active { 
+    background-color: #304FFF !important; 
+    color: white !important; 
+    font-weight: 600; 
+}
+
+/* Dynamic PDF Template Container Styling */
+.pdf-render-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 15mm 20mm 15mm;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    font-size: 10pt;
+    color: #1f2937;
+    position: relative;
+}
+
+@media print {
+    .no-print { display: none !important; }
+}
