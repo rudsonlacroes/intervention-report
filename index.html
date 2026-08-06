@@ -23,6 +23,69 @@
             body.print-hide-engineers #sec-engineers-block { display: none !important; }
             body.print-hide-thirdparty #sec-tp-block { display: none !important; }
             body.print-hide-costs #sec-costs-block { display: none !important; }
+
+            /* Extra zekerheid: dit paneel mag nooit meeprinten. */
+            #customer-doc-panel { display: none !important; }
+
+            /* ==================================================== */
+            /* GEPOLIJSTE KLANT-PDF: invoerkaders weg, alleen         */
+            /* gekozen keuzes zichtbaar, nettere documentopmaak.      */
+            /* Wordt automatisch aangezet door printCustomerReport(). */
+            /* ==================================================== */
+            body.print-customer-mode #service-report-form input[type="text"],
+            body.print-customer-mode #service-report-form input[type="tel"],
+            body.print-customer-mode #service-report-form input[type="email"],
+            body.print-customer-mode #service-report-form input[type="date"],
+            body.print-customer-mode #service-report-form input[type="time"],
+            body.print-customer-mode #service-report-form input[type="number"],
+            body.print-customer-mode #service-report-form textarea,
+            body.print-customer-mode #service-report-form select {
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                padding: 1px 0 !important;
+                color: #111827 !important;
+                font-weight: 500;
+                -webkit-appearance: none;
+                appearance: none;
+                resize: none;
+            }
+
+            /* Radio- en checkbox-rondjes/vinkjes zelf verbergen... */
+            body.print-customer-mode #service-report-form input[type="radio"],
+            body.print-customer-mode #service-report-form input[type="checkbox"] {
+                display: none !important;
+            }
+            /* ...en het bijbehorende label alleen tonen als het aangevinkt/geselecteerd was. */
+            body.print-customer-mode #service-report-form label:has(input[type="radio"]):not(:has(input:checked)),
+            body.print-customer-mode #service-report-form label:has(input[type="checkbox"]):not(:has(input:checked)) {
+                display: none !important;
+            }
+            body.print-customer-mode #service-report-form label span {
+                font-weight: 600;
+                color: #111827;
+            }
+
+            /* Secties: van gekleurde 'webkaart' naar rustige documentsectie. */
+            body.print-customer-mode #service-report-form .rounded-md.shadow-sm {
+                border: none !important;
+                border-bottom: 1px solid #E5E7EB !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                padding: 10px 0 14px 0 !important;
+                page-break-inside: avoid;
+            }
+            body.print-customer-mode #service-report-form h2 {
+                color: #111827 !important;
+                border-bottom: 2px solid #304FFF;
+                padding-bottom: 4px;
+                margin-bottom: 8px;
+            }
+            body.print-customer-mode .signature-canvas,
+            body.print-customer-mode canvas {
+                border: 1px solid #D1D5DB !important;
+            }
         }
 
         input[type="radio"], input[type="checkbox"] {
@@ -310,6 +373,7 @@
                             <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblActionOwner">Action Owner</label>
                             <div class="space-y-1 text-xs">
                                 <label class="flex items-center"><input type="radio" name="followup-owner" value="Planning" class="mr-2"> <span data-i18n="ownerPlanning">Planning</span></label>
+                                <label class="flex items-center"><input type="radio" name="followup-owner" value="Job Prep" class="mr-2"> <span data-i18n="ownerJobPrep">Job Prep</span></label>
                                 <label class="flex items-center"><input type="radio" name="followup-owner" value="Customer Support" class="mr-2"> <span data-i18n="ownerCustomerSupport">Customer Support</span></label>
                                 <label class="flex items-center"><input type="radio" name="followup-owner" value="Sales / Account Manager" class="mr-2"> <span data-i18n="ownerSales">Sales / Account Manager</span></label>
                                 <label class="flex items-center"><input type="radio" name="followup-owner" value="Technical Support" class="mr-2"> <span data-i18n="ownerTechSupport">Technical Support</span></label>
@@ -413,17 +477,17 @@
             <!-- ============================================ -->
             <!-- NIEUW: SLIMME KLANT-PDF                       -->
             <!-- ============================================ -->
-            <div class="mt-8 bg-white p-4 rounded-md border border-fuchsia-100 border-l-4 border-l-fuchsia-600 shadow-sm space-y-3 no-print">
-                <h2 class="text-sm font-bold text-fuchsia-700 uppercase tracking-wider">Customer Document — Wat mag de klant zien?</h2>
-                <p class="text-xs text-gray-500">Vink aan welke onderdelen worden meegeprint. Deze keuze bepaalt alleen het klantdocument — naar Power Automate/SharePoint gaat altijd de volledige data, inclusief alle bijlages.</p>
+            <div id="customer-doc-panel" class="mt-8 bg-white p-4 rounded-md border border-fuchsia-100 border-l-4 border-l-fuchsia-600 shadow-sm space-y-3 no-print">
+                <h2 class="text-sm font-bold text-fuchsia-700 uppercase tracking-wider" data-i18n="secCustomerDoc">Customer Document — What may the customer see?</h2>
+                <p class="text-xs text-gray-500" data-i18n="lblCustomerDocHint">Check which sections are included in the printout. This choice only affects the customer document — Power Automate/SharePoint always receives the full data, including all attachments.</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-photos" checked class="mr-2"> Photos</label>
-                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-engineers" class="mr-2"> Engineers & Hours</label>
-                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-thirdparty" class="mr-2"> Third Party Support</label>
-                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-costs" class="mr-2"> Internal Costs</label>
+                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-photos" checked class="mr-2"> <span data-i18n="chkPhotos">Photos</span></label>
+                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-engineers" class="mr-2"> <span data-i18n="chkEngineers">Engineers & Hours</span></label>
+                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-thirdparty" class="mr-2"> <span data-i18n="chkThirdParty">Third Party Support</span></label>
+                    <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-costs" class="mr-2"> <span data-i18n="chkCosts">Internal Costs</span></label>
                 </div>
                 <button type="button" onclick="printCustomerReport()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm">
-                    🖨️ Print / Save Customer PDF
+                    🖨️ <span data-i18n="btnPrintCustomerPdf">Print / Save Customer PDF</span>
                 </button>
             </div>
 

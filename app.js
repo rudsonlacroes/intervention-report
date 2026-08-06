@@ -49,6 +49,7 @@ const translations = {
         lblFollowUpRequired: "Follow-up required",
         lblActionOwner: "Action Owner",
         ownerPlanning: "Planning",
+        ownerJobPrep: "Job Prep",
         ownerCustomerSupport: "Customer Support",
         ownerSales: "Sales / Account Manager",
         ownerTechSupport: "Technical Support",
@@ -69,7 +70,14 @@ const translations = {
         secSignatures: "Signatures & Approval",
         secEngineers: "Engineers & Hours Breakdown",
         secThirdParty: "Third Party Support & Subcontractors",
-        secCosts: "Internal Costs & Expenses"
+        secCosts: "Internal Costs & Expenses",
+        secCustomerDoc: "Customer Document — What may the customer see?",
+        lblCustomerDocHint: "Check which sections are included in the printout. This choice only affects the customer document — Power Automate/SharePoint always receives the full data, including all attachments.",
+        chkPhotos: "Photos",
+        chkEngineers: "Engineers & Hours",
+        chkThirdParty: "Third Party Support",
+        chkCosts: "Internal Costs",
+        btnPrintCustomerPdf: "Print / Save Customer PDF"
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -117,6 +125,7 @@ const translations = {
         lblFollowUpRequired: "Vervolgactie vereist",
         lblActionOwner: "Actie Eigenaar",
         ownerPlanning: "Planning",
+        ownerJobPrep: "Werkvoorbereiding",
         ownerCustomerSupport: "Customer Support",
         ownerSales: "Sales / Account Manager",
         ownerTechSupport: "Technical Support",
@@ -137,7 +146,14 @@ const translations = {
         secSignatures: "Handtekeningen & Goedkeuring",
         secEngineers: "Engineers & Urenoverzicht",
         secThirdParty: "Externe Ondersteuning & Onderaannemers",
-        secCosts: "Interne Kosten & Uitgaven"
+        secCosts: "Interne Kosten & Uitgaven",
+        secCustomerDoc: "Klantdocument — Wat mag de klant zien?",
+        lblCustomerDocHint: "Vink aan welke onderdelen worden meegeprint. Deze keuze bepaalt alleen het klantdocument — naar Power Automate/SharePoint gaat altijd de volledige data, inclusief alle bijlages.",
+        chkPhotos: "Foto's",
+        chkEngineers: "Engineers & Uren",
+        chkThirdParty: "Externe Ondersteuning",
+        chkCosts: "Interne Kosten",
+        btnPrintCustomerPdf: "Print / Sla Klantrapport op als PDF"
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -185,6 +201,7 @@ const translations = {
         lblFollowUpRequired: "Folgemassnahme erforderlich",
         lblActionOwner: "Verantwortlich",
         ownerPlanning: "Planung",
+        ownerJobPrep: "Arbeitsvorbereitung",
         ownerCustomerSupport: "Kundensupport",
         ownerSales: "Vertrieb / Account Manager",
         ownerTechSupport: "Technischer Support",
@@ -205,7 +222,14 @@ const translations = {
         secSignatures: "Unterschriften & Genehmigung",
         secEngineers: "Techniker & Stundenübersicht",
         secThirdParty: "Fremdunterstützung & Subunternehmer",
-        secCosts: "Interne Kosten & Ausgaben"
+        secCosts: "Interne Kosten & Ausgaben",
+        secCustomerDoc: "Kundendokument — Was darf der Kunde sehen?",
+        lblCustomerDocHint: "Wählen Sie aus, welche Abschnitte gedruckt werden. Diese Auswahl betrifft nur das Kundendokument — an Power Automate/SharePoint werden immer alle Daten inklusive aller Anhänge übermittelt.",
+        chkPhotos: "Fotos",
+        chkEngineers: "Techniker & Stunden",
+        chkThirdParty: "Fremdunterstützung",
+        chkCosts: "Interne Kosten",
+        btnPrintCustomerPdf: "Kundendokument drucken / als PDF speichern"
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -253,6 +277,7 @@ const translations = {
         lblFollowUpRequired: "Azione successiva richiesta",
         lblActionOwner: "Responsabile Azione",
         ownerPlanning: "Pianificazione",
+        ownerJobPrep: "Preparazione Lavoro",
         ownerCustomerSupport: "Assistenza Clienti",
         ownerSales: "Vendite / Account Manager",
         ownerTechSupport: "Supporto Tecnico",
@@ -273,7 +298,14 @@ const translations = {
         secSignatures: "Firme & Approvazione",
         secEngineers: "Tecnici & Riepilogo Ore",
         secThirdParty: "Supporto di Terze Parti & Subappaltatori",
-        secCosts: "Costi Interni & Spese"
+        secCosts: "Costi Interni & Spese",
+        secCustomerDoc: "Documento Cliente — Cosa può vedere il cliente?",
+        lblCustomerDocHint: "Seleziona quali sezioni includere nella stampa. Questa scelta riguarda solo il documento cliente — Power Automate/SharePoint riceve sempre tutti i dati, inclusi tutti gli allegati.",
+        chkPhotos: "Foto",
+        chkEngineers: "Tecnici & Ore",
+        chkThirdParty: "Supporto di Terze Parti",
+        chkCosts: "Costi Interni",
+        btnPrintCustomerPdf: "Stampa / Salva PDF Cliente"
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -321,6 +353,7 @@ const translations = {
         lblFollowUpRequired: "Wymagane dalsze działania",
         lblActionOwner: "Właściciel Działania",
         ownerPlanning: "Planowanie",
+        ownerJobPrep: "Przygotowanie Pracy",
         ownerCustomerSupport: "Obsługa Klienta",
         ownerSales: "Sprzedaż / Account Manager",
         ownerTechSupport: "Wsparcie Techniczne",
@@ -341,7 +374,14 @@ const translations = {
         secSignatures: "Podpisy i Zatwierdzenie",
         secEngineers: "Inżynierowie i Podsumowanie Godzin",
         secThirdParty: "Wsparcie Zewnętrzne i Podwykonawcy",
-        secCosts: "Koszty Wewnętrzne i Wydatki"
+        secCosts: "Koszty Wewnętrzne i Wydatki",
+        secCustomerDoc: "Dokument Klienta — Co może zobaczyć klient?",
+        lblCustomerDocHint: "Zaznacz, które sekcje mają zostać wydrukowane. Ten wybór dotyczy tylko dokumentu klienta — do Power Automate/SharePoint zawsze trafiają wszystkie dane, łącznie z załącznikami.",
+        chkPhotos: "Zdjęcia",
+        chkEngineers: "Inżynierowie i Godziny",
+        chkThirdParty: "Wsparcie Zewnętrzne",
+        chkCosts: "Koszty Wewnętrzne",
+        btnPrintCustomerPdf: "Drukuj / Zapisz PDF dla Klienta"
     }
 };
 
@@ -1346,9 +1386,16 @@ function printCustomerReport() {
     document.body.classList.toggle('print-hide-engineers', !includeEngineers);
     document.body.classList.toggle('print-hide-thirdparty', !includeThirdParty);
     document.body.classList.toggle('print-hide-costs', !includeCosts);
+    document.body.classList.add('print-customer-mode');
 
     window.print();
 }
+
+// Zodra het printvenster sluit (geprint of geannuleerd), de opgeschoonde
+// weergave weer uitzetten zodat het scherm er weer normaal uitziet.
+window.addEventListener('afterprint', () => {
+    document.body.classList.remove('print-customer-mode');
+});
 
 function switchTab(tab) {
     const customerContent = document.getElementById('tab-customer-content');
