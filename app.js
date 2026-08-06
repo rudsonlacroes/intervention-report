@@ -1376,6 +1376,20 @@ function resetFormWithConfirmation() {
 // ==========================================
 // SLIMME KLANT-PDF (SELECTIEF PRINTEN)
 // ==========================================
+const ORIGINAL_PAGE_TITLE = document.title;
+
+function buildCustomerPdfFilename() {
+    const date = document.getElementById('date')?.value || 'NoDate';
+    const site = document.getElementById('customer-site')?.value || 'UnknownSite';
+    const ig = document.getElementById('installation-group')?.value || 'NoIG';
+    const so = document.getElementById('service-order')?.value || 'NoSO';
+
+    // Verwijder tekens die niet in bestandsnamen mogen, en vervang spaties door underscores.
+    const sanitize = (s) => s.trim().replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '_');
+
+    return `${sanitize(date)}_${sanitize(site)}_${sanitize(ig)}_${sanitize(so)}`;
+}
+
 function printCustomerReport() {
     const includePhotos = document.getElementById('print-include-photos')?.checked;
     const includeEngineers = document.getElementById('print-include-engineers')?.checked;
@@ -1388,13 +1402,17 @@ function printCustomerReport() {
     document.body.classList.toggle('print-hide-costs', !includeCosts);
     document.body.classList.add('print-customer-mode');
 
+    // De browser gebruikt de pagina-titel als standaard bestandsnaam bij
+    // 'Opslaan als PDF' — daarom zetten we die hier tijdelijk om.
+    document.title = buildCustomerPdfFilename();
+
     window.print();
 }
 
-// Zodra het printvenster sluit (geprint of geannuleerd), de opgeschoonde
-// weergave weer uitzetten zodat het scherm er weer normaal uitziet.
+// Zodra het printvenster sluit (geprint of geannuleerd), alles weer normaal zetten.
 window.addEventListener('afterprint', () => {
     document.body.classList.remove('print-customer-mode');
+    document.title = ORIGINAL_PAGE_TITLE;
 });
 
 function switchTab(tab) {
