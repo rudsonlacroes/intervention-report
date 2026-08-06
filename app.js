@@ -1279,7 +1279,7 @@ function addThirdPartyEntry(name = '', desc = '', cost = '', receiptImg = '') {
             </div>
             <div class="md:col-span-4"><input type="text" placeholder="Description" value="${desc}" class="tp-desc text-xs p-1.5 border rounded w-full"></div>
             <div class="md:col-span-3 flex items-center gap-1">
-                <span class="text-xs font-semibold text-gray-500">€</span>
+                <span class="text-xs font-semibold text-gray-500 currency-symbol">€</span>
                 <input type="text" placeholder="Cost" value="${cost}" class="tp-cost text-xs p-1.5 border rounded w-full">
             </div>
             <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('tp-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
@@ -1321,7 +1321,7 @@ function addCostEntry(type = '', amount = '', receiptImg = '') {
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-6"><input type="text" placeholder="Type" value="${type}" class="cost-type text-xs p-1.5 border rounded w-full"></div>
             <div class="md:col-span-5 flex items-center gap-1">
-                <span class="text-xs font-semibold text-gray-500">€</span>
+                <span class="text-xs font-semibold text-gray-500 currency-symbol">€</span>
                 <input type="number" step="0.01" min="0" placeholder="Amount" value="${amount}" class="cost-amount text-xs p-1.5 border rounded w-full">
             </div>
             <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('cost-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
