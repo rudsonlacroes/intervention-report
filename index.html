@@ -196,7 +196,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblSO">Service Order Number</label>
-                            <input type="text" id="service-order" placeholder="e.g. GYA000215" class="w-full text-xs p-2 border rounded">
+                            <input type="text" id="service-order" placeholder="e.g. 0000104" onblur="normalizeServiceOrderNumber()" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div class="relative">
                             <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblInstGroup">Installation Group</label>
@@ -230,10 +230,10 @@
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblAgreement">Agreement Type</label>
                             <div class="flex items-center space-x-3 pt-1 text-xs">
-                                <label><input type="radio" name="agreement-type" value="GLA" checked> GLA</label>
-                                <label><input type="radio" name="agreement-type" value="LTA"> LTA</label>
-                                <label><input type="radio" name="agreement-type" value="LAA"> LAA</label>
-                                <label><input type="radio" name="agreement-type" value="Other"> Other</label>
+                                <label><input type="radio" name="agreement-type" value="GLA" checked onchange="normalizeServiceOrderNumber()"> GLA</label>
+                                <label><input type="radio" name="agreement-type" value="LTA" onchange="normalizeServiceOrderNumber()"> LTA</label>
+                                <label><input type="radio" name="agreement-type" value="LAA" onchange="normalizeServiceOrderNumber()"> LAA</label>
+                                <label><input type="radio" name="agreement-type" value="Other" onchange="normalizeServiceOrderNumber()"> Other</label>
                             </div>
                         </div>
                     </div>

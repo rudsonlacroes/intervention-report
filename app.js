@@ -642,7 +642,11 @@ function getFormDataObject() {
         const start = row.querySelector('.eng-start')?.value || '';
         const end = row.querySelector('.eng-end')?.value || '';
         const hours = row.querySelector('.eng-hours-val')?.textContent || '0.00 hrs';
-        if (name || start || end || date) data.engineers.push({ date, name, type, cat, start, end, hours });
+        const travelFrom = cat === 'Travel Time' ? (row.querySelector('.eng-travel-from')?.value || '') : '';
+        const hotelHr = row.querySelector('.eng-hotel-hr')?.value || '';
+        const hotelKm = row.querySelector('.eng-hotel-km')?.value || '';
+        const noTravelSo = row.querySelector('.eng-notravel-so')?.value || '';
+        if (name || start || end || date) data.engineers.push({ date, name, type, cat, start, end, hours, travelFrom, hotelHr, hotelKm, noTravelSo });
     });
 
     document.querySelectorAll('#third-party-container > div').forEach(row => {
@@ -665,14 +669,44 @@ function getFormDataObject() {
     return data;
 }
 
-function buildSubmitPayload() {
-    const rawCustomerSite = document.getElementById('customer-site')?.value?.trim() || 'Unknown_Site';
-    const cleanCustomerSite = rawCustomerSite.replace(/[^a-zA-Z0-9]/g, '_');
+// ==========================================
+// SERVICE ORDER NUMMER = ALTIJD AGREEMENT TYPE + NUMMER
+// ==========================================
+// Bijv. Agreement Type "LTA" + nummer "0000104" -> veld toont "LTA0000104".
+// Wordt aangeroepen bij het wisselen van Agreement Type en bij het
+// verlaten (blur) van het Service Order-veld, zodat het altijd correct
+// samengevoegd blijft, ook als de monteur het later nog aanpast.
+const KNOWN_SO_PREFIXES = ['GLA', 'LTA', 'LAA', 'Other'];
+
+function normalizeServiceOrderNumber() {
+    const soInput = document.getElementById('service-order');
+    if (!soInput) return;
+
     const agreementRadio = document.querySelector('input[name="agreement-type"]:checked');
-    const soPrefix = agreementRadio ? agreementRadio.value : 'GLA';
-    const rawSoNumber = document.getElementById('service-order')?.value?.trim();
-    const formattedSo = rawSoNumber ? `${soPrefix}-${rawSoNumber}` : `${soPrefix}-PENDING`;
-    const fullServiceOrder = `${cleanCustomerSite}_${formattedSo}`;
+    const prefix = agreementRadio ? agreementRadio.value : '';
+
+    let raw = soInput.value.trim();
+
+    // Verwijder een eventueel al aanwezig prefix (van een eerdere keuze),
+    // zodat we niet dubbel combineren als de monteur van Agreement Type wisselt.
+    for (const p of KNOWN_SO_PREFIXES) {
+        if (raw.toUpperCase().startsWith(p.toUpperCase())) {
+            raw = raw.slice(p.length);
+            break;
+        }
+    }
+    raw = raw.trim();
+
+    if (!raw) { soInput.value = ''; return; }
+    soInput.value = prefix ? `${prefix}${raw}` : raw;
+}
+
+function buildSubmitPayload() {
+    normalizeServiceOrderNumber(); // zorg dat het veld gegarandeerd correct samengevoegd is vóór verzending
+
+    const rawCustomerSite = document.getElementById('customer-site')?.value?.trim() || 'Unknown_Site';
+    const agreementRadio = document.querySelector('input[name="agreement-type"]:checked');
+    const fullServiceOrder = document.getElementById('service-order')?.value?.trim() || 'NO-SO';
 
     const custCanvas = document.getElementById('customer-signature-canvas');
     const engCanvas = document.getElementById('engineer-signature-canvas');
@@ -923,7 +957,7 @@ function loadDraftByKey(key) {
 
     const engContainer = document.getElementById('engineers-container');
     if (engContainer) engContainer.innerHTML = '';
-    if (data.engineers && data.engineers.length > 0) data.engineers.forEach(e => addEngineerEntry(e.date, e.name, e.type, e.cat, e.start, e.end));
+    if (data.engineers && data.engineers.length > 0) data.engineers.forEach(e => addEngineerEntry(e.date, e.name, e.type, e.cat, e.start, e.end, e.travelFrom, e.hotelHr, e.hotelKm, e.noTravelSo));
     else addEngineerEntry();
 
     const tpContainer = document.getElementById('third-party-container');
@@ -963,6 +997,7 @@ function loadDraftByKey(key) {
     checkScopeVisibility();
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
+    normalizeServiceOrderNumber();
     calculateGrandTotals();
     document.getElementById('auto-save-status').textContent = `Loaded draft from ${data['_savedAt']}`;
 }
@@ -1120,7 +1155,7 @@ function addPartEntry(qty = '', artNo = '', desc = '') {
     container.appendChild(div);
 }
 
-function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', start = '', end = '') {
+function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', start = '', end = '', travelFrom = '', hotelHr = '', hotelKm = '', noTravelSo = '') {
     const container = document.getElementById('engineers-container');
     if (!container) return;
 
@@ -1154,7 +1189,7 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
                 </select>
             </div>
             <div class="md:col-span-3">
-                <select class="eng-category text-xs p-1.5 border rounded w-full font-semibold text-blue-600" onchange="calculateGrandTotals()">
+                <select class="eng-category text-xs p-1.5 border rounded w-full font-semibold text-blue-600" onchange="calculateGrandTotals(); toggleEngineerTravelFields(this);">
                     <option value="Work Hours" ${cat === 'Work Hours' ? 'selected' : ''}>🛠️ Work Hours</option>
                     <option value="Travel Time" ${cat === 'Travel Time' ? 'selected' : ''}>🚗 Travel Time</option>
                 </select>
@@ -1165,6 +1200,29 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
             <div class="md:col-span-3"><input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()"></div>
             <div class="md:col-span-4"><span class="text-xs font-bold text-blue-600 eng-hours-val" data-hours-num="0">0.00 hrs</span></div>
             <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs">Remove</button></div>
+        </div>
+        <div class="eng-travel-fields ${cat === 'Travel Time' ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
+            <div class="md:col-span-3">
+                <label class="block text-[10px] text-gray-500 mb-0.5">Travel From</label>
+                <select class="eng-travel-from text-xs p-1.5 border rounded w-full" onchange="toggleTravelFromDetails(this)">
+                    <option value="Home" ${travelFrom === 'Home' ? 'selected' : ''}>Home</option>
+                    <option value="Office" ${travelFrom === 'Office' ? 'selected' : ''}>Office</option>
+                    <option value="Hotel" ${travelFrom === 'Hotel' ? 'selected' : ''}>Hotel</option>
+                    <option value="Other Customer" ${travelFrom === 'Other Customer' ? 'selected' : ''}>Other Customer</option>
+                    <option value="No Travel" ${travelFrom === 'No Travel' ? 'selected' : ''}>No Travel</option>
+                </select>
+            </div>
+            <div class="md:col-span-5 eng-hotel-fields ${travelFrom === 'Hotel' ? '' : 'hidden'}">
+                <label class="block text-[10px] text-gray-500 mb-0.5">Distance hotel — work location</label>
+                <div class="flex gap-2">
+                    <input type="number" step="0.1" min="0" placeholder="hr" value="${hotelHr}" class="eng-hotel-hr text-xs p-1.5 border rounded w-1/2">
+                    <input type="number" step="0.1" min="0" placeholder="km" value="${hotelKm}" class="eng-hotel-km text-xs p-1.5 border rounded w-1/2">
+                </div>
+            </div>
+            <div class="md:col-span-5 eng-notravel-fields ${travelFrom === 'No Travel' ? '' : 'hidden'}">
+                <label class="block text-[10px] text-gray-500 mb-0.5">Combined with SO</label>
+                <input type="text" placeholder="SO number" value="${noTravelSo}" class="eng-notravel-so text-xs p-1.5 border rounded w-full">
+            </div>
         </div>
     `;
     container.appendChild(div);
@@ -1187,6 +1245,25 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
     nameInput.addEventListener('blur', () => saveRecentEngineer(nameInput.value, typeSelect.value));
 }
 
+// Toont/verbergt het Travel From-blok afhankelijk van Work Hours vs Travel Time.
+function toggleEngineerTravelFields(categorySelectEl) {
+    const row = categorySelectEl.closest('[id^="eng-row-"]');
+    if (!row) return;
+    const travelBlock = row.querySelector('.eng-travel-fields');
+    if (travelBlock) travelBlock.classList.toggle('hidden', categorySelectEl.value !== 'Travel Time');
+}
+
+// Toont/verbergt de Hotel-afstand- of No Travel/gecombineerd-SO-velden
+// afhankelijk van de gekozen Travel From-optie.
+function toggleTravelFromDetails(travelFromSelectEl) {
+    const row = travelFromSelectEl.closest('[id^="eng-row-"]');
+    if (!row) return;
+    const hotelFields = row.querySelector('.eng-hotel-fields');
+    const noTravelFields = row.querySelector('.eng-notravel-fields');
+    if (hotelFields) hotelFields.classList.toggle('hidden', travelFromSelectEl.value !== 'Hotel');
+    if (noTravelFields) noTravelFields.classList.toggle('hidden', travelFromSelectEl.value !== 'No Travel');
+}
+
 function addThirdPartyEntry(name = '', desc = '', cost = '', receiptImg = '') {
     const container = document.getElementById('third-party-container');
     if (!container) return;
@@ -1201,7 +1278,10 @@ function addThirdPartyEntry(name = '', desc = '', cost = '', receiptImg = '') {
                 <ul class="tp-name-suggestions hidden absolute z-20 left-0 right-0 mt-1 bg-white border border-indigo-200 rounded-lg shadow-lg max-h-48 overflow-y-auto text-xs"></ul>
             </div>
             <div class="md:col-span-4"><input type="text" placeholder="Description" value="${desc}" class="tp-desc text-xs p-1.5 border rounded w-full"></div>
-            <div class="md:col-span-3"><input type="text" placeholder="Cost" value="${cost}" class="tp-cost text-xs p-1.5 border rounded w-full"></div>
+            <div class="md:col-span-3 flex items-center gap-1">
+                <span class="text-xs font-semibold text-gray-500">€</span>
+                <input type="text" placeholder="Cost" value="${cost}" class="tp-cost text-xs p-1.5 border rounded w-full">
+            </div>
             <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('tp-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
         </div>
         <div class="flex items-center space-x-3 pt-2 border-t no-print">
@@ -1240,7 +1320,10 @@ function addCostEntry(type = '', amount = '', receiptImg = '') {
     div.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-6"><input type="text" placeholder="Type" value="${type}" class="cost-type text-xs p-1.5 border rounded w-full"></div>
-            <div class="md:col-span-5"><input type="number" placeholder="Amount" value="${amount}" class="cost-amount text-xs p-1.5 border rounded w-full"></div>
+            <div class="md:col-span-5 flex items-center gap-1">
+                <span class="text-xs font-semibold text-gray-500">€</span>
+                <input type="number" step="0.01" min="0" placeholder="Amount" value="${amount}" class="cost-amount text-xs p-1.5 border rounded w-full">
+            </div>
             <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('cost-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
         </div>
         <div class="flex items-center space-x-3 pt-2 border-t no-print">
@@ -1379,6 +1462,8 @@ function resetFormWithConfirmation() {
 const ORIGINAL_PAGE_TITLE = document.title;
 
 function buildCustomerPdfFilename() {
+    normalizeServiceOrderNumber();
+
     const date = document.getElementById('date')?.value || 'NoDate';
     const site = document.getElementById('customer-site')?.value || 'UnknownSite';
     const ig = document.getElementById('installation-group')?.value || 'NoIG';
