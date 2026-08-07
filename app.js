@@ -1519,7 +1519,7 @@ function buildEmailSummary() {
     if (activitiesLabel) lines.push(`- ${t.emailLabelActivitiesCompleted}: ${activitiesLabel}`);
     if (ownerLabel) lines.push(`- ${t.emailLabelFollowUpOwner}: ${ownerLabel}`);
     if (priorityLabel) lines.push(`- ${t.emailLabelFollowUpPriority}: ${priorityLabel}`);
-    lines.push('', t.emailPdfReminder);
+    lines.push('', t.emailPdfReminder, '', t.emailClosing);
 
     return { to, subject, body: lines.join('\n') };
 }

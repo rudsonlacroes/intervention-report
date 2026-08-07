@@ -113,7 +113,8 @@ const translations = {
         emailLabelActivitiesCompleted: "Activities completed",
         emailLabelFollowUpOwner: "Follow-up owner",
         emailLabelFollowUpPriority: "Priority",
-        emailPdfReminder: "Don't forget to manually attach the PDF report."
+        emailPdfReminder: "Don't forget to manually attach the PDF report.",
+        emailClosing: "Kind regards,\nFortna Service Team"
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -225,7 +226,8 @@ const translations = {
         emailLabelActivitiesCompleted: "Activiteiten voltooid",
         emailLabelFollowUpOwner: "Vervolgactie eigenaar",
         emailLabelFollowUpPriority: "Prioriteit",
-        emailPdfReminder: "Vergeet niet het PDF-rapport handmatig bij te voegen."
+        emailPdfReminder: "Vergeet niet het PDF-rapport handmatig bij te voegen.",
+        emailClosing: "Met vriendelijke groet,\nFortna Service Team"
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -337,7 +339,8 @@ const translations = {
         emailLabelActivitiesCompleted: "Tätigkeiten abgeschlossen",
         emailLabelFollowUpOwner: "Verantwortlich für Folgemassnahme",
         emailLabelFollowUpPriority: "Priorität",
-        emailPdfReminder: "Vergessen Sie nicht, den PDF-Bericht manuell anzuhängen."
+        emailPdfReminder: "Vergessen Sie nicht, den PDF-Bericht manuell anzuhängen.",
+        emailClosing: "Mit freundlichen Grüßen,\nFortna Service Team"
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -449,7 +452,8 @@ const translations = {
         emailLabelActivitiesCompleted: "Attività completate",
         emailLabelFollowUpOwner: "Responsabile azione successiva",
         emailLabelFollowUpPriority: "Priorità",
-        emailPdfReminder: "Non dimenticare di allegare manualmente il rapporto PDF."
+        emailPdfReminder: "Non dimenticare di allegare manualmente il rapporto PDF.",
+        emailClosing: "Cordiali saluti,\nFortna Service Team"
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -561,6 +565,7 @@ const translations = {
         emailLabelActivitiesCompleted: "Czynności ukończone",
         emailLabelFollowUpOwner: "Właściciel działania następczego",
         emailLabelFollowUpPriority: "Priorytet",
-        emailPdfReminder: "Nie zapomnij ręcznie dołączyć raportu PDF."
+        emailPdfReminder: "Nie zapomnij ręcznie dołączyć raportu PDF.",
+        emailClosing: "Z poważaniem,\nFortna Service Team"
     }
 };
