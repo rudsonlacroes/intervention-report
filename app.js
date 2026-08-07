@@ -45,6 +45,10 @@ const IG_LOOKUP_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environm
 // Email_Templates SharePoint-lijst. Zelfde beveiligingskanttekening als hierboven.
 const EMAIL_SETTINGS_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/342e5d27b78d4358bd88e47a35587c5a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=5xpbYk-dQmnO-0GRNiz4dqqmGw72Yw6_0pQKACDCdBU";
 
+// Schrijf-flow: "Http -> Update Email Settings" — het schrijf-gedeelte bij EMAIL_SETTINGS_URL.
+// Zelfde beveiligingskanttekening als hierboven.
+const EMAIL_SETTINGS_UPDATE_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/4448c807f6164aa6b5f544d91f922a6c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QK_r0pPTWheJD2fcJ063Bc2vtLKCjRdJByVnDoQQLow";
+
 // ==========================================
 // INSTALLATION GROUP LOOKUP (SharePoint via Power Automate)
 // ==========================================
@@ -206,6 +210,100 @@ async function loadEmailSettings() {
     } catch (e) {
         console.error('Email settings lookup ophalen mislukt:', e);
     }
+}
+
+// ==========================================
+// EMAIL SETTINGS ADMIN PANEL (schrijft naar Email_Templates via Power Automate)
+// ==========================================
+// LET OP: het wachtwoord hieronder is GEEN echte beveiliging — dit is client-side
+// JavaScript, dus iedereen kan het gewoon in de broncode/devtools uitlezen. Het dient
+// alleen om te voorkomen dat een monteur er per ongeluk doorheen klikt.
+const EMAIL_SETTINGS_ADMIN_PASSWORD = 'fortna2026';
+const EMAIL_SETTINGS_ADMIN_LANGS = ['en', 'nl', 'de', 'it', 'pl'];
+let emailSettingsAdminActiveLang = 'en';
+
+function openEmailSettingsAdminPanel() {
+    const pwd = prompt('Wachtwoord:');
+    if (pwd === null) return; // geannuleerd, geen foutmelding nodig
+    if (pwd !== EMAIL_SETTINGS_ADMIN_PASSWORD) {
+        alert('Onjuist wachtwoord.');
+        return;
+    }
+
+    renderEmailSettingsAdminTabs();
+    switchEmailSettingsAdminTab('en');
+    document.getElementById('email-settings-admin-modal')?.classList.remove('hidden');
+}
+
+function closeEmailSettingsAdminPanel() {
+    document.getElementById('email-settings-admin-modal')?.classList.add('hidden');
+}
+
+function renderEmailSettingsAdminTabs() {
+    const container = document.getElementById('email-settings-admin-tabs');
+    if (!container) return;
+    container.innerHTML = EMAIL_SETTINGS_ADMIN_LANGS.map(lang => `
+        <button type="button" onclick="switchEmailSettingsAdminTab('${lang}')" id="email-settings-admin-tab-${lang}" class="px-3 py-1.5 text-xs font-semibold rounded-t-lg bg-gray-100 text-gray-600 hover:bg-indigo-50">${lang.toUpperCase()}</button>
+    `).join('');
+}
+
+// Wisselt van taal-tab: laadt de velden opnieuw vanuit emailSettings[lang] — eventuele
+// niet-opgeslagen tekst in de vorige tab gaat dan verloren (bewust simpel gehouden).
+function switchEmailSettingsAdminTab(lang) {
+    emailSettingsAdminActiveLang = lang;
+
+    EMAIL_SETTINGS_ADMIN_LANGS.forEach(l => {
+        const tabBtn = document.getElementById(`email-settings-admin-tab-${l}`);
+        if (!tabBtn) return;
+        tabBtn.classList.toggle('bg-indigo-600', l === lang);
+        tabBtn.classList.toggle('text-white', l === lang);
+        tabBtn.classList.toggle('bg-gray-100', l !== lang);
+        tabBtn.classList.toggle('text-gray-600', l !== lang);
+    });
+
+    const current = emailSettings[lang] || {};
+    document.getElementById('email-settings-admin-subject').value = current.subject || '';
+    document.getElementById('email-settings-admin-intro').value = current.introLine || '';
+    document.getElementById('email-settings-admin-reminder').value = current.reminderLine || '';
+    document.getElementById('email-settings-admin-closing').value = current.closingLine || '';
+
+    const status = document.getElementById('email-settings-admin-status');
+    if (status) { status.textContent = ''; status.className = 'text-xs font-semibold block'; }
+}
+
+function saveEmailSettingsAdmin() {
+    const lang = emailSettingsAdminActiveLang;
+    const subject = document.getElementById('email-settings-admin-subject')?.value || '';
+    const introLine = document.getElementById('email-settings-admin-intro')?.value || '';
+    const reminderLine = document.getElementById('email-settings-admin-reminder')?.value || '';
+    const closingLine = document.getElementById('email-settings-admin-closing')?.value || '';
+
+    const status = document.getElementById('email-settings-admin-status');
+    const saveBtn = document.getElementById('email-settings-admin-save-btn');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Opslaan...'; }
+
+    fetch(EMAIL_SETTINGS_UPDATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: lang, subject, introLine, reminderLine, closingLine })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+
+        emailSettings[lang] = { subject, introLine, reminderLine, closingLine };
+        try {
+            localStorage.setItem(EMAIL_SETTINGS_CACHE_KEY, JSON.stringify({ data: emailSettings, savedAt: new Date().toLocaleString() }));
+        } catch (e) { /* cache-opslag mislukt, niet kritiek: emailSettings zelf is al bijgewerkt */ }
+
+        if (status) { status.textContent = `✅ Opgeslagen voor ${lang.toUpperCase()}.`; status.className = 'text-xs font-semibold text-green-600 block'; }
+    })
+    .catch(e => {
+        console.error('Email settings opslaan mislukt:', e);
+        if (status) { status.textContent = `❌ Opslaan mislukt: ${e.message}. Uw tekst is niet verloren, probeer opnieuw.`; status.className = 'text-xs font-semibold text-red-600 block'; }
+    })
+    .finally(() => {
+        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Opslaan'; }
+    });
 }
 
 // Kernfunctie: koppelt een tekstveld aan een dropdown-lijst via directe
