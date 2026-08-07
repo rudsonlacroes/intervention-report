@@ -101,7 +101,19 @@ const translations = {
         msgIgOffline: "⚠️ Offline — no customer list available",
         msgIgLoadedUpdated: "📋 {count} customers loaded (updated)",
         msgIgParseError: "⚠️ Customer list could not be read",
-        msgIgFetchError: "⚠️ Customer list could not be retrieved"
+        msgIgFetchError: "⚠️ Customer list could not be retrieved",
+        btnEmailCustomer: "✉️ Email Customer",
+        msgEmailNoAddress: "Please fill in the customer's email address before opening an email.",
+        emailSubjectTemplate: "Service Visit Report - {site} - {so}",
+        emailGreeting: "Dear,",
+        emailIntro: "Please find below the summary of the visit on {date}:",
+        emailLabelSite: "Customer/Site",
+        emailLabelSO: "Service Order",
+        emailLabelDate: "Date",
+        emailLabelActivitiesCompleted: "Activities completed",
+        emailLabelFollowUpOwner: "Follow-up owner",
+        emailLabelFollowUpPriority: "Priority",
+        emailPdfReminder: "Don't forget to manually attach the PDF report."
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -201,7 +213,19 @@ const translations = {
         msgIgOffline: "⚠️ Offline — geen klantenlijst beschikbaar",
         msgIgLoadedUpdated: "📋 {count} klanten geladen (bijgewerkt)",
         msgIgParseError: "⚠️ Klantenlijst kon niet worden gelezen",
-        msgIgFetchError: "⚠️ Klantenlijst kon niet worden opgehaald"
+        msgIgFetchError: "⚠️ Klantenlijst kon niet worden opgehaald",
+        btnEmailCustomer: "✉️ Email Klant",
+        msgEmailNoAddress: "Vul eerst het e-mailadres van de klant in voordat u een e-mail opent.",
+        emailSubjectTemplate: "Service Visit Report - {site} - {so}",
+        emailGreeting: "Beste,",
+        emailIntro: "Hierbij de samenvatting van het bezoek op {date}:",
+        emailLabelSite: "Klant/locatie",
+        emailLabelSO: "Service Order",
+        emailLabelDate: "Datum",
+        emailLabelActivitiesCompleted: "Activiteiten voltooid",
+        emailLabelFollowUpOwner: "Vervolgactie eigenaar",
+        emailLabelFollowUpPriority: "Prioriteit",
+        emailPdfReminder: "Vergeet niet het PDF-rapport handmatig bij te voegen."
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -301,7 +325,19 @@ const translations = {
         msgIgOffline: "⚠️ Offline — keine Kundenliste verfügbar",
         msgIgLoadedUpdated: "📋 {count} Kunden geladen (aktualisiert)",
         msgIgParseError: "⚠️ Kundenliste konnte nicht gelesen werden",
-        msgIgFetchError: "⚠️ Kundenliste konnte nicht abgerufen werden"
+        msgIgFetchError: "⚠️ Kundenliste konnte nicht abgerufen werden",
+        btnEmailCustomer: "✉️ Kunde E-Mail",
+        msgEmailNoAddress: "Bitte geben Sie zuerst die E-Mail-Adresse des Kunden ein, bevor Sie eine E-Mail öffnen.",
+        emailSubjectTemplate: "Service-Besuchsbericht - {site} - {so}",
+        emailGreeting: "Sehr geehrte Damen und Herren,",
+        emailIntro: "Nachfolgend die Zusammenfassung des Besuchs am {date}:",
+        emailLabelSite: "Kunde/Standort",
+        emailLabelSO: "Auftragsnummer",
+        emailLabelDate: "Datum",
+        emailLabelActivitiesCompleted: "Tätigkeiten abgeschlossen",
+        emailLabelFollowUpOwner: "Verantwortlich für Folgemassnahme",
+        emailLabelFollowUpPriority: "Priorität",
+        emailPdfReminder: "Vergessen Sie nicht, den PDF-Bericht manuell anzuhängen."
     },
     it: {
         title: "Rapporto di Visita di Servizio",
