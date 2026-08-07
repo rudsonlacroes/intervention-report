@@ -77,7 +77,8 @@ const translations = {
         chkEngineers: "Engineers & Hours",
         chkThirdParty: "Third Party Support",
         chkCosts: "Internal Costs",
-        btnPrintCustomerPdf: "Print / Save Customer PDF"
+        btnPrintCustomerPdf: "Print / Save Customer PDF",
+        msgValidationRequired: "Please fill in all required fields (marked in red) before submitting the report."
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -153,7 +154,8 @@ const translations = {
         chkEngineers: "Engineers & Uren",
         chkThirdParty: "Externe Ondersteuning",
         chkCosts: "Interne Kosten",
-        btnPrintCustomerPdf: "Print / Sla Klantrapport op als PDF"
+        btnPrintCustomerPdf: "Print / Sla Klantrapport op als PDF",
+        msgValidationRequired: "Vul alle verplichte velden in (rood gemarkeerd) voordat u het rapport verzendt."
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -229,7 +231,8 @@ const translations = {
         chkEngineers: "Techniker & Stunden",
         chkThirdParty: "Fremdunterstützung",
         chkCosts: "Interne Kosten",
-        btnPrintCustomerPdf: "Kundendokument drucken / als PDF speichern"
+        btnPrintCustomerPdf: "Kundendokument drucken / als PDF speichern",
+        msgValidationRequired: "Bitte füllen Sie alle Pflichtfelder aus (rot markiert), bevor Sie den Bericht senden."
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -305,7 +308,8 @@ const translations = {
         chkEngineers: "Tecnici & Ore",
         chkThirdParty: "Supporto di Terze Parti",
         chkCosts: "Costi Interni",
-        btnPrintCustomerPdf: "Stampa / Salva PDF Cliente"
+        btnPrintCustomerPdf: "Stampa / Salva PDF Cliente",
+        msgValidationRequired: "Si prega di compilare tutti i campi obbligatori (evidenziati in rosso) prima di inviare il rapporto."
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -381,7 +385,8 @@ const translations = {
         chkEngineers: "Inżynierowie i Godziny",
         chkThirdParty: "Wsparcie Zewnętrzne",
         chkCosts: "Koszty Wewnętrzne",
-        btnPrintCustomerPdf: "Drukuj / Zapisz PDF dla Klienta"
+        btnPrintCustomerPdf: "Drukuj / Zapisz PDF dla Klienta",
+        msgValidationRequired: "Proszę wypełnić wszystkie wymagane pola (zaznaczone na czerwono) przed wysłaniem raportu."
     }
 };
 
@@ -818,7 +823,8 @@ function handleFormSubmit(event, btnElement) {
     if (firstInvalidField) {
         const msg = document.getElementById('submit-validation-msg');
         if (msg) {
-            msg.textContent = '⚠️ Vul alle verplichte velden in (rood gemarkeerd) voordat u het rapport verzendt.';
+            const lang = localStorage.getItem('fortna_lang') || 'en';
+            msg.textContent = `⚠️ ${translations[lang].msgValidationRequired}`;
             msg.classList.remove('hidden');
         }
         firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });

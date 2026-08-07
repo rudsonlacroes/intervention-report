@@ -205,12 +205,12 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="relative">
-                            <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblCustSite">Customer & Site Location</label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblCustSite">Customer & Site Location</span> <span class="text-red-500">*</span></label>
                             <input type="text" id="customer-site" required autocomplete="off" class="w-full text-xs p-2 border rounded">
                             <ul id="customer-site-suggestions" class="hidden absolute z-20 left-0 right-0 mt-1 bg-white border border-indigo-200 rounded-lg shadow-lg max-h-56 overflow-y-auto text-xs"></ul>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblSO">Service Order Number</label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblSO">Service Order Number</span> <span class="text-red-500">*</span></label>
                             <input type="text" id="service-order" placeholder="e.g. 0000104" onblur="normalizeServiceOrderNumber()" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div class="relative">
@@ -225,7 +225,7 @@
                             <input type="text" id="salesforce-ref" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblContact">Contact Name Customer</label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblContact">Contact Name Customer</span> <span class="text-red-500">*</span></label>
                             <input type="text" id="contact-name" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
@@ -235,7 +235,7 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblDate">Intervention Date</label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblDate">Intervention Date</span> <span class="text-red-500">*</span></label>
                             <input type="date" id="date" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
@@ -330,7 +330,7 @@
                 </div>
 
                 <div class="bg-white p-4 rounded-md border border-cyan-100 border-l-4 border-l-cyan-600 shadow-sm space-y-3">
-                    <h2 class="text-sm font-bold text-cyan-700 uppercase tracking-wider" data-i18n="secWork">Work Performed</h2>
+                    <h2 class="text-sm font-bold text-cyan-700 uppercase tracking-wider"><span data-i18n="secWork">Work Performed</span> <span class="text-red-500">*</span></h2>
                     <textarea id="work-performed-desc" rows="4" class="w-full text-xs p-2 border rounded"></textarea>
                 </div>
 
