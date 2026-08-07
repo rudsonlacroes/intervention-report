@@ -41,6 +41,10 @@ const POWER_AUTOMATE_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.env
 // Zelfde beveiligingskanttekening als hierboven geldt voor deze URL.
 const IG_LOOKUP_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/23/workflows/b57329532d894f2ba2da48b76e317b39/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TvcdrKza3xfiHK7dB5zZo0bBB5NipA1LvXV1PNkkf48";
 
+// Read-only lookup-flow: haalt de e-mailtekst-templates (per taal) op uit de
+// Email_Templates SharePoint-lijst. Zelfde beveiligingskanttekening als hierboven.
+const EMAIL_SETTINGS_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/342e5d27b78d4358bd88e47a35587c5a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=5xpbYk-dQmnO-0GRNiz4dqqmGw72Yw6_0pQKACDCdBU";
+
 // ==========================================
 // INSTALLATION GROUP LOOKUP (SharePoint via Power Automate)
 // ==========================================
@@ -124,6 +128,83 @@ async function loadIgLookupData() {
             const lang = localStorage.getItem('fortna_lang') || 'en';
             setIgLookupStatus(translations[lang].msgIgFetchError);
         }
+    }
+}
+
+// ==========================================
+// EMAIL-TEKSTEN LOOKUP (Email_Templates SharePoint-lijst via Power Automate)
+// ==========================================
+let emailSettings = {}; // { en: {subject, introLine, reminderLine, closingLine}, nl: {...}, ... }
+const EMAIL_SETTINGS_CACHE_KEY = 'fortna_email_settings_cache';
+
+// De Language-kolom in Email_Templates bevat gegarandeerd 2-letter-codes in hoofdletters
+// (EN/NL/DE/IT/PL) — simpelweg lowercasen is dus voldoende om te matchen met fortna_lang.
+// Voor de overige kolomnamen houden we, net als bij de IG-lookup, wat fallback-varianten
+// aan voor het geval SharePoint de interne veldnamen anders opslaat.
+function normalizeEmailSettingsResponse(raw) {
+    let items = raw;
+    if (!Array.isArray(items)) {
+        items = raw?.value || raw?.body || raw?.items || raw?.Items || [];
+    }
+    if (!Array.isArray(items)) return {};
+
+    const result = {};
+    items.forEach(item => {
+        const langRaw = item['Language'] ?? item['Title'] ?? item['language'] ?? item['Taal'] ?? '';
+        const lang = String(langRaw).trim().toLowerCase();
+        if (!lang) return;
+
+        const subject = item['Subject'] ?? item['EmailSubject'] ?? item['Subject_x0020_'] ?? '';
+        const introLine = item['IntroLine'] ?? item['Intro_x0020_Line'] ?? item['Intro Line'] ?? '';
+        const reminderLine = item['ReminderLine'] ?? item['Reminder_x0020_Line'] ?? item['Reminder Line'] ?? '';
+        const closingLine = item['ClosingLine'] ?? item['Closing_x0020_Line'] ?? item['Closing Line'] ?? '';
+
+        result[lang] = {
+            subject: String(subject).trim(),
+            introLine: String(introLine).trim(),
+            reminderLine: String(reminderLine).trim(),
+            closingLine: String(closingLine).trim()
+        };
+    });
+    return result;
+}
+
+async function loadEmailSettings() {
+    // 1. Toon meteen de laatst bekende (gecachte) versie, zodat offline werken direct mogelijk is.
+    try {
+        const cached = localStorage.getItem(EMAIL_SETTINGS_CACHE_KEY);
+        if (cached) {
+            const parsed = JSON.parse(cached);
+            emailSettings = parsed.data || {};
+        }
+    } catch (e) { /* corrupte cache negeren */ }
+
+    // 2. Probeer op de achtergrond een verse versie op te halen.
+    if (!navigator.onLine) return;
+
+    try {
+        const response = await fetch(EMAIL_SETTINGS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        });
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const raw = await response.json();
+
+        // Handig voor het eerste testmoment: log de ruwe respons zodat je in de
+        // browser-devtools (F12 > Console) precies kunt zien welke veldnamen
+        // SharePoint teruggeeft, mocht de automatische herkenning niet kloppen.
+        console.log('Email settings lookup — ruwe respons van Power Automate:', raw);
+
+        const parsed = normalizeEmailSettingsResponse(raw);
+        if (Object.keys(parsed).length > 0) {
+            emailSettings = parsed;
+            localStorage.setItem(EMAIL_SETTINGS_CACHE_KEY, JSON.stringify({ data: parsed, savedAt: new Date().toLocaleString() }));
+        } else {
+            console.warn('Email settings lookup: kon geen taalregels herkennen in de respons. Controleer de veldnamen — zie console.log hierboven.');
+        }
+    } catch (e) {
+        console.error('Email settings lookup ophalen mislukt:', e);
     }
 }
 
@@ -1493,6 +1574,9 @@ const FOLLOWUP_PRIORITY_I18N_KEY = { High: 'prioHigh', Normal: 'prioNormal', Low
 function buildEmailSummary() {
     const lang = localStorage.getItem('fortna_lang') || 'en';
     const t = translations[lang];
+    // Centraal beheerde teksten uit SharePoint (Email_Templates) hebben voorrang; zolang die
+    // nog niet geladen zijn (trage/geen verbinding), vallen we terug op de vaste translations.js-teksten.
+    const remote = emailSettings[lang];
 
     const to = document.getElementById('customer-email')?.value?.trim() || '';
     const site = document.getElementById('customer-site')?.value?.trim() || '';
@@ -1507,11 +1591,16 @@ function buildEmailSummary() {
     const ownerLabel = FOLLOWUP_OWNER_I18N_KEY[ownerRaw] ? t[FOLLOWUP_OWNER_I18N_KEY[ownerRaw]] : '';
     const priorityLabel = FOLLOWUP_PRIORITY_I18N_KEY[priorityRaw] ? t[FOLLOWUP_PRIORITY_I18N_KEY[priorityRaw]] : '';
 
-    const subject = t.emailSubjectTemplate.replace('{site}', site).replace('{so}', so);
+    const subjectTemplate = remote?.subject || t.emailSubjectTemplate;
+    const introTemplate = remote?.introLine || t.emailIntro;
+    const reminderLine = remote?.reminderLine || t.emailPdfReminder;
+    const closingLine = remote?.closingLine || t.emailClosing;
+
+    const subject = subjectTemplate.replace('{site}', site).replace('{so}', so);
 
     const lines = [
         t.emailGreeting, '',
-        t.emailIntro.replace('{date}', date), '',
+        introTemplate.replace('{date}', date), '',
         `- ${t.emailLabelSite}: ${site}`,
         `- ${t.emailLabelSO}: ${so}`,
         `- ${t.emailLabelDate}: ${date}`
@@ -1519,7 +1608,7 @@ function buildEmailSummary() {
     if (activitiesLabel) lines.push(`- ${t.emailLabelActivitiesCompleted}: ${activitiesLabel}`);
     if (ownerLabel) lines.push(`- ${t.emailLabelFollowUpOwner}: ${ownerLabel}`);
     if (priorityLabel) lines.push(`- ${t.emailLabelFollowUpPriority}: ${priorityLabel}`);
-    lines.push('', t.emailPdfReminder, '', t.emailClosing);
+    lines.push('', reminderLine, '', closingLine);
 
     return { to, subject, body: lines.join('\n') };
 }
@@ -1585,6 +1674,7 @@ window.addEventListener('load', () => {
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
     loadIgLookupData();
+    loadEmailSettings();
     setupIgTypeaheads();
     const savedLang = localStorage.getItem('fortna_lang') || 'en';
     changeLanguage(savedLang);
