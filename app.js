@@ -850,6 +850,23 @@ function renderPendingQueueBadge() {
         }
     }
     if (syncBtn) syncBtn.classList.toggle('hidden', keys.length === 0);
+    const clearBtn = document.getElementById('clear-queue-btn');
+    if (clearBtn) clearBtn.classList.toggle('hidden', keys.length === 0);
+}
+
+// Verwijdert ALLE openstaande wachtrij-rapporten (bijv. oude/kapotte pogingen
+// die telkens blijven falen). Vraagt eerst bevestiging, want dit is onomkeerbaar.
+function clearPendingQueue() {
+    const keys = getPendingReportKeys();
+    if (keys.length === 0) {
+        alert("Geen rapporten in de wachtrij.");
+        return;
+    }
+    const ok = confirm(`Weet u zeker dat u alle ${keys.length} wachtende rapport(en) wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`);
+    if (!ok) return;
+    keys.forEach(key => localStorage.removeItem(key));
+    renderPendingQueueBadge();
+    alert("🗑️ Wachtrij geleegd.");
 }
 
 function syncPendingReports() {
