@@ -1107,10 +1107,42 @@ function handlePhotoUpload(event) {
     Array.from(files).forEach(file => {
         const reader = new FileReader();
         reader.onload = (e) => {
-            uploadedFiles.push({ name: file.name, data: e.target.result, type: file.type, category: 'photo' });
-            appendPhotoPreview(e.target.result, file.name);
+            if (file.type.startsWith('image/')) {
+                compressImage(e.target.result, 1600, 0.7).then(compressedDataUrl => {
+                    uploadedFiles.push({ name: file.name, data: compressedDataUrl, type: 'image/jpeg', category: 'photo' });
+                    appendPhotoPreview(compressedDataUrl, file.name);
+                });
+            } else {
+                uploadedFiles.push({ name: file.name, data: e.target.result, type: file.type, category: 'photo' });
+                appendPhotoPreview(e.target.result, file.name);
+            }
         };
         reader.readAsDataURL(file);
+    });
+}
+
+function compressImage(dataUrl, maxSize, quality) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            let { width, height } = img;
+            if (width > maxSize || height > maxSize) {
+                if (width > height) {
+                    height = Math.round(height * (maxSize / width));
+                    width = maxSize;
+                } else {
+                    width = Math.round(width * (maxSize / height));
+                    height = maxSize;
+                }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
     });
 }
 
