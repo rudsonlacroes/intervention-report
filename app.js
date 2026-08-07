@@ -770,10 +770,62 @@ function buildSubmitPayload() {
 }
 
 // ==========================================
+// VALIDATIE VERPLICHTE VELDEN VÓÓR VERZENDEN
+// ==========================================
+const REQUIRED_SUBMIT_FIELDS = ['customer-site', 'service-order', 'contact-name', 'date', 'work-performed-desc'];
+
+// Zet border-red-500 op elk leeg verplicht veld en geeft het eerste ongeldige element terug (of null als alles ok is).
+function validateRequiredFields() {
+    let firstInvalid = null;
+    REQUIRED_SUBMIT_FIELDS.forEach(id => {
+        const elem = document.getElementById(id);
+        if (!elem) return;
+        if (!elem.value || !elem.value.trim()) {
+            elem.classList.add('border-red-500');
+            if (!firstInvalid) firstInvalid = elem;
+        }
+    });
+    return firstInvalid;
+}
+
+// Verwijdert de rode rand automatisch zodra een verplicht veld weer wordt ingevuld,
+// en verbergt de waarschuwing zodra geen enkel verplicht veld meer ongeldig is.
+function setupRequiredFieldValidationClearing() {
+    REQUIRED_SUBMIT_FIELDS.forEach(id => {
+        const elem = document.getElementById(id);
+        if (!elem) return;
+        const clear = () => {
+            if (!elem.value || !elem.value.trim()) return;
+            elem.classList.remove('border-red-500');
+            const stillInvalid = REQUIRED_SUBMIT_FIELDS.some(fid => document.getElementById(fid)?.classList.contains('border-red-500'));
+            if (!stillInvalid) {
+                const msg = document.getElementById('submit-validation-msg');
+                if (msg) msg.classList.add('hidden');
+            }
+        };
+        elem.addEventListener('input', clear);
+        elem.addEventListener('blur', clear);
+    });
+}
+
+// ==========================================
 // FORM SUBMISSION (NAAR POWER AUTOMATE) + OFFLINE WACHTRIJ
 // ==========================================
 function handleFormSubmit(event, btnElement) {
     if (event) event.preventDefault();
+
+    const firstInvalidField = validateRequiredFields();
+    if (firstInvalidField) {
+        const msg = document.getElementById('submit-validation-msg');
+        if (msg) {
+            msg.textContent = '⚠️ Vul alle verplichte velden in (rood gemarkeerd) voordat u het rapport verzendt.';
+            msg.classList.remove('hidden');
+        }
+        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+    const msg = document.getElementById('submit-validation-msg');
+    if (msg) msg.classList.add('hidden');
 
     let originalText = '';
     if (btnElement) {
@@ -806,6 +858,7 @@ function handleFormSubmit(event, btnElement) {
             alert("✅ Rapport en bijlagen succesvol verstuurd naar Power Automate!");
             uploadedFiles = [];
             document.getElementById('photos-preview-container').innerHTML = '';
+            localStorage.removeItem('fortna_autosave_current');
         } else {
             queuePendingReport(payload);
             alert(`⚠️ Power Automate statuscode: ${response.status}. Rapport is lokaal opgeslagen in de wachtrij, probeer later opnieuw te synchroniseren.`);
@@ -1032,6 +1085,47 @@ function saveDraft() {
     } catch (e) {
         alert("Opslagruimte overschreden!");
     }
+}
+
+// ==========================================
+// STILLE AUTO-SAVE (ACHTERGROND, ELKE 30 SEC.)
+// ==========================================
+const AUTOSAVE_KEY = 'fortna_autosave_current';
+
+// Slaat het formulier stil op onder een vaste key (overschrijft steeds), zonder alert().
+// Slaat niets op als het formulier nog leeg is (geen customer-site en geen service-order).
+function autoSaveSilent() {
+    const site = document.getElementById('customer-site')?.value?.trim();
+    const so = document.getElementById('service-order')?.value?.trim();
+    if (!site && !so) return;
+
+    try {
+        const draftData = getFormDataObject();
+        draftData['_savedAtEpoch'] = Date.now();
+        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draftData));
+
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const status = document.getElementById('auto-save-status');
+        if (status) status.textContent = `Automatisch opgeslagen om ${timeStr}`;
+    } catch (e) {
+        // Stil negeren: dit is een achtergrondproces, de gebruiker mag hier niet door gestoord worden.
+    }
+}
+
+// Toont bij het laden van de pagina een niet-opdringerige banner als er een recent
+// (< 2 uur oud) automatisch opgeslagen concept klaarstaat, met een knop om het te laden.
+function checkAutoSaveRecovery() {
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if (!raw) return;
+
+    try {
+        const data = JSON.parse(raw);
+        const twoHoursMs = 2 * 60 * 60 * 1000;
+        if (Date.now() - (data['_savedAtEpoch'] || 0) > twoHoursMs) return;
+
+        const banner = document.getElementById('autosave-recovery-banner');
+        if (banner) banner.classList.remove('hidden');
+    } catch (e) {}
 }
 
 function openDraftManagerModal() {
@@ -1601,4 +1695,8 @@ window.addEventListener('load', () => {
     changeLanguage(savedLang);
     const langSwitcher = document.getElementById('language-switcher');
     if (langSwitcher) langSwitcher.value = savedLang;
+
+    checkAutoSaveRecovery();
+    setupRequiredFieldValidationClearing();
+    setInterval(autoSaveSilent, 30000);
 });
