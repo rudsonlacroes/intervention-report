@@ -437,7 +437,19 @@ const translations = {
         msgIgOffline: "⚠️ Offline — nessun elenco clienti disponibile",
         msgIgLoadedUpdated: "📋 {count} clienti caricati (aggiornato)",
         msgIgParseError: "⚠️ Impossibile leggere l'elenco clienti",
-        msgIgFetchError: "⚠️ Impossibile recuperare l'elenco clienti"
+        msgIgFetchError: "⚠️ Impossibile recuperare l'elenco clienti",
+        btnEmailCustomer: "✉️ Email Cliente",
+        msgEmailNoAddress: "Inserire prima l'indirizzo email del cliente prima di aprire un'email.",
+        emailSubjectTemplate: "Rapporto di Visita di Servizio - {site} - {so}",
+        emailGreeting: "Gentile Cliente,",
+        emailIntro: "Di seguito il riepilogo della visita del {date}:",
+        emailLabelSite: "Cliente/Sede",
+        emailLabelSO: "Numero Ordine di Servizio",
+        emailLabelDate: "Data",
+        emailLabelActivitiesCompleted: "Attività completate",
+        emailLabelFollowUpOwner: "Responsabile azione successiva",
+        emailLabelFollowUpPriority: "Priorità",
+        emailPdfReminder: "Non dimenticare di allegare manualmente il rapporto PDF."
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -537,6 +549,18 @@ const translations = {
         msgIgOffline: "⚠️ Offline — brak dostępnej listy klientów",
         msgIgLoadedUpdated: "📋 Załadowano {count} klientów (zaktualizowano)",
         msgIgParseError: "⚠️ Nie można odczytać listy klientów",
-        msgIgFetchError: "⚠️ Nie można pobrać listy klientów"
+        msgIgFetchError: "⚠️ Nie można pobrać listy klientów",
+        btnEmailCustomer: "✉️ Email do Klienta",
+        msgEmailNoAddress: "Najpierw wprowadź adres e-mail klienta, zanim otworzysz wiadomość e-mail.",
+        emailSubjectTemplate: "Raport z Wizyty Serwisowej - {site} - {so}",
+        emailGreeting: "Szanowni Państwo,",
+        emailIntro: "Poniżej podsumowanie wizyty w dniu {date}:",
+        emailLabelSite: "Klient/Lokalizacja",
+        emailLabelSO: "Numer Zlecenia Serwisowego",
+        emailLabelDate: "Data",
+        emailLabelActivitiesCompleted: "Czynności ukończone",
+        emailLabelFollowUpOwner: "Właściciel działania następczego",
+        emailLabelFollowUpPriority: "Priorytet",
+        emailPdfReminder: "Nie zapomnij ręcznie dołączyć raportu PDF."
     }
 };

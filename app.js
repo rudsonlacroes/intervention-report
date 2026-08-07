@@ -1478,6 +1478,66 @@ window.addEventListener('afterprint', () => {
     document.title = ORIGINAL_PAGE_TITLE;
 });
 
+// ==========================================
+// EMAIL KLANT (mailto:)
+// ==========================================
+const ACTIVITIES_COMPLETED_I18N_KEY = { Yes: 'optYes', Partly: 'optPartly', No: 'optNo' };
+const FOLLOWUP_OWNER_I18N_KEY = {
+    'Planning': 'ownerPlanning', 'Job Prep': 'ownerJobPrep', 'Customer Support': 'ownerCustomerSupport',
+    'Sales / Account Manager': 'ownerSales', 'Technical Support': 'ownerTechSupport', 'Other': 'ownerOther'
+};
+const FOLLOWUP_PRIORITY_I18N_KEY = { High: 'prioHigh', Normal: 'prioNormal', Low: 'prioLow' };
+
+// Bouwt de {to, subject, body} voor de klant-e-mail op, los van mailto-specifieke encodering —
+// zo is dit later herbruikbaar voor een ander verzendkanaal zonder deze logica te dupliceren.
+function buildEmailSummary() {
+    const lang = localStorage.getItem('fortna_lang') || 'en';
+    const t = translations[lang];
+
+    const to = document.getElementById('customer-email')?.value?.trim() || '';
+    const site = document.getElementById('customer-site')?.value?.trim() || '';
+    const so = document.getElementById('service-order')?.value?.trim() || '';
+    const date = document.getElementById('date')?.value || '';
+
+    const activitiesRaw = document.querySelector('input[name="activities-completed"]:checked')?.value || '';
+    const ownerRaw = document.querySelector('input[name="followup-owner"]:checked')?.value || '';
+    const priorityRaw = document.querySelector('input[name="followup-priority"]:checked')?.value || '';
+
+    const activitiesLabel = ACTIVITIES_COMPLETED_I18N_KEY[activitiesRaw] ? t[ACTIVITIES_COMPLETED_I18N_KEY[activitiesRaw]] : '';
+    const ownerLabel = FOLLOWUP_OWNER_I18N_KEY[ownerRaw] ? t[FOLLOWUP_OWNER_I18N_KEY[ownerRaw]] : '';
+    const priorityLabel = FOLLOWUP_PRIORITY_I18N_KEY[priorityRaw] ? t[FOLLOWUP_PRIORITY_I18N_KEY[priorityRaw]] : '';
+
+    const subject = t.emailSubjectTemplate.replace('{site}', site).replace('{so}', so);
+
+    const lines = [
+        t.emailGreeting, '',
+        t.emailIntro.replace('{date}', date), '',
+        `- ${t.emailLabelSite}: ${site}`,
+        `- ${t.emailLabelSO}: ${so}`,
+        `- ${t.emailLabelDate}: ${date}`
+    ];
+    if (activitiesLabel) lines.push(`- ${t.emailLabelActivitiesCompleted}: ${activitiesLabel}`);
+    if (ownerLabel) lines.push(`- ${t.emailLabelFollowUpOwner}: ${ownerLabel}`);
+    if (priorityLabel) lines.push(`- ${t.emailLabelFollowUpPriority}: ${priorityLabel}`);
+    lines.push('', t.emailPdfReminder);
+
+    return { to, subject, body: lines.join('\n') };
+}
+
+// Opent de mail-app van de monteur met een vooraf ingevulde samenvatting. Geen bijlage mogelijk
+// via mailto: — de monteur voegt de zojuist opgeslagen PDF er zelf aan toe.
+function emailCustomerSummary() {
+    const lang = localStorage.getItem('fortna_lang') || 'en';
+    const { to, subject, body } = buildEmailSummary();
+
+    if (!to) {
+        alert(translations[lang].msgEmailNoAddress);
+        return;
+    }
+
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 function switchTab(tab) {
     const customerContent = document.getElementById('tab-customer-content');
     const adminContent = document.getElementById('tab-admin-content');
