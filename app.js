@@ -1345,8 +1345,14 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
-            <div class="md:col-span-3"><input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()"></div>
-            <div class="md:col-span-3"><input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()"></div>
+            <div class="md:col-span-3">
+                <input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
+                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded no-print">▶️ Start Nu</button>
+            </div>
+            <div class="md:col-span-3">
+                <input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
+                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-[10px] bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded no-print">⏹️ Eindig Nu</button>
+            </div>
             <div class="md:col-span-4"><span class="text-xs font-bold text-blue-600 eng-hours-val" data-hours-num="0">0.00 hrs</span></div>
             <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs">Remove</button></div>
         </div>
@@ -1411,6 +1417,19 @@ function toggleTravelFromDetails(travelFromSelectEl) {
     const noTravelFields = row.querySelector('.eng-notravel-fields');
     if (hotelFields) hotelFields.classList.toggle('hidden', travelFromSelectEl.value !== 'Hotel');
     if (noTravelFields) noTravelFields.classList.toggle('hidden', travelFromSelectEl.value !== 'No Travel');
+}
+
+// Vult het start- of eind-tijdveld van deze engineer-rij met de huidige tijd (HH:MM)
+// en herberekent meteen de uren — handmatig corrigeren blijft daarna gewoon mogelijk.
+function setEngineerTimeNow(buttonEl, which) {
+    const row = buttonEl.closest('[id^="eng-row-"]');
+    if (!row) return;
+    const input = row.querySelector(which === 'start' ? '.eng-start' : '.eng-end');
+    if (!input) return;
+
+    const now = new Date();
+    input.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    calculateGrandTotals();
 }
 
 function addThirdPartyEntry(name = '', desc = '', cost = '', receiptImg = '') {
