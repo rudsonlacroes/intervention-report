@@ -78,14 +78,18 @@ async function loadIgLookupData() {
             const parsed = JSON.parse(cached);
             igLookupData = parsed.data || [];
             if (igLookupData.length > 0) {
-                setIgLookupStatus(`📋 ${igLookupData.length} klanten geladen (${parsed.savedAt})`);
+                const lang = localStorage.getItem('fortna_lang') || 'en';
+                setIgLookupStatus(translations[lang].msgIgLoaded.replace('{count}', igLookupData.length).replace('{date}', parsed.savedAt));
             }
         }
     } catch (e) { /* corrupte cache negeren */ }
 
     // 2. Probeer op de achtergrond een verse lijst op te halen.
     if (!navigator.onLine) {
-        if (igLookupData.length === 0) setIgLookupStatus('⚠️ Offline — geen klantenlijst beschikbaar');
+        if (igLookupData.length === 0) {
+            const lang = localStorage.getItem('fortna_lang') || 'en';
+            setIgLookupStatus(translations[lang].msgIgOffline);
+        }
         return;
     }
 
@@ -104,18 +108,22 @@ async function loadIgLookupData() {
         console.log('IG lookup — ruwe respons van Power Automate:', raw);
 
         const parsed = normalizeIgLookupResponse(raw);
+        const lang = localStorage.getItem('fortna_lang') || 'en';
         if (parsed.length > 0) {
             igLookupData = parsed;
             const savedAt = new Date().toLocaleString();
             localStorage.setItem(IG_CACHE_KEY, JSON.stringify({ data: parsed, savedAt }));
-            setIgLookupStatus(`📋 ${parsed.length} klanten geladen (bijgewerkt)`);
+            setIgLookupStatus(translations[lang].msgIgLoadedUpdated.replace('{count}', parsed.length));
         } else {
             console.warn('IG lookup: kon geen klantregels herkennen in de respons. Controleer de veldnamen — zie console.log hierboven.');
-            if (igLookupData.length === 0) setIgLookupStatus('⚠️ Klantenlijst kon niet worden gelezen');
+            if (igLookupData.length === 0) setIgLookupStatus(translations[lang].msgIgParseError);
         }
     } catch (e) {
         console.error('IG lookup ophalen mislukt:', e);
-        if (igLookupData.length === 0) setIgLookupStatus('⚠️ Klantenlijst kon niet worden opgehaald');
+        if (igLookupData.length === 0) {
+            const lang = localStorage.getItem('fortna_lang') || 'en';
+            setIgLookupStatus(translations[lang].msgIgFetchError);
+        }
     }
 }
 
@@ -408,7 +416,7 @@ function attachVoiceInput(textareaId) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'mt-1 text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2 py-1 rounded no-print';
-    btn.textContent = '🎤 Dicteer';
+    btn.textContent = translations[localStorage.getItem('fortna_lang') || 'en'].btnDictate;
     textarea.insertAdjacentElement('afterend', btn);
 
     const recognition = new SpeechRecognitionCtor();
@@ -419,7 +427,8 @@ function attachVoiceInput(textareaId) {
 
     function setRecordingUi(isRecording) {
         recording = isRecording;
-        btn.textContent = isRecording ? '🔴 Opnemen... (klik om te stoppen)' : '🎤 Dicteer';
+        const lang = localStorage.getItem('fortna_lang') || 'en';
+        btn.textContent = isRecording ? translations[lang].btnRecording : translations[lang].btnDictate;
         btn.classList.toggle('animate-pulse', isRecording);
         btn.classList.toggle('bg-red-600', isRecording);
         btn.classList.toggle('hover:bg-red-700', isRecording);
@@ -862,15 +871,16 @@ function closeDuplicateVisitModal() {
 // Service-order zelf wordt bewust NIET overgenomen (elk bezoek krijgt een eigen nummer);
 // alleen het Agreement Type (GLA/LTA/LAA/Other) wordt vooraf gezet.
 function confirmDuplicateVisit() {
+    const lang = localStorage.getItem('fortna_lang') || 'en';
     const query = document.getElementById('duplicate-visit-input')?.value || '';
     const matches = findCustomerVisitRecords(query);
     if (matches.length === 0) {
-        alert(`Geen eerder bezoek gevonden voor "${query}".`);
+        alert(translations[lang].msgNoVisitFound.replace('{query}', query));
         return;
     }
 
     const record = matches[0];
-    if (!confirm(`Wilt u de klantgegevens van "${record.site}" overnemen?`)) return;
+    if (!confirm(translations[lang].msgConfirmTakeOver.replace('{site}', record.site))) return;
 
     const setVal = (id, val) => {
         const el = document.getElementById(id);
@@ -888,7 +898,7 @@ function confirmDuplicateVisit() {
     }
 
     closeDuplicateVisitModal();
-    document.getElementById('auto-save-status').textContent = `Klantgegevens overgenomen van "${record.site}"`;
+    document.getElementById('auto-save-status').textContent = translations[lang].msgVisitTakenOver.replace('{site}', record.site);
 }
 
 // ==========================================
@@ -910,7 +920,8 @@ function autoSaveSilent() {
 
         const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const status = document.getElementById('auto-save-status');
-        if (status) status.textContent = `Automatisch opgeslagen om ${timeStr}`;
+        const lang = localStorage.getItem('fortna_lang') || 'en';
+        if (status) status.textContent = translations[lang].msgAutoSaved.replace('{time}', timeStr);
     } catch (e) {
         // Stil negeren: dit is een achtergrondproces, de gebruiker mag hier niet door gestoord worden.
     }
@@ -1118,6 +1129,7 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
     type = type || 'Service Engineer';
 
     const rowId = Date.now() + Math.floor(Math.random() * 1000);
+    const lang = localStorage.getItem('fortna_lang') || 'en';
     const div = document.createElement('div');
     div.className = 'bg-gray-50 p-3 rounded-md border space-y-3 relative shadow-xs';
     div.id = `eng-row-${rowId}`;
@@ -1145,11 +1157,11 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
             <div class="md:col-span-3">
                 <input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded no-print">▶️ Start Nu</button>
+                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded no-print">${translations[lang].btnStartNow}</button>
             </div>
             <div class="md:col-span-3">
                 <input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-[10px] bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded no-print">⏹️ Eindig Nu</button>
+                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-[10px] bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded no-print">${translations[lang].btnStopNow}</button>
             </div>
             <div class="md:col-span-4"><span class="text-xs font-bold text-blue-600 eng-hours-val" data-hours-num="0">0.00 hrs</span></div>
             <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs">Remove</button></div>
