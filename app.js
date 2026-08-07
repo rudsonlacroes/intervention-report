@@ -1,395 +1,3 @@
-// ==========================================
-// TRANSLATIONS (EN / NL)
-// ==========================================
-
-const translations = {
-    en: {
-        title: "Service Visit Report",
-        subTitle: "Digital report for on-site service interventions",
-        tabCustomer: "1. Customer Report (Client View)",
-        tabAdmin: "2. Internal & Admin Data (Back-office)",
-        secGeneral: "General Information",
-        lblCustSite: "Customer & Site Location",
-        lblSO: "Service Order Number",
-        lblInstGroup: "Installation Group",
-        lblSFRef: "Salesforce Case / Ref",
-        lblContact: "Contact Name Customer",
-        lblPhone: "Phone Nr. Customer",
-        lblDate: "Intervention Date",
-        lblCallTime: "Inbound Call Time",
-        lblAgreement: "Agreement Type",
-        secIntervention: "Type of Intervention",
-        secMalfunction: "Description of Malfunction",
-        secScope: "Original Scope of Work",
-        lblPlannedActivities: "Planned activities",
-        lblPlannedDuration: "Planned duration",
-        lblPlannedResources: "Planned resources",
-        lblPlannedMaterials: "Planned materials",
-        lblScopeValidation: "Can the original scope be executed as planned?",
-        optYes: "Yes",
-        optNo: "No",
-        optPartly: "Partly",
-        lblScopeReasons: "Reasons",
-        reasonCustomerRequest: "Customer requested additional work",
-        reasonAdditionalDefect: "Additional defect found",
-        reasonPlanningSO: "Planning requested to work on additional Service Order nr",
-        reasonWaitingTime: "Waiting time",
-        reasonMaterialUnavailable: "Material unavailable",
-        reasonSafetyIssue: "Safety issue",
-        reasonOther: "Other, description",
-        secWork: "Work Performed",
-        secParts: "Used Spare Parts",
-        secPhotos: "Photos",
-        secCompletion: "Visit Completion & Follow-up",
-        lblActivitiesCompleted: "Were all planned activities completed?",
-        lblRemainingWork: "Describe remaining work",
-        lblAdditionalWorkPerformed: "Was additional work performed?",
-        lblAdditionalWorkDescYes: "What extra work did you do? Please describe:",
-        lblAdditionalWorkDescNo: "What extra work needs to be done? Please describe:",
-        lblFollowUpRequired: "Follow-up required",
-        lblActionOwner: "Action Owner",
-        ownerPlanning: "Planning",
-        ownerJobPrep: "Job Prep",
-        ownerCustomerSupport: "Customer Support",
-        ownerSales: "Sales / Account Manager",
-        ownerTechSupport: "Technical Support",
-        ownerOther: "Other",
-        lblPriority: "Priority",
-        prioHigh: "High",
-        prioNormal: "Normal",
-        prioLow: "Low",
-        lblCustomerDecision: "Customer decision",
-        decApproved: "Approved",
-        decQuotationFirst: "Quotation first (only applicable by follow-up)",
-        decDeclined: "Declined",
-        lblPOInstruction: "PO instruction",
-        poExisting: "Existing PO",
-        poRevised: "Revised PO",
-        poAdditional: "Additional PO",
-        poTBD: "To be determined",
-        secSignatures: "Signatures & Approval",
-        secEngineers: "Engineers & Hours Breakdown",
-        secThirdParty: "Third Party Support & Subcontractors",
-        secCosts: "Internal Costs & Expenses",
-        secCustomerDoc: "Customer Document — What may the customer see?",
-        lblCustomerDocHint: "Check which sections are included in the printout. This choice only affects the customer document — Power Automate/SharePoint always receives the full data, including all attachments.",
-        chkPhotos: "Photos",
-        chkEngineers: "Engineers & Hours",
-        chkThirdParty: "Third Party Support",
-        chkCosts: "Internal Costs",
-        btnPrintCustomerPdf: "Print / Save Customer PDF",
-        msgValidationRequired: "Please fill in all required fields (marked in red) before submitting the report."
-    },
-    nl: {
-        title: "Service Bezoek Rapport",
-        subTitle: "Digitaal rapport voor service-interventies op locatie",
-        tabCustomer: "1. Klantrapport (Klantweergave)",
-        tabAdmin: "2. Interne & Admin Data (Back-office)",
-        secGeneral: "Algemene Informatie",
-        lblCustSite: "Klant & Locatie",
-        lblSO: "Service Order Nummer",
-        lblInstGroup: "Installatiegroep",
-        lblSFRef: "Salesforce Case / Ref",
-        lblContact: "Naam Contactpersoon Klant",
-        lblPhone: "Telefoonnr. Klant",
-        lblDate: "Interventiedatum",
-        lblCallTime: "Tijd Inkomend Gesprek",
-        lblAgreement: "Contractvorm",
-        secIntervention: "Soort Interventie",
-        secMalfunction: "Beschrijving van de Storing",
-        secScope: "Oorspronkelijke Scope van het Werk",
-        lblPlannedActivities: "Geplande activiteiten",
-        lblPlannedDuration: "Geplande duur",
-        lblPlannedResources: "Geplande resources",
-        lblPlannedMaterials: "Geplande materialen",
-        lblScopeValidation: "Kan de oorspronkelijke scope worden uitgevoerd zoals gepland?",
-        optYes: "Ja",
-        optNo: "Nee",
-        optPartly: "Gedeeltelijk",
-        lblScopeReasons: "Redenen",
-        reasonCustomerRequest: "Klant heeft extra werk aangevraagd",
-        reasonAdditionalDefect: "Extra defect gevonden",
-        reasonPlanningSO: "Planning verzocht om aan extra Service Order nr te werken",
-        reasonWaitingTime: "Wachttijd",
-        reasonMaterialUnavailable: "Materiaal niet beschikbaar",
-        reasonSafetyIssue: "Veiligheidskwestie",
-        reasonOther: "Overig, beschrijving",
-        secWork: "Uitgevoerd Werk",
-        secParts: "Gebruikte Reserveonderdelen",
-        secPhotos: "Foto's",
-        secCompletion: "Afronding Bezoek & Vervolgactie",
-        lblActivitiesCompleted: "Zijn alle geplande activiteiten voltooid?",
-        lblRemainingWork: "Beschrijf resterend werk",
-        lblAdditionalWorkPerformed: "Is er extra werk uitgevoerd?",
-        lblAdditionalWorkDescYes: "Welk extra werk heeft u gedaan? Beschrijf:",
-        lblAdditionalWorkDescNo: "Welk extra werk moet nog gebeuren? Beschrijf:",
-        lblFollowUpRequired: "Vervolgactie vereist",
-        lblActionOwner: "Actie Eigenaar",
-        ownerPlanning: "Planning",
-        ownerJobPrep: "Werkvoorbereiding",
-        ownerCustomerSupport: "Customer Support",
-        ownerSales: "Sales / Account Manager",
-        ownerTechSupport: "Technical Support",
-        ownerOther: "Overig",
-        lblPriority: "Prioriteit",
-        prioHigh: "Hoog",
-        prioNormal: "Normaal",
-        prioLow: "Laag",
-        lblCustomerDecision: "Klantbeslissing",
-        decApproved: "Goedgekeurd",
-        decQuotationFirst: "Eerst offerte (alleen van toepassing bij follow-up)",
-        decDeclined: "Afgewezen",
-        lblPOInstruction: "PO instructie",
-        poExisting: "Bestaande PO",
-        poRevised: "Herziene PO",
-        poAdditional: "Aanvullende PO",
-        poTBD: "Nog te bepalen",
-        secSignatures: "Handtekeningen & Goedkeuring",
-        secEngineers: "Engineers & Urenoverzicht",
-        secThirdParty: "Externe Ondersteuning & Onderaannemers",
-        secCosts: "Interne Kosten & Uitgaven",
-        secCustomerDoc: "Klantdocument — Wat mag de klant zien?",
-        lblCustomerDocHint: "Vink aan welke onderdelen worden meegeprint. Deze keuze bepaalt alleen het klantdocument — naar Power Automate/SharePoint gaat altijd de volledige data, inclusief alle bijlages.",
-        chkPhotos: "Foto's",
-        chkEngineers: "Engineers & Uren",
-        chkThirdParty: "Externe Ondersteuning",
-        chkCosts: "Interne Kosten",
-        btnPrintCustomerPdf: "Print / Sla Klantrapport op als PDF",
-        msgValidationRequired: "Vul alle verplichte velden in (rood gemarkeerd) voordat u het rapport verzendt."
-    },
-    de: {
-        title: "Servicebesuchsbericht",
-        subTitle: "Digitaler Bericht für Serviceeinsätze vor Ort",
-        tabCustomer: "1. Kundenbericht (Kundenansicht)",
-        tabAdmin: "2. Interne & Admin-Daten (Back-Office)",
-        secGeneral: "Allgemeine Informationen",
-        lblCustSite: "Kunde & Standort",
-        lblSO: "Auftragsnummer",
-        lblInstGroup: "Installationsgruppe",
-        lblSFRef: "Salesforce-Fall / Ref.",
-        lblContact: "Ansprechpartner Kunde",
-        lblPhone: "Telefonnr. Kunde",
-        lblDate: "Interventionsdatum",
-        lblCallTime: "Zeit des Eingangsanrufs",
-        lblAgreement: "Vertragsart",
-        secIntervention: "Art der Intervention",
-        secMalfunction: "Beschreibung der Störung",
-        secScope: "Ursprünglicher Arbeitsumfang",
-        lblPlannedActivities: "Geplante Tätigkeiten",
-        lblPlannedDuration: "Geplante Dauer",
-        lblPlannedResources: "Geplante Ressourcen",
-        lblPlannedMaterials: "Geplante Materialien",
-        lblScopeValidation: "Kann der ursprüngliche Umfang wie geplant ausgeführt werden?",
-        optYes: "Ja",
-        optNo: "Nein",
-        optPartly: "Teilweise",
-        lblScopeReasons: "Gründe",
-        reasonCustomerRequest: "Kunde hat zusätzliche Arbeiten angefordert",
-        reasonAdditionalDefect: "Zusätzlicher Defekt gefunden",
-        reasonPlanningSO: "Planung hat um Arbeit an zusätzlicher Auftragsnr. gebeten",
-        reasonWaitingTime: "Wartezeit",
-        reasonMaterialUnavailable: "Material nicht verfügbar",
-        reasonSafetyIssue: "Sicherheitsproblem",
-        reasonOther: "Andere, Beschreibung",
-        secWork: "Durchgeführte Arbeiten",
-        secParts: "Verwendete Ersatzteile",
-        secPhotos: "Fotos",
-        secCompletion: "Abschluss des Besuchs & Folgemassnahme",
-        lblActivitiesCompleted: "Wurden alle geplanten Tätigkeiten abgeschlossen?",
-        lblRemainingWork: "Verbleibende Arbeit beschreiben",
-        lblAdditionalWorkPerformed: "Wurden zusätzliche Arbeiten durchgeführt?",
-        lblAdditionalWorkDescYes: "Welche zusätzliche Arbeit haben Sie durchgeführt? Bitte beschreiben:",
-        lblAdditionalWorkDescNo: "Welche zusätzliche Arbeit muss noch erledigt werden? Bitte beschreiben:",
-        lblFollowUpRequired: "Folgemassnahme erforderlich",
-        lblActionOwner: "Verantwortlich",
-        ownerPlanning: "Planung",
-        ownerJobPrep: "Arbeitsvorbereitung",
-        ownerCustomerSupport: "Kundensupport",
-        ownerSales: "Vertrieb / Account Manager",
-        ownerTechSupport: "Technischer Support",
-        ownerOther: "Andere",
-        lblPriority: "Priorität",
-        prioHigh: "Hoch",
-        prioNormal: "Normal",
-        prioLow: "Niedrig",
-        lblCustomerDecision: "Kundenentscheidung",
-        decApproved: "Genehmigt",
-        decQuotationFirst: "Erst Angebot (nur bei Folgemassnahme anwendbar)",
-        decDeclined: "Abgelehnt",
-        lblPOInstruction: "PO-Anweisung",
-        poExisting: "Bestehende PO",
-        poRevised: "Überarbeitete PO",
-        poAdditional: "Zusätzliche PO",
-        poTBD: "Noch zu bestimmen",
-        secSignatures: "Unterschriften & Genehmigung",
-        secEngineers: "Techniker & Stundenübersicht",
-        secThirdParty: "Fremdunterstützung & Subunternehmer",
-        secCosts: "Interne Kosten & Ausgaben",
-        secCustomerDoc: "Kundendokument — Was darf der Kunde sehen?",
-        lblCustomerDocHint: "Wählen Sie aus, welche Abschnitte gedruckt werden. Diese Auswahl betrifft nur das Kundendokument — an Power Automate/SharePoint werden immer alle Daten inklusive aller Anhänge übermittelt.",
-        chkPhotos: "Fotos",
-        chkEngineers: "Techniker & Stunden",
-        chkThirdParty: "Fremdunterstützung",
-        chkCosts: "Interne Kosten",
-        btnPrintCustomerPdf: "Kundendokument drucken / als PDF speichern",
-        msgValidationRequired: "Bitte füllen Sie alle Pflichtfelder aus (rot markiert), bevor Sie den Bericht senden."
-    },
-    it: {
-        title: "Rapporto di Visita di Servizio",
-        subTitle: "Rapporto digitale per interventi di assistenza in loco",
-        tabCustomer: "1. Rapporto Cliente (Vista Cliente)",
-        tabAdmin: "2. Dati Interni & Admin (Back-office)",
-        secGeneral: "Informazioni Generali",
-        lblCustSite: "Cliente e Sede",
-        lblSO: "Numero Ordine di Servizio",
-        lblInstGroup: "Gruppo di Installazione",
-        lblSFRef: "Caso Salesforce / Rif.",
-        lblContact: "Nome Contatto Cliente",
-        lblPhone: "Tel. Cliente",
-        lblDate: "Data Intervento",
-        lblCallTime: "Ora Chiamata in Entrata",
-        lblAgreement: "Tipo di Contratto",
-        secIntervention: "Tipo di Intervento",
-        secMalfunction: "Descrizione del Guasto",
-        secScope: "Ambito Originale del Lavoro",
-        lblPlannedActivities: "Attività pianificate",
-        lblPlannedDuration: "Durata pianificata",
-        lblPlannedResources: "Risorse pianificate",
-        lblPlannedMaterials: "Materiali pianificati",
-        lblScopeValidation: "L'ambito originale può essere eseguito come pianificato?",
-        optYes: "Sì",
-        optNo: "No",
-        optPartly: "Parzialmente",
-        lblScopeReasons: "Motivi",
-        reasonCustomerRequest: "Il cliente ha richiesto lavori aggiuntivi",
-        reasonAdditionalDefect: "Trovato un ulteriore difetto",
-        reasonPlanningSO: "La pianificazione ha richiesto di lavorare su un ulteriore Ordine di Servizio nr.",
-        reasonWaitingTime: "Tempo di attesa",
-        reasonMaterialUnavailable: "Materiale non disponibile",
-        reasonSafetyIssue: "Problema di sicurezza",
-        reasonOther: "Altro, descrizione",
-        secWork: "Lavoro Svolto",
-        secParts: "Parti di Ricambio Utilizzate",
-        secPhotos: "Foto",
-        secCompletion: "Completamento Visita & Azione Successiva",
-        lblActivitiesCompleted: "Tutte le attività pianificate sono state completate?",
-        lblRemainingWork: "Descrivere il lavoro rimanente",
-        lblAdditionalWorkPerformed: "È stato svolto lavoro aggiuntivo?",
-        lblAdditionalWorkDescYes: "Che lavoro extra hai svolto? Si prega di descrivere:",
-        lblAdditionalWorkDescNo: "Che lavoro extra deve ancora essere svolto? Si prega di descrivere:",
-        lblFollowUpRequired: "Azione successiva richiesta",
-        lblActionOwner: "Responsabile Azione",
-        ownerPlanning: "Pianificazione",
-        ownerJobPrep: "Preparazione Lavoro",
-        ownerCustomerSupport: "Assistenza Clienti",
-        ownerSales: "Vendite / Account Manager",
-        ownerTechSupport: "Supporto Tecnico",
-        ownerOther: "Altro",
-        lblPriority: "Priorità",
-        prioHigh: "Alta",
-        prioNormal: "Normale",
-        prioLow: "Bassa",
-        lblCustomerDecision: "Decisione del Cliente",
-        decApproved: "Approvato",
-        decQuotationFirst: "Prima preventivo (applicabile solo per azioni successive)",
-        decDeclined: "Rifiutato",
-        lblPOInstruction: "Istruzione PO",
-        poExisting: "PO Esistente",
-        poRevised: "PO Rivisto",
-        poAdditional: "PO Aggiuntivo",
-        poTBD: "Da determinare",
-        secSignatures: "Firme & Approvazione",
-        secEngineers: "Tecnici & Riepilogo Ore",
-        secThirdParty: "Supporto di Terze Parti & Subappaltatori",
-        secCosts: "Costi Interni & Spese",
-        secCustomerDoc: "Documento Cliente — Cosa può vedere il cliente?",
-        lblCustomerDocHint: "Seleziona quali sezioni includere nella stampa. Questa scelta riguarda solo il documento cliente — Power Automate/SharePoint riceve sempre tutti i dati, inclusi tutti gli allegati.",
-        chkPhotos: "Foto",
-        chkEngineers: "Tecnici & Ore",
-        chkThirdParty: "Supporto di Terze Parti",
-        chkCosts: "Costi Interni",
-        btnPrintCustomerPdf: "Stampa / Salva PDF Cliente",
-        msgValidationRequired: "Si prega di compilare tutti i campi obbligatori (evidenziati in rosso) prima di inviare il rapporto."
-    },
-    pl: {
-        title: "Raport z Wizyty Serwisowej",
-        subTitle: "Cyfrowy raport z interwencji serwisowych na miejscu",
-        tabCustomer: "1. Raport Klienta (Widok Klienta)",
-        tabAdmin: "2. Dane Wewnętrzne i Administracyjne (Back-office)",
-        secGeneral: "Informacje Ogólne",
-        lblCustSite: "Klient i Lokalizacja",
-        lblSO: "Numer Zlecenia Serwisowego",
-        lblInstGroup: "Grupa Instalacyjna",
-        lblSFRef: "Sprawa Salesforce / Ref.",
-        lblContact: "Osoba Kontaktowa Klienta",
-        lblPhone: "Nr Tel. Klienta",
-        lblDate: "Data Interwencji",
-        lblCallTime: "Godzina Zgłoszenia",
-        lblAgreement: "Rodzaj Umowy",
-        secIntervention: "Rodzaj Interwencji",
-        secMalfunction: "Opis Awarii",
-        secScope: "Pierwotny Zakres Prac",
-        lblPlannedActivities: "Planowane czynności",
-        lblPlannedDuration: "Planowany czas trwania",
-        lblPlannedResources: "Planowane zasoby",
-        lblPlannedMaterials: "Planowane materiały",
-        lblScopeValidation: "Czy pierwotny zakres można wykonać zgodnie z planem?",
-        optYes: "Tak",
-        optNo: "Nie",
-        optPartly: "Częściowo",
-        lblScopeReasons: "Powody",
-        reasonCustomerRequest: "Klient poprosił o dodatkową pracę",
-        reasonAdditionalDefect: "Znaleziono dodatkową usterkę",
-        reasonPlanningSO: "Planowanie poprosiło o pracę nad dodatkowym zleceniem nr",
-        reasonWaitingTime: "Czas oczekiwania",
-        reasonMaterialUnavailable: "Materiał niedostępny",
-        reasonSafetyIssue: "Kwestia bezpieczeństwa",
-        reasonOther: "Inne, opis",
-        secWork: "Wykonana Praca",
-        secParts: "Użyte Części Zamienne",
-        secPhotos: "Zdjęcia",
-        secCompletion: "Zakończenie Wizyty i Dalsze Działania",
-        lblActivitiesCompleted: "Czy wszystkie planowane czynności zostały ukończone?",
-        lblRemainingWork: "Opisz pozostałą pracę",
-        lblAdditionalWorkPerformed: "Czy wykonano dodatkową pracę?",
-        lblAdditionalWorkDescYes: "Jaką dodatkową pracę wykonałeś? Proszę opisać:",
-        lblAdditionalWorkDescNo: "Jaka dodatkowa praca musi zostać wykonana? Proszę opisać:",
-        lblFollowUpRequired: "Wymagane dalsze działania",
-        lblActionOwner: "Właściciel Działania",
-        ownerPlanning: "Planowanie",
-        ownerJobPrep: "Przygotowanie Pracy",
-        ownerCustomerSupport: "Obsługa Klienta",
-        ownerSales: "Sprzedaż / Account Manager",
-        ownerTechSupport: "Wsparcie Techniczne",
-        ownerOther: "Inne",
-        lblPriority: "Priorytet",
-        prioHigh: "Wysoki",
-        prioNormal: "Normalny",
-        prioLow: "Niski",
-        lblCustomerDecision: "Decyzja Klienta",
-        decApproved: "Zatwierdzone",
-        decQuotationFirst: "Najpierw wycena (dotyczy tylko działań następczych)",
-        decDeclined: "Odrzucone",
-        lblPOInstruction: "Instrukcja PO",
-        poExisting: "Istniejące PO",
-        poRevised: "Zmienione PO",
-        poAdditional: "Dodatkowe PO",
-        poTBD: "Do ustalenia",
-        secSignatures: "Podpisy i Zatwierdzenie",
-        secEngineers: "Inżynierowie i Podsumowanie Godzin",
-        secThirdParty: "Wsparcie Zewnętrzne i Podwykonawcy",
-        secCosts: "Koszty Wewnętrzne i Wydatki",
-        secCustomerDoc: "Dokument Klienta — Co może zobaczyć klient?",
-        lblCustomerDocHint: "Zaznacz, które sekcje mają zostać wydrukowane. Ten wybór dotyczy tylko dokumentu klienta — do Power Automate/SharePoint zawsze trafiają wszystkie dane, łącznie z załącznikami.",
-        chkPhotos: "Zdjęcia",
-        chkEngineers: "Inżynierowie i Godziny",
-        chkThirdParty: "Wsparcie Zewnętrzne",
-        chkCosts: "Koszty Wewnętrzne",
-        btnPrintCustomerPdf: "Drukuj / Zapisz PDF dla Klienta",
-        msgValidationRequired: "Proszę wypełnić wszystkie wymagane pola (zaznaczone na czerwono) przed wysłaniem raportu."
-    }
-};
-
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW fail:', err));
@@ -775,6 +383,78 @@ function buildSubmitPayload() {
 }
 
 // ==========================================
+// SPRAAK-NAAR-TEKST (WEB SPEECH API)
+// ==========================================
+const SPEECH_RECOGNITION_LANG_MAP = { en: 'en-US', nl: 'nl-NL', de: 'de-DE', it: 'it-IT', pl: 'pl-PL' };
+
+// Voegt een microfoonknop toe direct onder de gegeven textarea. Herkende spraak wordt
+// AANGEVULD aan de bestaande inhoud (niet overschreven) — de monteur kan gewoon blijven
+// typen/corrigeren. Bestaat SpeechRecognition niet in deze browser, dan tonen we alleen
+// een korte, niet-opdringerige melding i.p.v. de knop, zonder verder iets te breken.
+function attachVoiceInput(textareaId) {
+    const textarea = document.getElementById(textareaId);
+    if (!textarea) return;
+
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) {
+        const lang = localStorage.getItem('fortna_lang') || 'en';
+        const hint = document.createElement('p');
+        hint.className = 'text-[10px] text-gray-400 italic mt-1 no-print';
+        hint.textContent = translations[lang]?.msgVoiceNotSupported || 'Speech recognition is not supported in this browser.';
+        textarea.insertAdjacentElement('afterend', hint);
+        return;
+    }
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mt-1 text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2 py-1 rounded no-print';
+    btn.textContent = '🎤 Dicteer';
+    textarea.insertAdjacentElement('afterend', btn);
+
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    let recording = false;
+
+    function setRecordingUi(isRecording) {
+        recording = isRecording;
+        btn.textContent = isRecording ? '🔴 Opnemen... (klik om te stoppen)' : '🎤 Dicteer';
+        btn.classList.toggle('animate-pulse', isRecording);
+        btn.classList.toggle('bg-red-600', isRecording);
+        btn.classList.toggle('hover:bg-red-700', isRecording);
+        btn.classList.toggle('bg-indigo-600', !isRecording);
+        btn.classList.toggle('hover:bg-indigo-700', !isRecording);
+    }
+
+    recognition.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript;
+        }
+        if (finalTranscript.trim()) {
+            const needsSeparator = textarea.value && !/[\s\n]$/.test(textarea.value);
+            textarea.value += (needsSeparator ? ' ' : '') + finalTranscript.trim();
+        }
+    };
+
+    recognition.onerror = () => setRecordingUi(false);
+    recognition.onend = () => setRecordingUi(false);
+
+    btn.addEventListener('click', () => {
+        if (recording) {
+            recognition.stop();
+        } else {
+            recognition.lang = SPEECH_RECOGNITION_LANG_MAP[localStorage.getItem('fortna_lang') || 'en'] || 'en-US';
+            try {
+                recognition.start();
+                setRecordingUi(true);
+            } catch (e) { /* al bezig met opnemen of geen microfoon-toegang: negeren */ }
+        }
+    });
+}
+
+// ==========================================
 // VALIDATIE VERPLICHTE VELDEN VÓÓR VERZENDEN
 // ==========================================
 const REQUIRED_SUBMIT_FIELDS = ['customer-site', 'service-order', 'contact-name', 'date', 'work-performed-desc'];
@@ -1091,6 +771,124 @@ function saveDraft() {
     } catch (e) {
         alert("Opslagruimte overschreden!");
     }
+}
+
+// ==========================================
+// DUPLICEER LAATSTE BEZOEK KLANT
+// ==========================================
+// Een succesvol verstuurd rapport wordt nergens lokaal bewaard (zie handleFormSubmit),
+// dus als bron voor "laatste bezoek" doorzoeken we de twee plekken die wél een volledige
+// momentopname bevatten: handmatige/stille drafts (fortna_draft_*, fortna_autosave_current)
+// en nog niet succesvol verzonden rapporten in de wachtrij (fortna_pending_*).
+function cleanDuplicateVisitValue(v) {
+    return (!v || v === 'N/A' || v === 'Unknown_Site') ? '' : v;
+}
+
+function findCustomerVisitRecords(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const results = [];
+
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('fortna_draft_') || key === AUTOSAVE_KEY) {
+            try {
+                const draft = JSON.parse(localStorage.getItem(key));
+                const site = draft.fields?.['customer-site'] || '';
+                if (!site.toLowerCase().includes(q)) return;
+
+                const agreementKey = Object.keys(draft.fields || {}).find(k => k.startsWith('name_agreement-type_') && draft.fields[k]);
+
+                results.push({
+                    site,
+                    timestamp: key === AUTOSAVE_KEY ? (draft['_savedAtEpoch'] || 0) : (Number(key.split('_').pop()) || 0),
+                    installationGroup: draft.fields?.['installation-group'] || '',
+                    contactName: draft.fields?.['contact-name'] || '',
+                    contactPhone: draft.fields?.['contact-phone'] || '',
+                    customerEmail: draft.fields?.['customer-email'] || '',
+                    agreementType: agreementKey ? agreementKey.replace('name_agreement-type_', '') : ''
+                });
+            } catch (e) { /* corrupte/onleesbare entry overslaan */ }
+        } else if (key.startsWith('fortna_pending_')) {
+            try {
+                const record = JSON.parse(localStorage.getItem(key));
+                const site = record.payload?.customerSite || '';
+                if (!site.toLowerCase().includes(q)) return;
+
+                results.push({
+                    site,
+                    timestamp: Number(key.replace('fortna_pending_', '')) || 0,
+                    installationGroup: record.payload?.installationGroup || '',
+                    contactName: record.payload?.contactName || '',
+                    contactPhone: record.payload?.contactPhone || '',
+                    customerEmail: record.payload?.customerEmail || '',
+                    agreementType: record.payload?.agreementType || ''
+                });
+            } catch (e) { /* corrupte/onleesbare entry overslaan */ }
+        }
+    });
+
+    return results.sort((a, b) => b.timestamp - a.timestamp);
+}
+
+// Vult de datalist met alle bekende klantnamen uit drafts/pending, zodat de monteur kan kiezen i.p.v. exact typen.
+function openDuplicateVisitModal() {
+    const datalist = document.getElementById('duplicate-customer-options');
+    if (datalist) {
+        const sites = new Set();
+        Object.keys(localStorage).forEach(key => {
+            try {
+                if (key.startsWith('fortna_draft_') || key === AUTOSAVE_KEY) {
+                    const site = cleanDuplicateVisitValue(JSON.parse(localStorage.getItem(key)).fields?.['customer-site']);
+                    if (site) sites.add(site);
+                } else if (key.startsWith('fortna_pending_')) {
+                    const site = cleanDuplicateVisitValue(JSON.parse(localStorage.getItem(key)).payload?.customerSite);
+                    if (site) sites.add(site);
+                }
+            } catch (e) { /* corrupte/onleesbare entry overslaan */ }
+        });
+        datalist.innerHTML = Array.from(sites).sort().map(s => `<option value="${s}"></option>`).join('');
+    }
+
+    const input = document.getElementById('duplicate-visit-input');
+    if (input) input.value = '';
+    document.getElementById('duplicate-visit-modal')?.classList.remove('hidden');
+}
+
+function closeDuplicateVisitModal() {
+    document.getElementById('duplicate-visit-modal')?.classList.add('hidden');
+}
+
+// Neemt alleen klant-/locatiegegevens over in het huidige (lege) formulier — de rest blijft ongewijzigd.
+// Service-order zelf wordt bewust NIET overgenomen (elk bezoek krijgt een eigen nummer);
+// alleen het Agreement Type (GLA/LTA/LAA/Other) wordt vooraf gezet.
+function confirmDuplicateVisit() {
+    const query = document.getElementById('duplicate-visit-input')?.value || '';
+    const matches = findCustomerVisitRecords(query);
+    if (matches.length === 0) {
+        alert(`Geen eerder bezoek gevonden voor "${query}".`);
+        return;
+    }
+
+    const record = matches[0];
+    if (!confirm(`Wilt u de klantgegevens van "${record.site}" overnemen?`)) return;
+
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = cleanDuplicateVisitValue(val);
+    };
+    setVal('customer-site', record.site);
+    setVal('installation-group', record.installationGroup);
+    setVal('contact-name', record.contactName);
+    setVal('contact-phone', record.contactPhone);
+    setVal('customer-email', record.customerEmail);
+
+    if (record.agreementType) {
+        const radio = document.querySelector(`input[name="agreement-type"][value="${record.agreementType}"]`);
+        if (radio) radio.checked = true;
+    }
+
+    closeDuplicateVisitModal();
+    document.getElementById('auto-save-status').textContent = `Klantgegevens overgenomen van "${record.site}"`;
 }
 
 // ==========================================
@@ -1724,4 +1522,9 @@ window.addEventListener('load', () => {
     checkAutoSaveRecovery();
     setupRequiredFieldValidationClearing();
     setInterval(autoSaveSilent, 30000);
+
+    attachVoiceInput('work-performed-desc');
+    attachVoiceInput('malfunction-desc');
+    attachVoiceInput('remaining-work-desc');
+    attachVoiceInput('additional-work-desc');
 });
