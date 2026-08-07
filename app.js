@@ -422,7 +422,7 @@ let uploadedFiles = [];
 // LET OP: deze URL (incl. signature) staat zichtbaar in de client-side code.
 // Voor productiegebruik met echte klantdata: beveilig de trigger met Azure AD-auth
 // of laat de request via een tussenlaag (bv. Azure Function) lopen.
-const POWER_AUTOMATE_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/04/workflows/2c700520555049929795fc4c1df7ebfd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qcnJS_lSp0z8v7g6oj9J9fpBElgbHcjzrUNyBFAL0z4";
+const POWER_AUTOMATE_URL = "https://defaultaf45b6ebfef340a8a4c7f197c92a86.33.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/961984ed08f542518fe340685b97e011/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9hI0BXppe1buSGpE0FPfOkS5gBu5cR87N2bAmwaCgQk";
 
 // Read-only lookup-flow: haalt de Installation Group-lijst op uit SharePoint.
 // Zelfde beveiligingskanttekening als hierboven geldt voor deze URL.
