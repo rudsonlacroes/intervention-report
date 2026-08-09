@@ -114,7 +114,15 @@ const translations = {
         emailLabelFollowUpOwner: "Follow-up owner",
         emailLabelFollowUpPriority: "Priority",
         emailPdfReminder: "Don't forget to manually attach the PDF report.",
-        emailClosing: "Kind regards,\nFortna Service Team"
+        emailClosing: "Kind regards,\nFortna Service Team",
+        lblPartsUsed: "Were spare parts used?",
+        lblPartsSource: "Source",
+        lblPartsReorder: "Needs Reorder",
+        lblPartsShipTo: "Ship To Location",
+        optCar: "Car",
+        optCustomerStock: "Customer Stock",
+        optHouten: "Houten",
+        optCustomer: "Customer"
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -227,7 +235,15 @@ const translations = {
         emailLabelFollowUpOwner: "Vervolgactie eigenaar",
         emailLabelFollowUpPriority: "Prioriteit",
         emailPdfReminder: "Vergeet niet het PDF-rapport handmatig bij te voegen.",
-        emailClosing: "Met vriendelijke groet,\nFortna Service Team"
+        emailClosing: "Met vriendelijke groet,\nFortna Service Team",
+        lblPartsUsed: "Zijn er onderdelen gebruikt?",
+        lblPartsSource: "Bron",
+        lblPartsReorder: "Herbestellen nodig",
+        lblPartsShipTo: "Verzendlocatie",
+        optCar: "Auto",
+        optCustomerStock: "Klant voorraad",
+        optHouten: "Houten",
+        optCustomer: "Klant"
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -340,7 +356,15 @@ const translations = {
         emailLabelFollowUpOwner: "Verantwortlich für Folgemassnahme",
         emailLabelFollowUpPriority: "Priorität",
         emailPdfReminder: "Vergessen Sie nicht, den PDF-Bericht manuell anzuhängen.",
-        emailClosing: "Mit freundlichen Grüßen,\nFortna Service Team"
+        emailClosing: "Mit freundlichen Grüßen,\nFortna Service Team",
+        lblPartsUsed: "Wurden Ersatzteile verwendet?",
+        lblPartsSource: "Quelle",
+        lblPartsReorder: "Nachbestellung nötig",
+        lblPartsShipTo: "Lieferort",
+        optCar: "Fahrzeug",
+        optCustomerStock: "Kundenbestand",
+        optHouten: "Houten",
+        optCustomer: "Kunde"
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -453,7 +477,15 @@ const translations = {
         emailLabelFollowUpOwner: "Responsabile azione successiva",
         emailLabelFollowUpPriority: "Priorità",
         emailPdfReminder: "Non dimenticare di allegare manualmente il rapporto PDF.",
-        emailClosing: "Cordiali saluti,\nFortna Service Team"
+        emailClosing: "Cordiali saluti,\nFortna Service Team",
+        lblPartsUsed: "Sono state utilizzate parti di ricambio?",
+        lblPartsSource: "Origine",
+        lblPartsReorder: "Riordino necessario",
+        lblPartsShipTo: "Luogo di Spedizione",
+        optCar: "Auto",
+        optCustomerStock: "Magazzino Cliente",
+        optHouten: "Houten",
+        optCustomer: "Cliente"
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -566,6 +598,14 @@ const translations = {
         emailLabelFollowUpOwner: "Właściciel działania następczego",
         emailLabelFollowUpPriority: "Priorytet",
         emailPdfReminder: "Nie zapomnij ręcznie dołączyć raportu PDF.",
-        emailClosing: "Z poważaniem,\nFortna Service Team"
+        emailClosing: "Z poważaniem,\nFortna Service Team",
+        lblPartsUsed: "Czy użyto części zamiennych?",
+        lblPartsSource: "Źródło",
+        lblPartsReorder: "Wymaga zamówienia",
+        lblPartsShipTo: "Lokalizacja Dostawy",
+        optCar: "Samochód",
+        optCustomerStock: "Magazyn Klienta",
+        optHouten: "Houten",
+        optCustomer: "Klient"
     }
 };

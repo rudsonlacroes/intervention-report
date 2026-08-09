@@ -431,7 +431,14 @@ function getFormDataObject() {
         const qty = row.querySelector('.part-qty')?.value || '';
         const artNo = row.querySelector('.part-artno')?.value || '';
         const desc = row.querySelector('.part-desc')?.value || '';
-        if (qty || artNo || desc) data.parts.push({ qty, artNo, desc });
+        const source = row.querySelector('.part-source')?.value || '';
+        // Niet via de generieke "name_<name>_<value>" radiologica (zoals scope-as-planned):
+        // part-reorder gebruikt een per-rij-uniek name-attribuut (name="part-reorder-${rowId}"),
+        // en dat rowId verandert elke keer dat de rij opnieuw wordt aangemaakt (bv. bij het laden
+        // van een draft) — dus expliciet uitlezen/doorgeven via de klasse, net als de andere velden.
+        const needsReorder = row.querySelector('.part-reorder:checked')?.value || '';
+        const shipToLocation = row.querySelector('.part-shipto')?.value || '';
+        if (qty || artNo || desc) data.parts.push({ qty, artNo, desc, source, needsReorder, shipToLocation });
     });
 
     document.querySelectorAll('#engineers-container > div').forEach(row => {
@@ -896,7 +903,7 @@ function loadDraftByKey(key) {
 
     const partsContainer = document.getElementById('parts-container');
     if (partsContainer) partsContainer.innerHTML = '';
-    if (data.parts && data.parts.length > 0) data.parts.forEach(p => addPartEntry(p.qty, p.artNo, p.desc));
+    if (data.parts && data.parts.length > 0) data.parts.forEach(p => addPartEntry(p.qty, p.artNo, p.desc, p.source, p.needsReorder, p.shipToLocation));
     else addPartEntry();
 
     const engContainer = document.getElementById('engineers-container');
@@ -942,6 +949,7 @@ function loadDraftByKey(key) {
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
     checkFollowUpVisibility();
+    checkPartsVisibility();
     normalizeServiceOrderNumber();
     calculateGrandTotals();
     document.getElementById('auto-save-status').textContent = `Loaded draft from ${data['_savedAt']}`;
@@ -1277,10 +1285,12 @@ function handleReceiptUpload(event, previewId) {
 // DYNAMISCHE RIJEN (PARTS, ENG, TP, COSTS)
 // ==========================================
 
-function addPartEntry(qty = '', artNo = '', desc = '') {
+function addPartEntry(qty = '', artNo = '', desc = '', source = '', reorder = '', shipTo = '') {
     const container = document.getElementById('parts-container');
     if (!container) return;
     const rowId = Date.now() + Math.floor(Math.random() * 1000);
+    const lang = localStorage.getItem('fortna_lang') || 'en';
+    const t = translations[lang];
     const div = document.createElement('div');
     div.className = 'grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-gray-50 p-2 rounded border';
     div.id = `part-row-${rowId}`;
@@ -1289,8 +1299,45 @@ function addPartEntry(qty = '', artNo = '', desc = '') {
         <div class="md:col-span-3"><input type="text" placeholder="Article No." value="${artNo}" class="part-artno text-xs p-1.5 border rounded w-full"></div>
         <div class="md:col-span-6"><input type="text" placeholder="Description" value="${desc}" class="part-desc text-xs p-1.5 border rounded w-full"></div>
         <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('part-row-${rowId}').remove()" class="text-red-600 font-bold px-3 text-xs min-h-[44px] min-w-[44px] inline-flex items-center justify-center">X</button></div>
+
+        <div class="md:col-span-4 flex items-center gap-2 text-xs">
+            <span class="text-gray-500 font-semibold shrink-0">${t.lblPartsSource}</span>
+            <select class="part-source text-xs p-1.5 border rounded w-full">
+                <option value="Car" ${source === 'Car' ? 'selected' : ''}>${t.optCar}</option>
+                <option value="Customer Stock" ${source === 'Customer Stock' ? 'selected' : ''}>${t.optCustomerStock}</option>
+                <option value="Houten" ${source === 'Houten' ? 'selected' : ''}>${t.optHouten}</option>
+            </select>
+        </div>
+        <div class="md:col-span-4 flex items-center gap-3 text-xs">
+            <span class="text-gray-500 font-semibold shrink-0">${t.lblPartsReorder}</span>
+            <label class="flex items-center"><input type="radio" name="part-reorder-${rowId}" value="Yes" class="part-reorder mr-1" ${reorder === 'Yes' ? 'checked' : ''} onchange="togglePartShipToField(this)"> ${t.optYes}</label>
+            <label class="flex items-center"><input type="radio" name="part-reorder-${rowId}" value="No" class="part-reorder mr-1" ${reorder === 'No' ? 'checked' : ''} onchange="togglePartShipToField(this)"> ${t.optNo}</label>
+        </div>
+        <div class="md:col-span-4 part-shipto-wrapper flex items-center gap-2 text-xs ${reorder === 'Yes' ? '' : 'hidden'}">
+            <span class="text-gray-500 font-semibold shrink-0">${t.lblPartsShipTo}</span>
+            <select class="part-shipto text-xs p-1.5 border rounded w-full">
+                <option value="Car" ${shipTo === 'Car' ? 'selected' : ''}>${t.optCar}</option>
+                <option value="Customer" ${shipTo === 'Customer' ? 'selected' : ''}>${t.optCustomer}</option>
+            </select>
+        </div>
     `;
     container.appendChild(div);
+}
+
+// Toont/verbergt het Ship To Location-veld van deze part-rij, afhankelijk van Needs Reorder.
+function togglePartShipToField(reorderRadioEl) {
+    const row = reorderRadioEl.closest('[id^="part-row-"]');
+    if (!row) return;
+    const shipToField = row.querySelector('.part-shipto-wrapper');
+    if (shipToField) shipToField.classList.toggle('hidden', reorderRadioEl.value !== 'Yes');
+}
+
+// Toont/verbergt de volledige Used Spare Parts-inhoud (Add Part-knop + rijen),
+// afhankelijk van de "Were spare parts used?"-vraag.
+function checkPartsVisibility() {
+    const radio = document.querySelector('input[name="parts-used"]:checked');
+    const block = document.getElementById('parts-section-block');
+    if (block) block.classList.toggle('hidden', !(radio && radio.value === 'Yes'));
 }
 
 function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', start = '', end = '', travelFrom = '', hotelHr = '', hotelKm = '', noTravelSo = '') {
@@ -1626,6 +1673,8 @@ function resetFormWithConfirmation() {
     document.getElementById('scope-reasons-block')?.classList.add('hidden');
     document.getElementById('remaining-work-block')?.classList.add('hidden');
     document.getElementById('additional-work-desc-block')?.classList.add('hidden');
+    document.getElementById('followup-section-block')?.classList.add('hidden');
+    document.getElementById('parts-section-block')?.classList.add('hidden');
 
     document.getElementById('auto-save-status').textContent = 'Form ready';
 }
@@ -1789,6 +1838,7 @@ window.addEventListener('load', () => {
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
     checkFollowUpVisibility();
+    checkPartsVisibility();
     loadIgLookupData();
     loadEmailSettings();
     setupIgTypeaheads();
