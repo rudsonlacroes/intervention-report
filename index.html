@@ -139,32 +139,32 @@
                 </div>
 
                 <div class="no-print flex items-center gap-2">
-                    <select id="language-switcher" onchange="changeLanguage(this.value)" class="text-xs p-2 border border-indigo-200 rounded-lg bg-indigo-50">
+                    <select id="language-switcher" onchange="changeLanguage(this.value)" class="text-xs p-2 border border-indigo-200 rounded-lg bg-indigo-50 min-h-[44px]">
                         <option value="en">English (EN)</option>
                         <option value="nl">Nederlands (NL)</option>
                         <option value="de">Deutsch (DE)</option>
                         <option value="it">Italiano (IT)</option>
                         <option value="pl">Polski (PL)</option>
                     </select>
-                    <button type="button" onclick="openEmailSettingsAdminPanel()" class="text-xs p-2 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100" title="Email Settings Admin">⚙️</button>
+                    <button type="button" onclick="openEmailSettingsAdminPanel()" class="text-xs p-2 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 min-h-[44px] min-w-[44px] inline-flex items-center justify-center" title="Email Settings Admin">⚙️</button>
                 </div>
             </div>
         </div>
 
-        <div class="mb-6 flex flex-col md:flex-row justify-between items-center bg-indigo-50 p-3 rounded-md border border-indigo-100 gap-3 no-print">
-            <div class="flex items-center space-x-3">
+        <div class="mb-6 flex flex-col md:flex-row justify-between items-stretch md:items-center bg-indigo-50 p-3 rounded-md border border-indigo-100 gap-3 no-print">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <span class="text-xs font-semibold text-gray-600">Saved Drafts:</span>
-                <select id="drafts-dropdown" onchange="loadDraftByKey(this.value)" class="text-xs p-1.5 border border-indigo-200 rounded-lg bg-indigo-50">
+                <select id="drafts-dropdown" onchange="loadDraftByKey(this.value)" class="text-xs p-1.5 border border-indigo-200 rounded-lg bg-indigo-50 min-h-[44px] w-full sm:w-auto">
                     <option value="">-- Load Saved Draft --</option>
                 </select>
-                <button type="button" onclick="openDraftManagerModal()" class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold text-xs px-3 py-1.5 rounded border border-red-200">
+                <button type="button" onclick="openDraftManagerModal()" class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold text-xs px-3 py-1.5 rounded border border-red-200 min-h-[44px] inline-flex items-center justify-center">
                     🗑️ Manage / Delete Drafts
                 </button>
-                <button type="button" onclick="openDuplicateVisitModal()" class="bg-teal-100 hover:bg-teal-200 text-teal-700 font-semibold text-xs px-3 py-1.5 rounded border border-teal-200" data-i18n="btnDuplicateVisit">
+                <button type="button" onclick="openDuplicateVisitModal()" class="bg-teal-100 hover:bg-teal-200 text-teal-700 font-semibold text-xs px-3 py-1.5 rounded border border-teal-200 min-h-[44px] inline-flex items-center justify-center" data-i18n="btnDuplicateVisit">
                     🔁 Dupliceer Laatste Bezoek Klant
                 </button>
             </div>
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center gap-3">
                 <span id="auto-save-status" class="text-xs text-gray-500 italic">Form ready</span>
                 <span id="offline-badge" class="hidden text-xs bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded">⚠️ Offline Mode</span>
             </div>
@@ -173,7 +173,7 @@
         <!-- AUTO-SAVE HERSTEL BANNER -->
         <div id="autosave-recovery-banner" class="hidden mb-4 flex flex-col md:flex-row justify-between items-center gap-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold px-3 py-2 rounded-md no-print">
             <span data-i18n="msgAutoSaveRecoveryFound">💡 Er is een automatisch opgeslagen concept gevonden.</span>
-            <button type="button" onclick="loadDraftByKey('fortna_autosave_current'); document.getElementById('autosave-recovery-banner').classList.add('hidden');" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs px-3 py-1.5 rounded" data-i18n="btnLoadConcept">
+            <button type="button" onclick="loadDraftByKey('fortna_autosave_current'); document.getElementById('autosave-recovery-banner').classList.add('hidden');" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs px-3 py-1.5 rounded min-h-[44px] inline-flex items-center justify-center" data-i18n="btnLoadConcept">
                 Concept laden
             </button>
         </div>
@@ -181,19 +181,19 @@
         <!-- SYNC WACHTRIJ BALK -->
         <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-3 no-print">
             <span id="pending-sync-badge" class="hidden text-xs bg-orange-100 text-orange-800 font-bold px-3 py-1.5 rounded border border-orange-200"></span>
-            <button type="button" id="sync-now-btn" onclick="syncPendingReports()" class="hidden bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs px-4 py-1.5 rounded shadow">
+            <button type="button" id="sync-now-btn" onclick="syncPendingReports()" class="hidden bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs px-4 py-1.5 rounded shadow min-h-[44px] inline-flex items-center justify-center">
                 🔄 Sync Now
             </button>
-            <button type="button" id="clear-queue-btn" onclick="clearPendingQueue()" class="hidden bg-gray-500 hover:bg-gray-600 text-white font-semibold text-xs px-4 py-1.5 rounded shadow ml-2">
+            <button type="button" id="clear-queue-btn" onclick="clearPendingQueue()" class="hidden bg-gray-500 hover:bg-gray-600 text-white font-semibold text-xs px-4 py-1.5 rounded shadow ml-2 min-h-[44px] inline-flex items-center justify-center">
                 🗑️ Clear Queue
             </button>
         </div>
 
-        <div class="flex border-b border-gray-300 mb-6 no-print">
-            <button type="button" id="tab-btn-cust" onclick="switchTab('customer')" class="px-4 py-2 font-semibold text-sm rounded-t-lg bg-indigo-600 text-white mr-2" data-i18n="tabCustomer">
+        <div class="flex flex-col sm:flex-row border-b border-gray-300 mb-6 no-print gap-2 sm:gap-0">
+            <button type="button" id="tab-btn-cust" onclick="switchTab('customer')" class="px-4 py-2 font-semibold text-sm rounded-t-lg bg-indigo-600 text-white sm:mr-2 min-h-[44px] inline-flex items-center justify-center" data-i18n="tabCustomer">
                 1. Customer Report (Client View)
             </button>
-            <button type="button" id="tab-btn-adm" onclick="switchTab('admin')" class="px-4 py-2 font-semibold text-sm rounded-t-lg bg-gray-100 text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors mr-2" data-i18n="tabAdmin">
+            <button type="button" id="tab-btn-adm" onclick="switchTab('admin')" class="px-4 py-2 font-semibold text-sm rounded-t-lg bg-gray-100 text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors sm:mr-2 min-h-[44px] inline-flex items-center justify-center" data-i18n="tabAdmin">
                 2. Internal & Admin Data (Back-office)
             </button>
         </div>
@@ -260,7 +260,7 @@
 
                 <div class="bg-white p-4 rounded-md border border-sky-100 border-l-4 border-l-sky-600 shadow-sm space-y-3">
                     <h2 class="text-sm font-bold text-sky-700 uppercase tracking-wider" data-i18n="secIntervention">Type of Intervention</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                         <label><input type="checkbox" name="intervention-type" value="Inspection"> Inspection</label>
                         <label><input type="checkbox" name="intervention-type" value="Maintenance"> Maintenance</label>
                         <label><input type="checkbox" name="intervention-type" value="Training"> Training</label>
@@ -308,8 +308,8 @@
                     <div class="pt-3 border-t border-gray-200">
                         <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblScopeValidation">Can the original scope be executed as planned?</label>
                         <div class="flex items-center space-x-4 text-xs">
-                            <label><input type="radio" name="scope-as-planned" value="Yes" onchange="checkScopeVisibility()"> <span data-i18n="optYes">Yes</span></label>
-                            <label><input type="radio" name="scope-as-planned" value="No" onchange="checkScopeVisibility()"> <span data-i18n="optNo">No</span></label>
+                            <label><input type="radio" name="scope-as-planned" value="Yes" onchange="checkScopeVisibility(); checkFollowUpVisibility();"> <span data-i18n="optYes">Yes</span></label>
+                            <label><input type="radio" name="scope-as-planned" value="No" onchange="checkScopeVisibility(); checkFollowUpVisibility();"> <span data-i18n="optNo">No</span></label>
                         </div>
                     </div>
 
@@ -341,7 +341,7 @@
                 <div class="bg-white p-4 rounded-md border border-teal-100 border-l-4 border-l-teal-600 shadow-sm space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-teal-700 uppercase tracking-wider" data-i18n="secParts">Used Spare Parts</h2>
-                        <button type="button" onclick="addPartEntry()" class="text-xs bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print">+ Add Part</button>
+                        <button type="button" onclick="addPartEntry()" class="text-xs bg-teal-600 hover:bg-teal-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Part</button>
                     </div>
                     <div id="parts-container" class="space-y-2"></div>
                 </div>
@@ -350,11 +350,11 @@
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-rose-700 uppercase tracking-wider" data-i18n="secPhotos">Photos</h2>
                         <div class="flex gap-2 no-print">
-                            <label class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg cursor-pointer inline-block">
+                            <label class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg cursor-pointer inline-flex items-center justify-center min-h-[44px]">
                                 <span data-i18n="btnTakePhoto">📷 Foto maken</span>
                                 <input type="file" accept="image/*" capture="environment" onchange="handlePhotoUpload(event)" class="hidden">
                             </label>
-                            <label class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg cursor-pointer inline-block">
+                            <label class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-semibold px-3 py-1.5 rounded-lg cursor-pointer inline-flex items-center justify-center min-h-[44px]">
                                 <span data-i18n="btnChooseGallery">🖼️ Kies uit galerij</span>
                                 <input type="file" accept="image/*" multiple onchange="handlePhotoUpload(event)" class="hidden">
                             </label>
@@ -372,9 +372,9 @@
                     <div>
                         <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblActivitiesCompleted">Were all planned activities completed?</label>
                         <div class="flex items-center space-x-4 text-xs">
-                            <label><input type="radio" name="activities-completed" value="Yes" onchange="checkCompletionVisibility()"> <span data-i18n="optYes">Yes</span></label>
-                            <label><input type="radio" name="activities-completed" value="Partly" onchange="checkCompletionVisibility()"> <span data-i18n="optPartly">Partly</span></label>
-                            <label><input type="radio" name="activities-completed" value="No" onchange="checkCompletionVisibility()"> <span data-i18n="optNo">No</span></label>
+                            <label><input type="radio" name="activities-completed" value="Yes" onchange="checkCompletionVisibility(); checkFollowUpVisibility();"> <span data-i18n="optYes">Yes</span></label>
+                            <label><input type="radio" name="activities-completed" value="Partly" onchange="checkCompletionVisibility(); checkFollowUpVisibility();"> <span data-i18n="optPartly">Partly</span></label>
+                            <label><input type="radio" name="activities-completed" value="No" onchange="checkCompletionVisibility(); checkFollowUpVisibility();"> <span data-i18n="optNo">No</span></label>
                         </div>
                     </div>
 
@@ -386,8 +386,8 @@
                     <div class="pt-3 border-t border-gray-200">
                         <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblAdditionalWorkPerformed">Was additional work performed?</label>
                         <div class="flex items-center space-x-4 text-xs">
-                            <label><input type="radio" name="additional-work" value="Yes" onchange="checkAdditionalWorkVisibility()"> <span data-i18n="optYes">Yes</span></label>
-                            <label><input type="radio" name="additional-work" value="No" onchange="checkAdditionalWorkVisibility()"> <span data-i18n="optNo">No</span></label>
+                            <label><input type="radio" name="additional-work" value="Yes" onchange="checkAdditionalWorkVisibility(); checkFollowUpVisibility();"> <span data-i18n="optYes">Yes</span></label>
+                            <label><input type="radio" name="additional-work" value="No" onchange="checkAdditionalWorkVisibility(); checkFollowUpVisibility();"> <span data-i18n="optNo">No</span></label>
                         </div>
                     </div>
 
@@ -396,6 +396,7 @@
                         <textarea id="additional-work-desc" rows="2" class="w-full text-xs p-2 border rounded"></textarea>
                     </div>
 
+                    <div id="followup-section-block" class="hidden space-y-4">
                     <div class="pt-3 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblActionOwner">Action Owner</label>
@@ -437,6 +438,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
 
                 <div class="bg-white p-4 rounded-md border border-slate-100 border-l-4 border-l-slate-600 shadow-sm space-y-4">
@@ -468,7 +470,7 @@
                 <div id="sec-engineers-block" class="bg-white p-4 rounded-md border border-blue-100 border-l-4 border-l-blue-600 shadow-sm space-y-4">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-blue-700 uppercase tracking-wider" data-i18n="secEngineers">Engineers & Hours Breakdown</h2>
-                        <button type="button" onclick="addEngineerEntry()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print">+ Add Engineer Row</button>
+                        <button type="button" onclick="addEngineerEntry()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Engineer Row</button>
                     </div>
                     <div id="engineers-container" class="space-y-3"></div>
                     <div class="bg-blue-50 p-3 rounded border text-xs flex justify-around font-semibold text-blue-900">
@@ -481,7 +483,7 @@
                 <div id="sec-tp-block" class="bg-white p-4 rounded-md border border-amber-100 border-l-4 border-l-amber-600 shadow-sm space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-amber-700 uppercase tracking-wider" data-i18n="secThirdParty">Third Party Support & Subcontractors</h2>
-                        <button type="button" onclick="addThirdPartyEntry()" class="text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print">+ Add Third Party</button>
+                        <button type="button" onclick="addThirdPartyEntry()" class="text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Third Party</button>
                     </div>
                     <div id="third-party-container" class="space-y-3"></div>
                 </div>
@@ -489,7 +491,7 @@
                 <div id="sec-costs-block" class="bg-white p-4 rounded-md border border-green-100 border-l-4 border-l-green-600 shadow-sm space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-green-700 uppercase tracking-wider" data-i18n="secCosts">Internal Costs & Expenses</h2>
-                        <button type="button" onclick="addCostEntry()" class="text-xs bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print">+ Add Expense</button>
+                        <button type="button" onclick="addCostEntry()" class="text-xs bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Expense</button>
                     </div>
                     <div id="costs-container" class="space-y-3"></div>
                 </div>
@@ -514,10 +516,10 @@
                     <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-thirdparty" class="mr-2"> <span data-i18n="chkThirdParty">Third Party Support</span></label>
                     <label class="flex items-center bg-gray-50 rounded-md p-2 border"><input type="checkbox" id="print-include-costs" class="mr-2"> <span data-i18n="chkCosts">Internal Costs</span></label>
                 </div>
-                <button type="button" onclick="printCustomerReport()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm">
+                <button type="button" onclick="printCustomerReport()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm min-h-[44px] inline-flex items-center justify-center">
                     🖨️ <span data-i18n="btnPrintCustomerPdf">Print / Save Customer PDF</span>
                 </button>
-                <button type="button" onclick="emailCustomerSummary()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm">
+                <button type="button" onclick="emailCustomerSummary()" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm min-h-[44px] inline-flex items-center justify-center">
                     <span data-i18n="btnEmailCustomer">✉️ Email Klant</span>
                 </button>
             </div>
@@ -526,10 +528,10 @@
             <div class="mt-8 pt-6 border-t border-gray-200 space-y-4 no-print">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="flex gap-2">
-                        <button type="button" onclick="saveDraft()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm">
+                        <button type="button" onclick="saveDraft()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-2 px-4 rounded-lg shadow-sm min-h-[44px] inline-flex items-center justify-center">
                             💾 Save Draft
                         </button>
-                        <button type="button" onclick="resetFormWithConfirmation()" class="bg-slate-600 hover:bg-slate-700 text-white font-semibold text-xs py-2 px-4 rounded-lg">
+                        <button type="button" onclick="resetFormWithConfirmation()" class="bg-slate-600 hover:bg-slate-700 text-white font-semibold text-xs py-2 px-4 rounded-lg min-h-[44px] inline-flex items-center justify-center">
                             📄 Clear Form
                         </button>
                     </div>
@@ -557,8 +559,8 @@
             <div class="flex justify-between items-center pt-3 border-t">
                 <button type="button" onclick="selectAllDrafts(true)" class="text-xs text-blue-600 underline">Select All</button>
                 <div class="flex gap-2">
-                    <button type="button" onclick="closeDraftManagerModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded">Cancel</button>
-                    <button type="button" onclick="deleteSelectedDraftsFromModal()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded">Delete Selected</button>
+                    <button type="button" onclick="closeDraftManagerModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded min-h-[44px] inline-flex items-center justify-center">Cancel</button>
+                    <button type="button" onclick="deleteSelectedDraftsFromModal()" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded min-h-[44px] inline-flex items-center justify-center">Delete Selected</button>
                 </div>
             </div>
         </div>
@@ -577,8 +579,8 @@
                 <datalist id="duplicate-customer-options"></datalist>
             </div>
             <div class="flex justify-end gap-2 pt-3 border-t">
-                <button type="button" onclick="closeDuplicateVisitModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded" data-i18n="btnCancel">Cancel</button>
-                <button type="button" onclick="confirmDuplicateVisit()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded" data-i18n="btnTakeOver">Overnemen</button>
+                <button type="button" onclick="closeDuplicateVisitModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded min-h-[44px] inline-flex items-center justify-center" data-i18n="btnCancel">Cancel</button>
+                <button type="button" onclick="confirmDuplicateVisit()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded min-h-[44px] inline-flex items-center justify-center" data-i18n="btnTakeOver">Overnemen</button>
             </div>
         </div>
     </div>
@@ -615,8 +617,8 @@
             <span id="email-settings-admin-status" class="text-xs font-semibold block"></span>
 
             <div class="flex justify-end gap-2 pt-3 border-t">
-                <button type="button" onclick="closeEmailSettingsAdminPanel()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded">Cancel</button>
-                <button type="button" id="email-settings-admin-save-btn" onclick="saveEmailSettingsAdmin()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded">Opslaan</button>
+                <button type="button" onclick="closeEmailSettingsAdminPanel()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded min-h-[44px] inline-flex items-center justify-center">Cancel</button>
+                <button type="button" id="email-settings-admin-save-btn" onclick="saveEmailSettingsAdmin()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded min-h-[44px] inline-flex items-center justify-center">Opslaan</button>
             </div>
         </div>
     </div>

@@ -243,7 +243,7 @@ function renderEmailSettingsAdminTabs() {
     const container = document.getElementById('email-settings-admin-tabs');
     if (!container) return;
     container.innerHTML = EMAIL_SETTINGS_ADMIN_LANGS.map(lang => `
-        <button type="button" onclick="switchEmailSettingsAdminTab('${lang}')" id="email-settings-admin-tab-${lang}" class="px-3 py-1.5 text-xs font-semibold rounded-t-lg bg-gray-100 text-gray-600 hover:bg-indigo-50">${lang.toUpperCase()}</button>
+        <button type="button" onclick="switchEmailSettingsAdminTab('${lang}')" id="email-settings-admin-tab-${lang}" class="px-3 py-1.5 text-xs font-semibold rounded-t-lg bg-gray-100 text-gray-600 hover:bg-indigo-50 min-h-[44px] min-w-[44px] inline-flex items-center justify-center">${lang.toUpperCase()}</button>
     `).join('');
 }
 
@@ -594,7 +594,7 @@ function attachVoiceInput(textareaId) {
 
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'mt-1 text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-2 py-1 rounded no-print';
+    btn.className = 'mt-1 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-2 rounded no-print min-h-[44px]';
     btn.textContent = translations[localStorage.getItem('fortna_lang') || 'en'].btnDictate;
     textarea.insertAdjacentElement('afterend', btn);
 
@@ -941,6 +941,7 @@ function loadDraftByKey(key) {
     checkScopeVisibility();
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
+    checkFollowUpVisibility();
     normalizeServiceOrderNumber();
     calculateGrandTotals();
     document.getElementById('auto-save-status').textContent = `Loaded draft from ${data['_savedAt']}`;
@@ -1244,7 +1245,7 @@ function appendPhotoPreview(src, fileName = 'Photo') {
     imgDiv.id = imgId;
     imgDiv.innerHTML = `
         <img src="${src}" alt="${fileName}" class="w-full h-32 object-cover rounded">
-        <button type="button" onclick="document.getElementById('${imgId}').remove()" class="absolute top-2 right-2 bg-red-600 text-white font-bold text-xs px-2 py-1 rounded-full shadow hover:bg-red-700 no-print" title="Remove photo">X</button>
+        <button type="button" onclick="document.getElementById('${imgId}').remove()" class="absolute top-2 right-2 bg-red-600 text-white font-bold text-xs rounded-full shadow hover:bg-red-700 no-print min-h-[44px] min-w-[44px] inline-flex items-center justify-center" title="Remove photo">X</button>
         <p class="text-xs text-center text-gray-500 mt-1 truncate">${fileName}</p>
     `;
     previewContainer.appendChild(imgDiv);
@@ -1287,7 +1288,7 @@ function addPartEntry(qty = '', artNo = '', desc = '') {
         <div class="md:col-span-2"><input type="number" placeholder="Qty" value="${qty}" class="part-qty text-xs p-1.5 border rounded w-full"></div>
         <div class="md:col-span-3"><input type="text" placeholder="Article No." value="${artNo}" class="part-artno text-xs p-1.5 border rounded w-full"></div>
         <div class="md:col-span-6"><input type="text" placeholder="Description" value="${desc}" class="part-desc text-xs p-1.5 border rounded w-full"></div>
-        <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('part-row-${rowId}').remove()" class="text-red-600 font-bold px-2 text-xs">X</button></div>
+        <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('part-row-${rowId}').remove()" class="text-red-600 font-bold px-3 text-xs min-h-[44px] min-w-[44px] inline-flex items-center justify-center">X</button></div>
     `;
     container.appendChild(div);
 }
@@ -1336,14 +1337,14 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
             <div class="md:col-span-3">
                 <input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-[10px] bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-1 rounded no-print">${translations[lang].btnStartNow}</button>
+                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStartNow}</button>
             </div>
             <div class="md:col-span-3">
                 <input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-[10px] bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-1 rounded no-print">${translations[lang].btnStopNow}</button>
+                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-xs bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStopNow}</button>
             </div>
             <div class="md:col-span-4"><span class="text-xs font-bold text-blue-600 eng-hours-val" data-hours-num="0">0.00 hrs</span></div>
-            <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs">Remove</button></div>
+            <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs px-3 min-h-[44px] inline-flex items-center justify-center">Remove</button></div>
         </div>
         <div class="eng-travel-fields ${cat === 'Travel Time' ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
             <div class="md:col-span-3">
@@ -1439,7 +1440,7 @@ function addThirdPartyEntry(name = '', desc = '', cost = '', receiptImg = '') {
                 <span class="text-xs font-semibold text-gray-500 currency-symbol">€</span>
                 <input type="text" placeholder="Cost" value="${cost}" class="tp-cost text-xs p-1.5 border rounded w-full">
             </div>
-            <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('tp-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
+            <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('tp-row-${rowId}').remove()" class="text-red-600 font-bold text-xs px-3 min-h-[44px] min-w-[44px] inline-flex items-center justify-center">X</button></div>
         </div>
         <div class="flex items-center space-x-3 pt-2 border-t no-print">
             <label class="text-xs font-semibold text-gray-600">Attach Receipt/Invoice:</label>
@@ -1481,7 +1482,7 @@ function addCostEntry(type = '', amount = '', receiptImg = '') {
                 <span class="text-xs font-semibold text-gray-500 currency-symbol">€</span>
                 <input type="number" step="0.01" min="0" placeholder="Amount" value="${amount}" class="cost-amount text-xs p-1.5 border rounded w-full">
             </div>
-            <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('cost-row-${rowId}').remove()" class="text-red-600 font-bold text-xs">X</button></div>
+            <div class="md:col-span-1 flex justify-end no-print"><button type="button" onclick="document.getElementById('cost-row-${rowId}').remove()" class="text-red-600 font-bold text-xs px-3 min-h-[44px] min-w-[44px] inline-flex items-center justify-center">X</button></div>
         </div>
         <div class="flex items-center space-x-3 pt-2 border-t no-print">
             <label class="text-xs font-semibold text-gray-600">Attach Receipt/Invoice:</label>
@@ -1551,6 +1552,22 @@ function checkAdditionalWorkVisibility() {
             ? translations[lang].lblAdditionalWorkDescYes
             : translations[lang].lblAdditionalWorkDescNo;
     }
+}
+
+// Toont Follow-up Action Owner/Priority + Customer Decision + PO Instruction zodra
+// scope-as-planned = 'No', of activities-completed = 'Partly'/'No', of additional-work
+// beantwoord is (ongeacht Yes/No) — in al deze gevallen is er immers een vervolgactie nodig.
+function checkFollowUpVisibility() {
+    const scopeAsPlanned = document.querySelector('input[name="scope-as-planned"]:checked')?.value;
+    const activitiesCompleted = document.querySelector('input[name="activities-completed"]:checked')?.value;
+    const additionalWork = document.querySelector('input[name="additional-work"]:checked')?.value;
+
+    const show = scopeAsPlanned === 'No'
+        || activitiesCompleted === 'Partly' || activitiesCompleted === 'No'
+        || !!additionalWork;
+
+    const block = document.getElementById('followup-section-block');
+    if (block) block.classList.toggle('hidden', !show);
 }
 
 function setupSignaturePad(canvasId) {
@@ -1771,6 +1788,7 @@ window.addEventListener('load', () => {
     checkScopeVisibility();
     checkCompletionVisibility();
     checkAdditionalWorkVisibility();
+    checkFollowUpVisibility();
     loadIgLookupData();
     loadEmailSettings();
     setupIgTypeaheads();
