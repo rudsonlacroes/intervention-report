@@ -214,8 +214,12 @@
                             <ul id="customer-site-suggestions" class="hidden absolute z-20 left-0 right-0 mt-1 bg-white border border-indigo-200 rounded-lg shadow-lg max-h-56 overflow-y-auto text-xs"></ul>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblSO">Service Order Number</span> <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblSO">Service Order Number</span> <span id="so-required-marker" class="text-red-500">*</span></label>
                             <input type="text" id="service-order" placeholder="e.g. 0000104" onblur="normalizeServiceOrderNumber()" class="w-full text-xs p-2 border rounded">
+                            <label class="flex items-center gap-1 mt-1 text-[10px] text-gray-500">
+                                <input type="checkbox" id="so-pending" onchange="toggleSoPendingField()">
+                                <span data-i18n="lblSoPending">SO number not yet known (will follow up)</span>
+                            </label>
                         </div>
                         <div class="relative">
                             <label class="block text-xs font-semibold text-gray-600 mb-1" data-i18n="lblInstGroup">Installation Group</label>
@@ -634,7 +638,7 @@
         </div>
     </div>
 
-    <script src="./translations.js?v=2026080903"></script>
-    <script src="./app.js?v=2026080903"></script>
+    <script src="./translations.js?v=2026080904"></script>
+    <script src="./app.js?v=2026080904"></script>
 </body>
 </html>

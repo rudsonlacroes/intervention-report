@@ -122,7 +122,8 @@ const translations = {
         optCar: "Car",
         optCustomerStock: "Customer Stock",
         optHouten: "Houten",
-        optCustomer: "Customer"
+        optCustomer: "Customer",
+        lblSoPending: "SO number not yet known (will follow up)"
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -243,7 +244,8 @@ const translations = {
         optCar: "Auto",
         optCustomerStock: "Klant voorraad",
         optHouten: "Houten",
-        optCustomer: "Klant"
+        optCustomer: "Klant",
+        lblSoPending: "SO nummer nog niet bekend (volgt later)"
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -364,7 +366,8 @@ const translations = {
         optCar: "Fahrzeug",
         optCustomerStock: "Kundenbestand",
         optHouten: "Houten",
-        optCustomer: "Kunde"
+        optCustomer: "Kunde",
+        lblSoPending: "Auftragsnummer noch nicht bekannt (folgt später)"
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -485,7 +488,8 @@ const translations = {
         optCar: "Auto",
         optCustomerStock: "Magazzino Cliente",
         optHouten: "Houten",
-        optCustomer: "Cliente"
+        optCustomer: "Cliente",
+        lblSoPending: "Numero SO non ancora noto (seguirà)"
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -606,6 +610,7 @@ const translations = {
         optCar: "Samochód",
         optCustomerStock: "Magazyn Klienta",
         optHouten: "Houten",
-        optCustomer: "Klient"
+        optCustomer: "Klient",
+        lblSoPending: "Numer SO jeszcze nieznany (zostanie podany później)"
     }
 };

@@ -488,6 +488,7 @@ const KNOWN_SO_PREFIXES = ['GLA', 'LTA', 'LAA', 'Other'];
 function normalizeServiceOrderNumber() {
     const soInput = document.getElementById('service-order');
     if (!soInput) return;
+    if (document.getElementById('so-pending')?.checked) return; // SO volgt later — veld niet aanraken
 
     const agreementRadio = document.querySelector('input[name="agreement-type"]:checked');
     const prefix = agreementRadio ? agreementRadio.value : '';
@@ -508,12 +509,27 @@ function normalizeServiceOrderNumber() {
     soInput.value = prefix ? `${prefix}${raw}` : raw;
 }
 
+// Zet het service-order-veld disabled + grijs zodra de monteur aangeeft dat het SO-nummer
+// nog niet bekend is (verplicht-sterretje verdwijnt mee), en maakt alles weer normaal bij uitvinken.
+function toggleSoPendingField() {
+    const checkbox = document.getElementById('so-pending');
+    const soInput = document.getElementById('service-order');
+    const marker = document.getElementById('so-required-marker');
+    if (!checkbox || !soInput) return;
+
+    soInput.disabled = checkbox.checked;
+    soInput.classList.toggle('bg-gray-100', checkbox.checked);
+    if (checkbox.checked) soInput.classList.remove('border-red-500');
+    if (marker) marker.classList.toggle('hidden', checkbox.checked);
+}
+
 function buildSubmitPayload() {
     normalizeServiceOrderNumber(); // zorg dat het veld gegarandeerd correct samengevoegd is vóór verzending
 
     const rawCustomerSite = document.getElementById('customer-site')?.value?.trim() || 'Unknown_Site';
     const agreementRadio = document.querySelector('input[name="agreement-type"]:checked');
-    const fullServiceOrder = document.getElementById('service-order')?.value?.trim() || 'NO-SO';
+    const soPending = document.getElementById('so-pending')?.checked;
+    const fullServiceOrder = soPending ? 'SO REQUESTED' : (document.getElementById('service-order')?.value?.trim() || 'NO-SO');
 
     const custCanvas = document.getElementById('customer-signature-canvas');
     const engCanvas = document.getElementById('engineer-signature-canvas');
@@ -657,7 +673,9 @@ const REQUIRED_SUBMIT_FIELDS = ['customer-site', 'service-order', 'contact-name'
 // Zet border-red-500 op elk leeg verplicht veld en geeft het eerste ongeldige element terug (of null als alles ok is).
 function validateRequiredFields() {
     let firstInvalid = null;
+    const soPending = document.getElementById('so-pending')?.checked;
     REQUIRED_SUBMIT_FIELDS.forEach(id => {
+        if (id === 'service-order' && soPending) return;
         const elem = document.getElementById(id);
         if (!elem) return;
         if (!elem.value || !elem.value.trim()) {
@@ -950,6 +968,7 @@ function loadDraftByKey(key) {
     checkAdditionalWorkVisibility();
     checkFollowUpVisibility();
     checkPartsVisibility();
+    toggleSoPendingField();
     normalizeServiceOrderNumber();
     calculateGrandTotals();
     document.getElementById('auto-save-status').textContent = `Loaded draft from ${data['_savedAt']}`;
@@ -1839,6 +1858,7 @@ window.addEventListener('load', () => {
     checkAdditionalWorkVisibility();
     checkFollowUpVisibility();
     checkPartsVisibility();
+    toggleSoPendingField();
     loadIgLookupData();
     loadEmailSettings();
     setupIgTypeaheads();
