@@ -413,6 +413,13 @@ function setupIgTypeaheads() {
 // ==========================================
 // DATA PAYLOAD GENERATOR
 // ==========================================
+// <img src=""> valt in JS terug op de huidige pagina-URL zodra je .src uitleest — dus
+// check eerst of de preview 'hidden' is (= geen bonnetje geüpload) voordat je .src gebruikt.
+function getVisibleImgSrc(imgEl) {
+    if (!imgEl || imgEl.classList.contains('hidden')) return '';
+    return imgEl.src || '';
+}
+
 function getFormDataObject() {
     const data = { fields: {}, parts: [], engineers: [], thirdParties: [], costs: [], photos: [] };
 
@@ -460,14 +467,14 @@ function getFormDataObject() {
         const name = row.querySelector('.tp-name')?.value || '';
         const desc = row.querySelector('.tp-desc')?.value || '';
         const cost = row.querySelector('.tp-cost')?.value || '';
-        const receiptImg = row.querySelector('.tp-receipt-preview')?.src || '';
+        const receiptImg = getVisibleImgSrc(row.querySelector('.tp-receipt-preview'));
         if (name || desc || cost) data.thirdParties.push({ name, desc, cost, receiptImg });
     });
 
     document.querySelectorAll('#costs-container > div').forEach(row => {
         const type = row.querySelector('.cost-type')?.value || '';
         const amount = row.querySelector('.cost-amount')?.value || '';
-        const receiptImg = row.querySelector('.cost-receipt-preview')?.src || '';
+        const receiptImg = getVisibleImgSrc(row.querySelector('.cost-receipt-preview'));
         if (type || amount) data.costs.push({ type, amount, receiptImg });
     });
 
