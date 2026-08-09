@@ -538,9 +538,6 @@ function buildSubmitPayload() {
     const soPending = document.getElementById('so-pending')?.checked;
     const fullServiceOrder = soPending ? 'SO REQUESTED' : (document.getElementById('service-order')?.value?.trim() || 'NO-SO');
 
-    const custCanvas = document.getElementById('customer-signature-canvas');
-    const engCanvas = document.getElementById('engineer-signature-canvas');
-
     const dataObj = getFormDataObject();
 
     return {
@@ -584,8 +581,8 @@ function buildSubmitPayload() {
         totalWorkHours: document.getElementById('total-work-hrs')?.textContent || '0.00 hrs',
         totalTravelHours: document.getElementById('total-travel-hrs')?.textContent || '0.00 hrs',
 
-        customerSignature: custCanvas ? custCanvas.toDataURL('image/png') : '',
-        engineerSignature: engCanvas ? engCanvas.toDataURL('image/png') : '',
+        customerSignature: signatureDataUrls.customer || '',
+        engineerSignature: signatureDataUrls.engineer || '',
 
         interventions: Array.from(document.querySelectorAll('input[name="intervention-type"]:checked')).map(cb => cb.value),
 
@@ -1674,14 +1671,78 @@ function clearSignature(canvasId) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// ==========================================
+// HANDTEKENING OVERLAY (fullscreen, gedeeld tussen Customer/Engineer)
+// ==========================================
+// Los tekenen op een inline canvas laat de browser op mobiel elke aanraking als tekenen
+// interpreteren, ook als de monteur eigenlijk wil scrollen. Een fullscreen overlay met
+// document.body.style.overflow = 'hidden' maakt die dubbelzinnigheid onmogelijk.
+let signatureDataUrls = { customer: '', engineer: '' };
+let activeSignatureTarget = null;
+let signatureOverlayInitialized = false;
+const SIGNATURE_TITLES = { customer: 'Customer Signature', engineer: 'Fortna Engineer Signature' };
+
+function openSignatureOverlay(target) {
+    activeSignatureTarget = target;
+
+    const title = document.getElementById('signature-overlay-title');
+    if (title) title.textContent = SIGNATURE_TITLES[target] || '';
+
+    document.getElementById('signature-overlay')?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // setupSignaturePad() hangt teken-listeners op en leest de canvas-afmetingen uit — dat
+    // laatste heeft alleen zin zodra de overlay echt zichtbaar is (anders is offsetWidth/Height 0).
+    // Daarom de listeners maar één keer ooit opzetten (lazy), en bij élke open apart de
+    // afmetingen resetten (wat de tekening ook meteen leegmaakt — overlay start altijd blanco).
+    if (!signatureOverlayInitialized) {
+        setupSignaturePad('signature-overlay-canvas');
+        signatureOverlayInitialized = true;
+    }
+    const canvas = document.getElementById('signature-overlay-canvas');
+    if (canvas) {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+}
+
+function closeSignatureOverlay() {
+    document.getElementById('signature-overlay')?.classList.add('hidden');
+    document.body.style.overflow = '';
+    activeSignatureTarget = null;
+}
+
+function confirmSignatureOverlay() {
+    if (!activeSignatureTarget) { closeSignatureOverlay(); return; }
+    const canvas = document.getElementById('signature-overlay-canvas');
+    if (canvas) {
+        signatureDataUrls[activeSignatureTarget] = canvas.toDataURL('image/png');
+        renderSignaturePreview(activeSignatureTarget);
+    }
+    closeSignatureOverlay();
+}
+
+// Toont ofwel het kleine voorbeeld van de opgeslagen handtekening, ofwel de "Tik om te tekenen"-placeholder.
+function renderSignaturePreview(target) {
+    const img = document.getElementById(`${target}-signature-preview`);
+    const placeholder = document.getElementById(`${target}-signature-placeholder`);
+    const dataUrl = signatureDataUrls[target];
+    if (img) {
+        img.src = dataUrl || '';
+        img.classList.toggle('hidden', !dataUrl);
+    }
+    if (placeholder) placeholder.classList.toggle('hidden', !!dataUrl);
+}
+
 function resetFormWithConfirmation() {
     if (!confirm("Formulier wissen?")) return;
 
     document.getElementById('service-report-form').reset();
     uploadedFiles = [];
     document.getElementById('photos-preview-container').innerHTML = '';
-    clearSignature('customer-signature-canvas');
-    clearSignature('engineer-signature-canvas');
+    signatureDataUrls = { customer: '', engineer: '' };
+    renderSignaturePreview('customer');
+    renderSignaturePreview('engineer');
 
     // Bugfix: form.reset() ruimt de dynamisch toegevoegde rijen niet op.
     ['parts-container', 'engineers-container', 'third-party-container', 'costs-container'].forEach(id => {
@@ -1851,8 +1912,6 @@ function switchTab(tab) {
 }
 
 window.addEventListener('load', () => {
-    setupSignaturePad('customer-signature-canvas');
-    setupSignaturePad('engineer-signature-canvas');
     addPartEntry();
     addEngineerEntry();
     addThirdPartyEntry();

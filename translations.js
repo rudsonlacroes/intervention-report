@@ -123,7 +123,10 @@ const translations = {
         optCustomerStock: "Customer Stock",
         optHouten: "Houten",
         optCustomer: "Customer",
-        lblSoPending: "SO number not yet known (will follow up)"
+        lblSoPending: "SO number not yet known (will follow up)",
+        lblTapToSign: "Tap to sign",
+        btnSignatureClear: "Clear",
+        btnSignatureConfirm: "✓ Confirm"
     },
     nl: {
         title: "Service Bezoek Rapport",
@@ -245,7 +248,10 @@ const translations = {
         optCustomerStock: "Klant voorraad",
         optHouten: "Houten",
         optCustomer: "Klant",
-        lblSoPending: "SO nummer nog niet bekend (volgt later)"
+        lblSoPending: "SO nummer nog niet bekend (volgt later)",
+        lblTapToSign: "Tik om te tekenen",
+        btnSignatureClear: "Wissen",
+        btnSignatureConfirm: "✓ Bevestigen"
     },
     de: {
         title: "Servicebesuchsbericht",
@@ -367,7 +373,10 @@ const translations = {
         optCustomerStock: "Kundenbestand",
         optHouten: "Houten",
         optCustomer: "Kunde",
-        lblSoPending: "Auftragsnummer noch nicht bekannt (folgt später)"
+        lblSoPending: "Auftragsnummer noch nicht bekannt (folgt später)",
+        lblTapToSign: "Zum Unterschreiben tippen",
+        btnSignatureClear: "Löschen",
+        btnSignatureConfirm: "✓ Bestätigen"
     },
     it: {
         title: "Rapporto di Visita di Servizio",
@@ -489,7 +498,10 @@ const translations = {
         optCustomerStock: "Magazzino Cliente",
         optHouten: "Houten",
         optCustomer: "Cliente",
-        lblSoPending: "Numero SO non ancora noto (seguirà)"
+        lblSoPending: "Numero SO non ancora noto (seguirà)",
+        lblTapToSign: "Tocca per firmare",
+        btnSignatureClear: "Cancella",
+        btnSignatureConfirm: "✓ Conferma"
     },
     pl: {
         title: "Raport z Wizyty Serwisowej",
@@ -611,6 +623,9 @@ const translations = {
         optCustomerStock: "Magazyn Klienta",
         optHouten: "Houten",
         optCustomer: "Klient",
-        lblSoPending: "Numer SO jeszcze nieznany (zostanie podany później)"
+        lblSoPending: "Numer SO jeszcze nieznany (zostanie podany później)",
+        lblTapToSign: "Dotknij, aby podpisać",
+        btnSignatureClear: "Wyczyść",
+        btnSignatureConfirm: "✓ Potwierdź"
     }
 };

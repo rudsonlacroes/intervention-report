@@ -87,7 +87,9 @@
                 font-weight: 700 !important;
             }
             body.print-customer-mode .signature-canvas,
-            body.print-customer-mode canvas {
+            body.print-customer-mode canvas,
+            body.print-customer-mode #customer-signature-preview,
+            body.print-customer-mode #engineer-signature-preview {
                 border: 1px solid #D1D5DB !important;
             }
         }
@@ -460,12 +462,24 @@
                     <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider" data-i18n="secSignatures">Signatures & Approval</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <div class="flex justify-between text-xs mb-1"><span>Customer Signature</span><button type="button" onclick="clearSignature('customer-signature-canvas')" class="text-red-600 no-print">Clear</button></div>
-                            <div class="border rounded bg-white h-32"><canvas id="customer-signature-canvas" class="w-full h-full"></canvas></div>
+                            <div class="flex justify-between text-xs mb-1"><span>Customer Signature</span></div>
+                            <div class="relative border rounded bg-white h-32 overflow-hidden">
+                                <button type="button" onclick="openSignatureOverlay('customer')" id="customer-signature-placeholder" class="no-print w-full h-full flex flex-col items-center justify-center gap-1 text-gray-400 text-xs">
+                                    <span class="text-2xl">✍️</span>
+                                    <span data-i18n="lblTapToSign">Tap to sign</span>
+                                </button>
+                                <img id="customer-signature-preview" onclick="openSignatureOverlay('customer')" class="hidden w-full h-full object-contain cursor-pointer" alt="Customer Signature">
+                            </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-xs mb-1"><span>Fortna Engineer Signature</span><button type="button" onclick="clearSignature('engineer-signature-canvas')" class="text-red-600 no-print">Clear</button></div>
-                            <div class="border rounded bg-white h-32"><canvas id="engineer-signature-canvas" class="w-full h-full"></canvas></div>
+                            <div class="flex justify-between text-xs mb-1"><span>Fortna Engineer Signature</span></div>
+                            <div class="relative border rounded bg-white h-32 overflow-hidden">
+                                <button type="button" onclick="openSignatureOverlay('engineer')" id="engineer-signature-placeholder" class="no-print w-full h-full flex flex-col items-center justify-center gap-1 text-gray-400 text-xs">
+                                    <span class="text-2xl">✍️</span>
+                                    <span data-i18n="lblTapToSign">Tap to sign</span>
+                                </button>
+                                <img id="engineer-signature-preview" onclick="openSignatureOverlay('engineer')" class="hidden w-full h-full object-contain cursor-pointer" alt="Fortna Engineer Signature">
+                            </div>
                         </div>
                     </div>
                     <input type="email" id="customer-email" placeholder="Customer Email Address" class="w-full md:w-1/2 text-xs p-2 border rounded">
@@ -638,7 +652,20 @@
         </div>
     </div>
 
-    <script src="./translations.js?v=2026080905"></script>
-    <script src="./app.js?v=2026080905"></script>
+    <!-- HANDTEKENING OVERLAY (fullscreen, gedeeld tussen Customer en Engineer Signature) -->
+    <div id="signature-overlay" class="hidden fixed inset-0 bg-white z-50 flex flex-col no-print">
+        <div class="flex justify-between items-center p-3 border-b bg-slate-700 text-white">
+            <h3 id="signature-overlay-title" class="font-bold text-sm">Customer Signature</h3>
+            <button type="button" onclick="closeSignatureOverlay()" class="text-white font-bold text-xl min-h-[44px] min-w-[44px]">✕</button>
+        </div>
+        <canvas id="signature-overlay-canvas" class="flex-1 w-full touch-none bg-white"></canvas>
+        <div class="flex justify-between items-center p-3 border-t gap-2">
+            <button type="button" onclick="clearSignature('signature-overlay-canvas')" class="px-4 py-2 bg-gray-200 text-gray-700 font-semibold text-sm rounded min-h-[44px]" data-i18n="btnSignatureClear">Clear</button>
+            <button type="button" onclick="confirmSignatureOverlay()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-sm rounded min-h-[44px]" data-i18n="btnSignatureConfirm">✓ Confirm</button>
+        </div>
+    </div>
+
+    <script src="./translations.js?v=2026080906"></script>
+    <script src="./app.js?v=2026080906"></script>
 </body>
 </html>
