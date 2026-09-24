@@ -392,6 +392,7 @@ function setupIgTypeaheads() {
             document.getElementById('customer-site').value = match.child;
             const igField = document.getElementById('installation-group');
             if (igField && match.ig) igField.value = match.ig;
+            updateSubmitReadiness();
         }
     );
 
@@ -521,13 +522,11 @@ function normalizeServiceOrderNumber() {
 function toggleSoPendingField() {
     const checkbox = document.getElementById('so-pending');
     const soInput = document.getElementById('service-order');
-    const marker = document.getElementById('so-required-marker');
     if (!checkbox || !soInput) return;
 
     soInput.disabled = checkbox.checked;
     soInput.classList.toggle('bg-gray-100', checkbox.checked);
     if (checkbox.checked) soInput.classList.remove('border-red-500');
-    if (marker) marker.classList.toggle('hidden', checkbox.checked);
 }
 
 function buildSubmitPayload() {
@@ -562,9 +561,8 @@ function buildSubmitPayload() {
         plannedResources: document.getElementById('planned-resources')?.value || '',
         plannedMaterials: document.getElementById('planned-materials')?.value || '',
         scopeAsPlanned: document.querySelector('input[name="scope-as-planned"]:checked')?.value || '',
-        scopeReasons: Array.from(document.querySelectorAll('input[name="scope-reason"]:checked')).map(cb => cb.value),
-        scopeReasonSoNumber: document.getElementById('scope-reason-so-number')?.value || '',
-        scopeReasonOtherDesc: document.getElementById('scope-reason-other-desc')?.value || '',
+        scopeDeviation: document.querySelector('input[name="scope-as-planned"]:checked')?.value === 'No',
+        scopeDeviationDesc: document.getElementById('scope-deviation-desc')?.value || '',
 
         workPerformed: document.getElementById('work-performed-desc')?.value || 'N/A',
 
@@ -650,6 +648,9 @@ function attachVoiceInput(textareaId) {
         if (finalTranscript.trim()) {
             const needsSeparator = textarea.value && !/[\s\n]$/.test(textarea.value);
             textarea.value += (needsSeparator ? ' ' : '') + finalTranscript.trim();
+            // Programmatisch .value zetten vuurt geen 'input'-event — dispatch 'm alsnog,
+            // zodat oninput-handlers (bv. updateSubmitReadiness()) ook via dictee meekrijgen dat er iets veranderde.
+            textarea.dispatchEvent(new Event('input'));
         }
     };
 
@@ -670,44 +671,69 @@ function attachVoiceInput(textareaId) {
 }
 
 // ==========================================
-// VALIDATIE VERPLICHTE VELDEN VÓÓR VERZENDEN
+// VALIDATIE VERPLICHTE VELDEN + REAL-TIME SUBMIT-STATUS
 // ==========================================
-const REQUIRED_SUBMIT_FIELDS = ['customer-site', 'service-order', 'contact-name', 'date', 'work-performed-desc'];
+// Geeft alle DOM-elementen terug die nog ontbreken volgens de verplichte-velden-regels.
+// Puur lezen, geen side-effects — gebruikt door zowel de live knop-status
+// (updateSubmitReadiness) als de daadwerkelijke check bij een submit-poging (handleFormSubmit).
+function getMissingSubmitFields() {
+    const missing = [];
 
-// Zet border-red-500 op elk leeg verplicht veld en geeft het eerste ongeldige element terug (of null als alles ok is).
-function validateRequiredFields() {
-    let firstInvalid = null;
-    const soPending = document.getElementById('so-pending')?.checked;
-    REQUIRED_SUBMIT_FIELDS.forEach(id => {
-        if (id === 'service-order' && soPending) return;
-        const elem = document.getElementById(id);
-        if (!elem) return;
-        if (!elem.value || !elem.value.trim()) {
-            elem.classList.add('border-red-500');
-            if (!firstInvalid) firstInvalid = elem;
-        }
+    const customerSite = document.getElementById('customer-site');
+    if (customerSite && !customerSite.value.trim()) missing.push(customerSite);
+
+    const engineerRows = Array.from(document.querySelectorAll('#engineers-container > div'));
+    const hasCompleteEngineerRow = engineerRows.some(row => {
+        const name = row.querySelector('.eng-name')?.value?.trim();
+        const start = row.querySelector('.eng-start')?.value?.trim();
+        const end = row.querySelector('.eng-end')?.value?.trim();
+        return name && start && end;
     });
-    return firstInvalid;
+    if (!hasCompleteEngineerRow && engineerRows.length > 0) {
+        // Geen enkele rij compleet: markeer alleen de lege velden van de EERSTE rij, zodat de
+        // monteur weet waar te beginnen (i.p.v. elke onvolledige rij tegelijk rood te maken).
+        const firstRow = engineerRows[0];
+        ['.eng-name', '.eng-start', '.eng-end'].forEach(sel => {
+            const el = firstRow.querySelector(sel);
+            if (el && !el.value.trim()) missing.push(el);
+        });
+    }
+
+    const workDesc = document.getElementById('work-performed-desc');
+    if (workDesc && !workDesc.value.trim()) missing.push(workDesc);
+
+    const scopeAsPlanned = document.querySelector('input[name="scope-as-planned"]:checked')?.value;
+    if (scopeAsPlanned === 'No') {
+        const scopeDeviationDesc = document.getElementById('scope-deviation-desc');
+        if (scopeDeviationDesc && !scopeDeviationDesc.value.trim()) missing.push(scopeDeviationDesc);
+    }
+
+    return missing;
 }
 
-// Verwijdert de rode rand automatisch zodra een verplicht veld weer wordt ingevuld,
-// en verbergt de waarschuwing zodra geen enkel verplicht veld meer ongeldig is.
-function setupRequiredFieldValidationClearing() {
-    REQUIRED_SUBMIT_FIELDS.forEach(id => {
-        const elem = document.getElementById(id);
-        if (!elem) return;
-        const clear = () => {
-            if (!elem.value || !elem.value.trim()) return;
-            elem.classList.remove('border-red-500');
-            const stillInvalid = REQUIRED_SUBMIT_FIELDS.some(fid => document.getElementById(fid)?.classList.contains('border-red-500'));
-            if (!stillInvalid) {
-                const msg = document.getElementById('submit-validation-msg');
-                if (msg) msg.classList.add('hidden');
-            }
-        };
-        elem.addEventListener('input', clear);
-        elem.addEventListener('blur', clear);
+// Werkt de visuele staat van de submit-knop bij (opacity/cursor — NIET het native disabled-
+// attribuut, want dat blokkeert click-events volledig en dan kunnen we geen foutmelding meer
+// tonen als iemand toch op de knop klikt terwijl het formulier nog niet compleet is).
+// Ruimt ook een rode rand op zodra een veld niet meer ontbreekt.
+function updateSubmitReadiness() {
+    const missing = getMissingSubmitFields();
+    const missingSet = new Set(missing);
+
+    document.querySelectorAll('.border-red-500').forEach(el => {
+        if (!missingSet.has(el)) el.classList.remove('border-red-500');
     });
+    if (missing.length === 0) {
+        const msg = document.getElementById('submit-validation-msg');
+        if (msg) msg.classList.add('hidden');
+    }
+
+    const submitBtn = document.getElementById('submit-report-btn');
+    if (submitBtn) {
+        submitBtn.classList.toggle('opacity-50', missing.length > 0);
+        submitBtn.classList.toggle('cursor-not-allowed', missing.length > 0);
+    }
+
+    return missing;
 }
 
 // ==========================================
@@ -716,15 +742,16 @@ function setupRequiredFieldValidationClearing() {
 function handleFormSubmit(event, btnElement) {
     if (event) event.preventDefault();
 
-    const firstInvalidField = validateRequiredFields();
-    if (firstInvalidField) {
+    const missing = getMissingSubmitFields();
+    if (missing.length > 0) {
+        missing.forEach(el => el.classList.add('border-red-500'));
         const msg = document.getElementById('submit-validation-msg');
         if (msg) {
             const lang = localStorage.getItem('fortna_lang') || 'en';
-            msg.textContent = `⚠️ ${translations[lang].msgValidationRequired}`;
+            msg.textContent = `⚠️ ${translations[lang].msgSubmitBlocked}`;
             msg.classList.remove('hidden');
         }
-        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
     }
     const msg = document.getElementById('submit-validation-msg');
@@ -975,6 +1002,7 @@ function loadDraftByKey(key) {
     toggleSoPendingField();
     normalizeServiceOrderNumber();
     calculateGrandTotals();
+    updateSubmitReadiness();
     document.getElementById('auto-save-status').textContent = `Loaded draft from ${data['_savedAt']}`;
 }
 
@@ -1406,15 +1434,15 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
         </div>
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
             <div class="md:col-span-3">
-                <input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'start')" class="mt-1 w-full text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStartNow}</button>
+                <input type="time" value="${start}" class="eng-start text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals(); updateSubmitReadiness();">
+                <button type="button" onclick="setEngineerTimeNow(this, 'start'); updateSubmitReadiness();" class="mt-1 w-full text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStartNow}</button>
             </div>
             <div class="md:col-span-3">
-                <input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals()">
-                <button type="button" onclick="setEngineerTimeNow(this, 'end')" class="mt-1 w-full text-xs bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStopNow}</button>
+                <input type="time" value="${end}" class="eng-end text-xs p-1.5 border rounded w-full" onchange="calculateGrandTotals(); updateSubmitReadiness();">
+                <button type="button" onclick="setEngineerTimeNow(this, 'end'); updateSubmitReadiness();" class="mt-1 w-full text-xs bg-red-600 hover:bg-red-700 text-white font-semibold px-2 py-2 rounded no-print min-h-[44px]">${translations[lang].btnStopNow}</button>
             </div>
             <div class="md:col-span-4"><span class="text-xs font-bold text-blue-600 eng-hours-val" data-hours-num="0">0.00 hrs</span></div>
-            <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals();" class="text-red-600 text-xs px-3 min-h-[44px] inline-flex items-center justify-center">Remove</button></div>
+            <div class="md:col-span-2 flex justify-end no-print"><button type="button" onclick="document.getElementById('eng-row-${rowId}').remove(); calculateGrandTotals(); updateSubmitReadiness();" class="text-red-600 text-xs px-3 min-h-[44px] inline-flex items-center justify-center">Remove</button></div>
         </div>
         <div class="eng-travel-fields ${cat === 'Travel Time' ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-12 gap-3 items-end border-t pt-2 border-gray-200">
             <div class="md:col-span-3">
@@ -1455,9 +1483,13 @@ function addEngineerEntry(date = '', name = '', type = '', cat = 'Work Hours', s
         (match) => {
             nameInput.value = match.name;
             typeSelect.value = match.type;
+            updateSubmitReadiness();
         }
     );
     nameInput.addEventListener('blur', () => saveRecentEngineer(nameInput.value, typeSelect.value));
+    nameInput.addEventListener('input', updateSubmitReadiness);
+
+    updateSubmitReadiness();
 }
 
 // Toont/verbergt het Travel From-blok afhankelijk van Work Hours vs Travel Time.
@@ -1601,8 +1633,8 @@ function checkMalfunctionVisibility() {
 
 function checkScopeVisibility() {
     const radio = document.querySelector('input[name="scope-as-planned"]:checked');
-    const reasonsBlock = document.getElementById('scope-reasons-block');
-    if (reasonsBlock) reasonsBlock.classList.toggle('hidden', !(radio && radio.value === 'No'));
+    const deviationBlock = document.getElementById('scope-deviation-block');
+    if (deviationBlock) deviationBlock.classList.toggle('hidden', !(radio && radio.value === 'No'));
 }
 
 function checkCompletionVisibility() {
@@ -1757,12 +1789,13 @@ function resetFormWithConfirmation() {
 
     // Verberg conditionele blokken weer.
     document.getElementById('malfunction-section')?.classList.add('hidden');
-    document.getElementById('scope-reasons-block')?.classList.add('hidden');
+    document.getElementById('scope-deviation-block')?.classList.add('hidden');
     document.getElementById('remaining-work-block')?.classList.add('hidden');
     document.getElementById('additional-work-desc-block')?.classList.add('hidden');
     document.getElementById('followup-section-block')?.classList.add('hidden');
     document.getElementById('parts-section-block')?.classList.add('hidden');
 
+    updateSubmitReadiness();
     document.getElementById('auto-save-status').textContent = 'Form ready';
 }
 
@@ -1934,7 +1967,7 @@ window.addEventListener('load', () => {
     if (langSwitcher) langSwitcher.value = savedLang;
 
     checkAutoSaveRecovery();
-    setupRequiredFieldValidationClearing();
+    updateSubmitReadiness();
     setInterval(autoSaveSilent, 30000);
 
     attachVoiceInput('work-performed-desc');

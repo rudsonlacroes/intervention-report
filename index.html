@@ -212,11 +212,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="relative">
                             <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblCustSite">Customer & Site Location</span> <span class="text-red-500">*</span></label>
-                            <input type="text" id="customer-site" required autocomplete="off" class="w-full text-xs p-2 border rounded">
+                            <input type="text" id="customer-site" required autocomplete="off" class="w-full text-xs p-2 border rounded" oninput="updateSubmitReadiness()">
                             <ul id="customer-site-suggestions" class="hidden absolute z-20 left-0 right-0 mt-1 bg-white border border-indigo-200 rounded-lg shadow-lg max-h-56 overflow-y-auto text-xs"></ul>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblSO">Service Order Number</span> <span id="so-required-marker" class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblSO">Service Order Number</span></label>
                             <input type="text" id="service-order" placeholder="e.g. 0000104" onblur="normalizeServiceOrderNumber()" class="w-full text-xs p-2 border rounded">
                             <label class="flex items-center gap-1 mt-1 text-[10px] text-gray-500">
                                 <input type="checkbox" id="so-pending" onchange="toggleSoPendingField()">
@@ -235,7 +235,7 @@
                             <input type="text" id="salesforce-ref" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblContact">Contact Name Customer</span> <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblContact">Contact Name Customer</span></label>
                             <input type="text" id="contact-name" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
@@ -245,7 +245,7 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblDate">Intervention Date</span> <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-gray-600 mb-1"><span data-i18n="lblDate">Intervention Date</span></label>
                             <input type="date" id="date" class="w-full text-xs p-2 border rounded">
                         </div>
                         <div>
@@ -261,6 +261,20 @@
                                 <label><input type="radio" name="agreement-type" value="Other" onchange="normalizeServiceOrderNumber()"> Other</label>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div id="sec-engineers-block" class="bg-white p-4 rounded-md border border-blue-100 border-l-4 border-l-blue-600 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-bold text-blue-700 uppercase tracking-wider" data-i18n="secEngineers">Engineers & Hours Breakdown</h2>
+                        <button type="button" onclick="addEngineerEntry()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Engineer Row</button>
+                    </div>
+                    <p class="text-[10px] text-gray-500 italic" data-i18n="lblEngineersRequiredHint">* At least one row must have name, start and end time filled in</p>
+                    <div id="engineers-container" class="space-y-3"></div>
+                    <div class="bg-blue-50 p-3 rounded border text-xs flex justify-around font-semibold text-blue-900">
+                        <div>Work: <span id="total-work-hrs">0.00 hrs</span></div>
+                        <div>Travel: <span id="total-travel-hrs">0.00 hrs</span></div>
+                        <div>Total: <span id="total-combined-hrs" class="font-bold">0.00 hrs</span></div>
                     </div>
                 </div>
 
@@ -312,36 +326,22 @@
                     </div>
 
                     <div class="pt-3 border-t border-gray-200">
-                        <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblScopeValidation">Can the original scope be executed as planned?</label>
+                        <label class="block text-xs font-semibold text-gray-600 mb-2" data-i18n="lblScopeValidation">Was work performed according to original scope of work?</label>
                         <div class="flex items-center space-x-4 text-xs">
-                            <label><input type="radio" name="scope-as-planned" value="Yes" onchange="checkScopeVisibility(); checkFollowUpVisibility();"> <span data-i18n="optYes">Yes</span></label>
-                            <label><input type="radio" name="scope-as-planned" value="No" onchange="checkScopeVisibility(); checkFollowUpVisibility();"> <span data-i18n="optNo">No</span></label>
+                            <label><input type="radio" name="scope-as-planned" value="Yes" onchange="checkScopeVisibility(); checkFollowUpVisibility(); updateSubmitReadiness();"> <span data-i18n="optYes">Yes</span></label>
+                            <label><input type="radio" name="scope-as-planned" value="No" onchange="checkScopeVisibility(); checkFollowUpVisibility(); updateSubmitReadiness();"> <span data-i18n="optNo">No</span></label>
                         </div>
                     </div>
 
-                    <div id="scope-reasons-block" class="hidden bg-amber-50 p-3 rounded border border-amber-200 space-y-2">
-                        <p class="text-xs font-semibold text-amber-800" data-i18n="lblScopeReasons">Reasons</p>
-                        <div class="space-y-1.5 text-xs">
-                            <label class="flex items-center"><input type="checkbox" name="scope-reason" value="Customer requested additional work" class="mr-2"> <span data-i18n="reasonCustomerRequest">Customer requested additional work</span></label>
-                            <label class="flex items-center"><input type="checkbox" name="scope-reason" value="Additional defect found" class="mr-2"> <span data-i18n="reasonAdditionalDefect">Additional defect found</span></label>
-                            <label class="flex items-center flex-wrap gap-2">
-                                <span><input type="checkbox" name="scope-reason" value="Planning requested additional SO" class="mr-2"> <span data-i18n="reasonPlanningSO">Planning requested to work on additional Service Order nr</span></span>
-                                <input type="text" id="scope-reason-so-number" placeholder="SO nr." class="text-xs p-1 border rounded w-28">
-                            </label>
-                            <label class="flex items-center"><input type="checkbox" name="scope-reason" value="Waiting time" class="mr-2"> <span data-i18n="reasonWaitingTime">Waiting time</span></label>
-                            <label class="flex items-center"><input type="checkbox" name="scope-reason" value="Material unavailable" class="mr-2"> <span data-i18n="reasonMaterialUnavailable">Material unavailable</span></label>
-                            <label class="flex items-center"><input type="checkbox" name="scope-reason" value="Safety issue" class="mr-2"> <span data-i18n="reasonSafetyIssue">Safety issue</span></label>
-                            <label class="flex items-center flex-wrap gap-2">
-                                <span><input type="checkbox" name="scope-reason" value="Other" class="mr-2"> <span data-i18n="reasonOther">Other, description</span></span>
-                                <input type="text" id="scope-reason-other-desc" class="text-xs p-1 border rounded flex-1 min-w-[150px]">
-                            </label>
-                        </div>
+                    <div id="scope-deviation-block" class="hidden bg-amber-50 p-3 rounded border border-amber-200">
+                        <label class="block text-xs font-semibold text-amber-800 mb-1"><span data-i18n="lblScopeDeviationDesc">Please explain the scope deviation</span> <span class="text-red-500">*</span></label>
+                        <textarea id="scope-deviation-desc" rows="2" class="w-full text-xs p-2 border rounded" oninput="updateSubmitReadiness()"></textarea>
                     </div>
                 </div>
 
                 <div class="bg-white p-4 rounded-md border border-cyan-100 border-l-4 border-l-cyan-600 shadow-sm space-y-3">
                     <h2 class="text-sm font-bold text-cyan-700 uppercase tracking-wider"><span data-i18n="secWork">Work Performed</span> <span class="text-red-500">*</span></h2>
-                    <textarea id="work-performed-desc" rows="4" class="w-full text-xs p-2 border rounded"></textarea>
+                    <textarea id="work-performed-desc" rows="4" class="w-full text-xs p-2 border rounded" oninput="updateSubmitReadiness()"></textarea>
                 </div>
 
                 <div class="bg-white p-4 rounded-md border border-teal-100 border-l-4 border-l-teal-600 shadow-sm space-y-3">
@@ -496,19 +496,6 @@
             <!-- TAB 2: BACK-OFFICE / ADMIN DATA -->
             <div id="tab-admin-content" class="space-y-6 hidden">
 
-                <div id="sec-engineers-block" class="bg-white p-4 rounded-md border border-blue-100 border-l-4 border-l-blue-600 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-sm font-bold text-blue-700 uppercase tracking-wider" data-i18n="secEngineers">Engineers & Hours Breakdown</h2>
-                        <button type="button" onclick="addEngineerEntry()" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1.5 rounded-lg no-print min-h-[44px] inline-flex items-center justify-center">+ Add Engineer Row</button>
-                    </div>
-                    <div id="engineers-container" class="space-y-3"></div>
-                    <div class="bg-blue-50 p-3 rounded border text-xs flex justify-around font-semibold text-blue-900">
-                        <div>Work: <span id="total-work-hrs">0.00 hrs</span></div>
-                        <div>Travel: <span id="total-travel-hrs">0.00 hrs</span></div>
-                        <div>Total: <span id="total-combined-hrs" class="font-bold">0.00 hrs</span></div>
-                    </div>
-                </div>
-
                 <div id="sec-tp-block" class="bg-white p-4 rounded-md border border-amber-100 border-l-4 border-l-amber-600 shadow-sm space-y-3">
                     <div class="flex justify-between items-center">
                         <h2 class="text-sm font-bold text-amber-700 uppercase tracking-wider" data-i18n="secThirdParty">Third Party Support & Subcontractors</h2>
@@ -567,7 +554,7 @@
 
                     <div class="flex flex-col items-end gap-1">
                         <span id="submit-validation-msg" class="hidden text-xs font-semibold text-red-600"></span>
-                        <button type="button" onclick="handleFormSubmit(event, this)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 px-8 rounded-xl shadow-lg transition-colors w-full md:w-auto">
+                        <button type="button" id="submit-report-btn" onclick="handleFormSubmit(event, this)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-3 px-8 rounded-xl shadow-lg transition-colors w-full md:w-auto">
                             🚀 Submit Report to Power Automate
                         </button>
                     </div>
@@ -665,7 +652,7 @@
         </div>
     </div>
 
-    <script src="./translations.js?v=2026080906"></script>
-    <script src="./app.js?v=2026080906"></script>
+    <script src="./translations.js?v=2026092401"></script>
+    <script src="./app.js?v=2026092401"></script>
 </body>
 </html>
